@@ -67,6 +67,7 @@ export const Check = (props) => (
           color="secondary"
           variant="contained"
           sx={{ mr: 1 }}
+          href="/check_schedule"
         >
           Verificar
         </Button>

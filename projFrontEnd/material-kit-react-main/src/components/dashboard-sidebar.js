@@ -30,9 +30,9 @@ const items = [
     title: 'Agendar vacina'
   },
   {
-    href: '/products',
+    href: '/check_schedule',
     icon: (<CalendarIcon fontSize="small" />),
-    title: 'Verificar agendamento'
+    title: 'Consultar agendamento'
   },
   // {
   //   href: '/account',
