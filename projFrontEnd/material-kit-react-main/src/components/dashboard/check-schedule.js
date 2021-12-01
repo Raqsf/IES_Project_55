@@ -1,17 +1,16 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import PeopleIcon from '@mui/icons-material/PeopleOutlined';
 
-export const Schedule = (props) => (
-  <Card
-    sx={{ height: '100%' }}
-    {...props}
-  >
+export const Check = (props) => (
+  <Card {...props}>
     <CardContent>
       <Grid
         container
         spacing={3}
         sx={{ justifyContent: 'space-between' }}
       >
+
         <Grid item
             lg={10}
             sm={10}
@@ -22,31 +21,38 @@ export const Schedule = (props) => (
             color="textPrimary"
             variant="h5"
           >
-            Agende a sua Vacina
+            Verifique o estado do agendamento
           </Typography>
+          {/* <Typography
+            color="textSecondary"
+            gutterBottom
+            variant="overline"
+          >
+            TOTAL CUSTOMERS
+          </Typography> */}
         </Grid>
         <Grid item
             lg={2}
             sm={2}
             xl={2}
             xs={2}
-            >
+        >
           <Avatar
             sx={{
-              backgroundColor: 'error.main',
+              backgroundColor: 'success.main',
               height: 56,
               width: 56
             }}
           >
-            <HealthAndSafetyIcon />
+            <PeopleIcon />
           </Avatar>
         </Grid>
       </Grid>
       <Box
         sx={{
-          pt: 2,
+          alignItems: 'center',
           display: 'flex',
-          alignItems: 'center'
+          pt: 2
         }}
       >
         <Typography
@@ -54,19 +60,17 @@ export const Schedule = (props) => (
             gutterBottom
             variant="body2"
         >
-            Depois de efetuar o pedido de agendamento é realizada uma validação para confirmar se reúne os critérios de elegibilidade em vigor, para a toma da vacina. 
-            Irá receber um código QR por email/sms/site juntamente com a indicação da hora e local onde se realizará a vacinação. 
-            Terá de apresentar o código QR quando for levar a dose.
+            Consulte a data e o local da vacinação, caso já tenha sido agendada. 
+            Caso contrário verifique em que estado se encontra.
         </Typography>
-        {/* <ArrowDownwardIcon color="error" />
+        {/* <ArrowUpwardIcon color="success" />
         <Typography
-          color="error"
+          variant="body2"
           sx={{
             mr: 1
           }}
-          variant="body2"
         >
-          12%
+          16%
         </Typography>
         <Typography
           color="textSecondary"
@@ -86,7 +90,7 @@ export const Schedule = (props) => (
           variant="contained"
           sx={{ mr: 1 }}
         >
-          Agendar
+          Verificar
         </Button>
       </Box>
     </CardContent>

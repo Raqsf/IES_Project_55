@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { Budget } from '../components/dashboard/budget';
 import { Schedule } from '../components/dashboard/schedule-vaccine';
+import { Check } from '../components/dashboard/check-schedule';
 import { LatestOrders } from '../components/dashboard/latest-orders';
 import { LatestProducts } from '../components/dashboard/latest-products';
 import { Sales } from '../components/dashboard/sales';
@@ -47,9 +48,7 @@ const Dashboard = () => (
             sm={6}
             xs={12}
           >
-            <p>Verifique o estado</p>
-            <p>Consulte a data da vacina ou se já foi agendada</p>
-            <TotalCustomers />
+            <Check />
           </Grid>
           {/* <Grid
             item
