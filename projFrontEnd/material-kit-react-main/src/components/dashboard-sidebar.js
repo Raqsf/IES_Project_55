@@ -12,6 +12,8 @@ import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
+import { Vaccine as VaccineIcon } from '../icons/vaccine';
+import { Calendar as CalendarIcon } from '../icons/calendar';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
@@ -24,13 +26,13 @@ const items = [
   },
   { 
     href: '/customers',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
+    icon: (<VaccineIcon fontSize="small" />),
+    title: 'Agendar vacina'
   },
   {
     href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
+    icon: (<CalendarIcon fontSize="small" />),
+    title: 'Verificar agendamento'
   },
   // {
   //   href: '/account',
