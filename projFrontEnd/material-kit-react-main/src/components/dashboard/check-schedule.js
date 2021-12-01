@@ -1,6 +1,7 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import NextLink from 'next/link';
 
 export const Check = (props) => (
   <Card {...props}>
@@ -63,13 +64,15 @@ export const Check = (props) => (
           alignItems: 'center'
         }}
       >
-        <Button
-          color="secondary"
-          variant="contained"
-          sx={{ mr: 1 }}
-        >
-          Verificar
-        </Button>
+        <NextLink href="/products" passHref>
+          <Button
+            color="secondary"
+            variant="contained"
+            sx={{ mr: 1 }}
+          >
+            Verificar
+          </Button>
+        </NextLink>
       </Box>
     </CardContent>
   </Card>
