@@ -1,6 +1,6 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import PeopleIcon from '@mui/icons-material/PeopleOutlined';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 export const Check = (props) => (
   <Card {...props}>
@@ -23,13 +23,6 @@ export const Check = (props) => (
           >
             Verifique o estado do agendamento
           </Typography>
-          {/* <Typography
-            color="textSecondary"
-            gutterBottom
-            variant="overline"
-          >
-            TOTAL CUSTOMERS
-          </Typography> */}
         </Grid>
         <Grid item
             lg={2}
@@ -44,7 +37,7 @@ export const Check = (props) => (
               width: 56
             }}
           >
-            <PeopleIcon />
+            <PermContactCalendarIcon />
           </Avatar>
         </Grid>
       </Grid>
@@ -63,21 +56,6 @@ export const Check = (props) => (
             Consulte a data e o local da vacinação, caso já tenha sido agendada. 
             Caso contrário verifique em que estado se encontra.
         </Typography>
-        {/* <ArrowUpwardIcon color="success" />
-        <Typography
-          variant="body2"
-          sx={{
-            mr: 1
-          }}
-        >
-          16%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography> */}
       </Box>
       <Box sx={{
           pt: 2,
