@@ -7,13 +7,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Form, Button, Col, Container } from 'react-bootstrap';
 
-import { useEffect } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-
-//import DatePicker from "react-datepicker";
-
-//import "react-datepicker/dist/react-datepicker.css";
 
 export default function DadosUtente() {
   const [utente, setUtente] = useState("");
