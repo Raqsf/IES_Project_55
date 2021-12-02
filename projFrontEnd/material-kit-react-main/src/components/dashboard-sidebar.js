@@ -25,7 +25,7 @@ const items = [
     title: 'Dashboard'
   },
   { 
-    href: '/customers',
+    href: '/agendamento',
     icon: (<VaccineIcon fontSize="small" />),
     title: 'Agendar vacina'
   },

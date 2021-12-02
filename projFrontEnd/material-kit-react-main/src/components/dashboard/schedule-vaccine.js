@@ -1,5 +1,6 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import NextLink from 'next/link';
 
 export const Schedule = (props) => (
   <Card
@@ -81,13 +82,15 @@ export const Schedule = (props) => (
           alignItems: 'center'
         }}
       >
-        <Button
-          color="secondary"
-          variant="contained"
-          sx={{ mr: 1 }}
-        >
-          Agendar
-        </Button>
+        <NextLink href="/agendamento" passHref>
+          <Button
+            color="secondary"
+            variant="contained"
+            sx={{ mr: 1 }}
+          >
+            Agendar
+          </Button>
+        </NextLink>
       </Box>
     </CardContent>
   </Card>
