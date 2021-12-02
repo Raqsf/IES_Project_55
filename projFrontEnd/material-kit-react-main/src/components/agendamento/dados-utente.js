@@ -7,8 +7,6 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Form, Button, Col, Container } from 'react-bootstrap';
 
-import NextLink from 'next/link';
-
 export default function DadosUtente() {
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
@@ -53,11 +51,9 @@ export default function DadosUtente() {
                     </Stack>
                 </LocalizationProvider>
             </Form.Group>
-            <NextLink href="/success" passHref>
-                <Button variant="primary" style={{ marginLeft: "50%" }} block size="lg" type="submit" disabled={!validateForm()}>
-                    Validação
-                </Button>
-            </NextLink>
+            <Button href="/success" variant="primary" style={{ marginLeft: "50%" }} block size="lg" type="submit" disabled={!validateForm()}>
+                Validação
+            </Button>
         </Form>
     </Container>
   );

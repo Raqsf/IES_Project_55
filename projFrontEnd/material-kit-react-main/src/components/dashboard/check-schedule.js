@@ -64,15 +64,14 @@ export const Check = (props) => (
           alignItems: 'center'
         }}
       >
-        <NextLink href="/products" passHref>
-          <Button
-            color="secondary"
-            variant="contained"
-            sx={{ mr: 1 }}
-          >
-            Verificar
-          </Button>
-        </NextLink>
+        <Button
+          color="secondary"
+          variant="contained"
+          sx={{ mr: 1 }}
+          href="/check_schedule"
+        >
+          Verificar
+        </Button>
       </Box>
     </CardContent>
   </Card>
