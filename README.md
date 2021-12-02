@@ -12,11 +12,12 @@ A distribuição de vacinas pelos centros de vacinação é feita automaticament
 O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 ## Equipa
-98323, Raquel da Silva Ferreira - Team Manager, Developer
-98546, Patrícia Matias Dias - Product Owner, Developer
-91359, Juan Victor Lessa Gonçalves - DevOps Master, Developer
-98491, Pedro Alexandre Coelho Sobral - Architect, Developer
-
+| NMEC | NOME| Papel |
+|----:|-----|-----|
+| 98323 | Raquel da Silva Ferreira | Team Manager, Developer |
+| 98546 | Patrícia Matias Dias | Product Owner, Developer |
+| 91359 | Juan Victor Lessa Gonçalves | DevOps Master, Developer |
+| 98491 | Pedro Alexandre Coelho Sobral | Architect, Developer |
 
 ## DevOps
 ### MySQL docker image
