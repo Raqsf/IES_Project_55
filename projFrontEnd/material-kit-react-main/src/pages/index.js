@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { Budget } from '../components/dashboard/budget';
+import { Schedule } from '../components/dashboard/schedule-vaccine';
+import { Check } from '../components/dashboard/check-schedule';
 import { LatestOrders } from '../components/dashboard/latest-orders';
 import { LatestProducts } from '../components/dashboard/latest-products';
 import { Sales } from '../components/dashboard/sales';
@@ -14,7 +16,7 @@ const Dashboard = () => (
   <>
     <Head>
       <title>
-        Dashboard | Material Kit
+        Dashboard | Vacinação
       </title>
     </Head>
     <Box
@@ -25,29 +27,30 @@ const Dashboard = () => (
       }}
     >
       <Container maxWidth={false}>
+        <h1>Vacinação</h1>
         <Grid
           container
-          spacing={3}
+          spacing={2}
         >
           <Grid
             item
-            lg={3}
+            lg={6}
             sm={6}
-            xl={3}
+            xl={6}
             xs={12}
           >
-            <Budget />
+            <Schedule />
           </Grid>
           <Grid
             item
-            xl={3}
-            lg={3}
+            xl={6}
+            lg={6}
             sm={6}
             xs={12}
           >
-            <TotalCustomers />
+            <Check />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             xl={3}
             lg={3}
@@ -100,7 +103,7 @@ const Dashboard = () => (
             xs={12}
           >
             <LatestOrders />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>
