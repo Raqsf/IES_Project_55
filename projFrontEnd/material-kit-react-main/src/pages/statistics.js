@@ -1,12 +1,12 @@
 import Head from "next/head";
 import { Box, Container } from "@mui/material";
-import { DashboardLayout } from "../components/dashboard-layout";
+import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 
-const statistics = () => {
+const Statistics = () => {
   return (
     <>
       <Head>
-        <title>Statistics</title>
+        <title>Estatísticas | Vacinação</title>
       </Head>
       <Box
         component="main"
@@ -16,7 +16,7 @@ const statistics = () => {
         }}
       >
         <Container maxWidth={false}>
-          <table class="styled-table">
+          <table className="styled-table">
             <thead>
               <tr>
                 <th>doses aplicadas</th>
@@ -43,6 +43,6 @@ const statistics = () => {
   );
 };
 
-statistics.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Statistics.getLayout = (page) => <DashboardLayoutGerente>{page}</DashboardLayoutGerente>;
 
-export default statistics;
+export default Statistics;

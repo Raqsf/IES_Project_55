@@ -11,6 +11,7 @@ import { TotalCustomers } from "../components/dashboard/total-customers";
 import { TotalProfit } from "../components/dashboard/total-profit";
 import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
+import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 
 const Dashboard = () => (
   <>
@@ -62,7 +63,12 @@ const Dashboard = () => (
     </Box>
   </>
 );
-
-Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+if (typeof window !== 'undefined') {
+  if(localStorage.getItem("login") == "false") {
+    Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+  } else {
+    Dashboard.getLayout = (page) => <DashboardLayoutGerente>{page}</DashboardLayoutGerente>;
+  }
+}
 
 export default Dashboard;
