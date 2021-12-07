@@ -2,16 +2,14 @@ import sys
 import mysql.connector
 from mysql.connector import Error
 
-# Usage: $ python testMysql.py 'root' 'password'
-
 
 def connect():
     """ Connect to MySQL database """
     conn = None
     try:
-        conn = mysql.connector.connect(host='localhost',
-                                       database='vacinas',
-                                       password='root')
+        conn = mysql.connector.connect(host='3306',
+                                       database='vaccinationdb',
+                                       password='password')
         if conn.is_connected():
             print('Connected to MySQL database')
 

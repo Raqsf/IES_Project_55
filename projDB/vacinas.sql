@@ -1,8 +1,8 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET TIME_ZONE = "+00:00";
 
-CREATE DATABASE IF NOT EXISTS `vacinas` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `vacinas`;
+CREATE DATABASE IF NOT EXISTS `vaccinationdb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `vaccinationdb`;
 
 CREATE TABLE IF NOT EXISTS `Pessoa` (
     `n_utente`			INT		  AUTO_INCREMENT          NOT NULL,
@@ -42,6 +42,12 @@ CREATE TABLE IF NOT EXISTS `Centro_vacinacao` (
 
     PRIMARY KEY(`id`)
 );
+
+INSERT INTO `Centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacodade_atual`) VALUES 
+(1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
+(2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
+(3, 'Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
+(4, 'Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
 
 CREATE TABLE IF NOT EXISTS `Lote` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
