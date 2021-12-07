@@ -3143,9 +3143,8 @@
   "resolved" "https://registry.npmjs.org/react-daypicker/-/react-daypicker-3.0.10.tgz"
   "version" "3.0.10"
 
-
 "react-dom@^16.8.1 || ^17", "react-dom@^17.0.2":
- "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
+  "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
   dependencies:
