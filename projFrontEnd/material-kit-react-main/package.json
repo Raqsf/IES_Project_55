@@ -30,6 +30,7 @@
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
+    "react-alert": "^7.0.3",
     "react-bootstrap": "^2.0.3",
     "react-chartjs-2": "^3.0.4",
     "react-daypicker": "^3.0.10",

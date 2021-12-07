@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbarGerente } from './dashboard-navbar-gerente';
-import { DashboardSidebar } from './dashboard-sidebar';
+import { DashboardSidebarGerente } from './dashboard-sidebar-gerente';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -33,7 +33,7 @@ export const DashboardLayoutGerente = (props) => {
         </Box>
       </DashboardLayoutRoot>
       <DashboardNavbarGerente onSidebarOpen={() => setSidebarOpen(true)} />
-      <DashboardSidebar
+      <DashboardSidebarGerente
         onClose={() => setSidebarOpen(false)}
         open={isSidebarOpen}
       />

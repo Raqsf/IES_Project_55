@@ -63,11 +63,12 @@ const Dashboard = () => (
     </Box>
   </>
 );
-// if(localStorage.getItem("username")) {
-//   Dashboard.getLayout = (page) => <DashboardLayoutGerente>{page}</DashboardLayoutGerente>;
-// } else {
-//   Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-// }
-Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+if (typeof window !== 'undefined') {
+  if(localStorage.getItem("login") == "false") {
+    Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+  } else {
+    Dashboard.getLayout = (page) => <DashboardLayoutGerente>{page}</DashboardLayoutGerente>;
+  }
+}
 
 export default Dashboard;

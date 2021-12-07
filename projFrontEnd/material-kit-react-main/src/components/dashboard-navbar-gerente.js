@@ -15,6 +15,11 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 export const DashboardNavbarGerente = (props) => {
   const { onSidebarOpen, ...other } = props;
 
+  function logout() {
+    alert("LOGOUT");
+    localStorage.setItem("login", false);
+  }
+
   return (
     <>
       <DashboardNavbarRoot
@@ -78,6 +83,17 @@ export const DashboardNavbarGerente = (props) => {
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
+          <Tooltip>
+            <Button
+              color="secondary"
+              variant="contained"
+              sx={{ mr: 1 }}
+              onClick={logout}
+              href="/"
+            >
+              Logout
+            </Button>
+          </Tooltip>
         </Toolbar>
       </DashboardNavbarRoot>
     </>

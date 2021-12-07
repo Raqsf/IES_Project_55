@@ -30,7 +30,7 @@ const Login = () => {
           'Password is required')
     }),
     onSubmit: () => {
-      localStorage.setItem("username", JSON.stringify(initialValues.email));
+      localStorage.setItem("login", true, "username", JSON.stringify('demo@devias.io'));
       router.push('/');
     }
   });
@@ -77,7 +77,7 @@ const Login = () => {
                 Sign in on the internal platform
               </Typography>
             </Box>
-            <Grid
+            {/* <Grid
               container
               spacing={3}
             >
@@ -113,7 +113,7 @@ const Login = () => {
                   Login with Google
                 </Button>
               </Grid>
-            </Grid>
+            </Grid> 
             <Box
               sx={{
                 pb: 1,
@@ -127,7 +127,7 @@ const Login = () => {
               >
                 or login with email address
               </Typography>
-            </Box>
+            </Box> */}
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
@@ -166,7 +166,7 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography
+            {/* <Typography
               color="textSecondary"
               variant="body2"
             >
@@ -186,7 +186,7 @@ const Login = () => {
                   Sign Up
                 </Link>
               </NextLink>
-            </Typography>
+            </Typography> */}
           </form>
         </Container>
       </Box>
