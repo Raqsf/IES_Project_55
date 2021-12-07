@@ -5,7 +5,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Stack from '@mui/material/Stack';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Form, Button, Col, Container } from 'react-bootstrap';
+import { FormControl,FormHelperText,Button, Container } from '@mui/material';
+import { Box } from "@mui/system";
 
 export default function DadosUtente() {
   const [utente, setUtente] = useState("");
@@ -21,40 +22,42 @@ export default function DadosUtente() {
   }
 
   return (
-    <Container className="DadosUtente">
-        <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicText">
-                <Form.Label>Número de Utente</Form.Label>
-                <Form.Control type="text" placeholder="123456789" 
-                    value={utente}
-                    onChange={(e) => setUtente(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicText">
-                <Form.Label>Nome completo</Form.Label>
-                <Form.Control type="text" placeholder="Nome completo" 
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}/>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicDate">            
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <Stack spacing={2}>
-                        <label>Data de nascimento</label>
-                        <DesktopDatePicker
-                        disableFuture
-                        value={date}
-                        minDate={new Date('1900-01-01')}
-                        onChange={(newValue) => {
-                            setDate(newValue);
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
-                        />
-                    </Stack>
-                </LocalizationProvider>
-            </Form.Group>
-            <Button href="/success" variant="primary" style={{ marginLeft: "50%" }} block size="lg" type="submit" disabled={!validateForm()}>
-                Validação
-            </Button>
-        </Form>
+    <Container>
+      <Box className="DadosUtente" onSubmit={handleSubmit} sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          pt: 3
+        }}>
+        <FormControl variant="outlined">
+              <TextField fullWidth label="Número de Utente"
+                  value={utente}
+                  onChange={(e) => setUtente(e.target.value)}
+                  style={{ marginTop: "20px" }}/>
+              <FormHelperText id="user-number-helper-text">Campo Nº Utente Saúde no Cartão de Cidadão.</FormHelperText> 
+              <TextField fullWidth label="Nome Completo"
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
+                      style={{ marginTop: "20px" }}/>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack spacing={2} style={{ marginTop: "20px" }}>
+                      <DesktopDatePicker
+                      label="Data de Nascimento"
+                      
+                      disableFuture
+                      value={date}
+                      minDate={new Date('1900-01-01')}
+                      onChange={(newValue) => {
+                          setDate(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                      />
+                  </Stack>
+              </LocalizationProvider>
+              <Button href="/success" block size="lg" type="submit" disabled={!validateForm()}>
+                  Validação
+              </Button>
+          </FormControl>
+      </Box>
     </Container>
   );
 }

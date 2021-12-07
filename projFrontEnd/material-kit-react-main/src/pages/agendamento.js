@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import { Box, Container, TextField } from '@mui/material';
+// import { Box, Container, TextField } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
-import { customers } from '../__mocks__/customers';
+// import { customers } from '../__mocks__/customers';
 import DadosUtente from 'src/components/agendamento/dados-utente';
 
 const Agendamento = () => (
