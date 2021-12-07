@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { DashboardNavbar } from './dashboard-navbar';
+import { DashboardNavbarGerente } from './dashboard-navbar-gerente';
 import { DashboardSidebar } from './dashboard-sidebar';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
@@ -14,7 +14,7 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   }
 }));
 
-export const DashboardLayout = (props) => {
+export const DashboardLayoutGerente = (props) => {
   const { children } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -32,7 +32,7 @@ export const DashboardLayout = (props) => {
           {children}
         </Box>
       </DashboardLayoutRoot>
-      <DashboardNavbar onSidebarOpen={() => setSidebarOpen(true)} />
+      <DashboardNavbarGerente onSidebarOpen={() => setSidebarOpen(true)} />
       <DashboardSidebar
         onClose={() => setSidebarOpen(false)}
         open={isSidebarOpen}

@@ -12,7 +12,7 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   boxShadow: theme.shadows[3]
 }));
 
-export const DashboardNavbar = (props) => {
+export const DashboardNavbarGerente = (props) => {
   const { onSidebarOpen, ...other } = props;
 
   return (
@@ -68,7 +68,7 @@ export const DashboardNavbar = (props) => {
               </Badge>
             </IconButton>
           </Tooltip> */}
-          {/* <Avatar
+          <Avatar
             sx={{
               height: 40,
               width: 40,
@@ -77,23 +77,13 @@ export const DashboardNavbar = (props) => {
             src="/static/images/avatars/avatar_1.png"
           >
             <UserCircleIcon fontSize="small" />
-          </Avatar> */}
-          <Tooltip>
-            <Button
-              color="secondary"
-              variant="contained"
-              sx={{ mr: 1 }}
-              href="/login"
-            >
-              Gerente
-            </Button>
-          </Tooltip>
+          </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
     </>
   );
 };
 
-DashboardNavbar.propTypes = {
+DashboardNavbarGerente.propTypes = {
   onSidebarOpen: PropTypes.func
 };

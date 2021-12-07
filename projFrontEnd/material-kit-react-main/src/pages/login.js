@@ -30,6 +30,7 @@ const Login = () => {
           'Password is required')
     }),
     onSubmit: () => {
+      localStorage.setItem("username", JSON.stringify(initialValues.email));
       router.push('/');
     }
   });

@@ -11,6 +11,7 @@ import { TotalCustomers } from "../components/dashboard/total-customers";
 import { TotalProfit } from "../components/dashboard/total-profit";
 import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
+import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 
 const Dashboard = () => (
   <>
@@ -62,7 +63,11 @@ const Dashboard = () => (
     </Box>
   </>
 );
-
+// if(localStorage.getItem("username")) {
+//   Dashboard.getLayout = (page) => <DashboardLayoutGerente>{page}</DashboardLayoutGerente>;
+// } else {
+//   Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+// }
 Dashboard.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Dashboard;
