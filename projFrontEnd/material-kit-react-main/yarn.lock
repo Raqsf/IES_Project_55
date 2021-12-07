@@ -459,7 +459,6 @@
   "resolved" "https://registry.npmjs.org/@next/react-refresh-utils/-/react-refresh-utils-12.0.3.tgz"
   "version" "12.0.3"
 
-<<<<<<< HEAD
 "@next/swc-android-arm64@12.0.3":
   "integrity" "sha512-40sOl9/50aamX0dEMrecqJQcUrRK47D7S9F66ulrZmz+5Ujp0lnP1rBOXngo0PZMecfU1tr7zbNubiAMDxfCxw=="
   "resolved" "https://registry.npmjs.org/@next/swc-android-arm64/-/swc-android-arm64-12.0.3.tgz"
@@ -490,8 +489,6 @@
   "resolved" "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-12.0.3.tgz"
   "version" "12.0.3"
 
-=======
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
 "@next/swc-linux-x64-gnu@12.0.3":
   "integrity" "sha512-4mkimH9nMzbuQfLmZ152NYSHdrII9AeqrkrHszexL1Lup2TLMPuxlXj55eVnyyeKFXRLlnqbCu7aOIND68RbOA=="
   "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-12.0.3.tgz"
@@ -501,7 +498,6 @@
   "integrity" "sha512-MXvx+IDYoSsSM7KcwbQAVo9r+ZeklHeDQiUEmyRRzQE1Q4JvkWwMdPu/NfFdyxur+RfKjRoUoWFdPi5MBKTpkw=="
   "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-12.0.3.tgz"
   "version" "12.0.3"
-<<<<<<< HEAD
 
 "@next/swc-win32-arm64-msvc@12.0.3":
   "integrity" "sha512-8GusumFZLp/mtVix+3JZVTGqzqntTsrTIFZ+GpcLMwyVjB3KkBwHiwJaa38WGleUinJSpJvgmhTWgppsiSKW3A=="
@@ -517,8 +513,6 @@
   "integrity" "sha512-eXFwyf46UFFggMQ3k2tJsOmB3SuKjWaSiZJH0tTDUsLw74lyqyzJqMCVA4yY0gWSlEnSjmX5nrCBknVZd3joaA=="
   "resolved" "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-12.0.3.tgz"
   "version" "12.0.3"
-=======
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
 
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
@@ -1891,14 +1885,11 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-<<<<<<< HEAD
 "fsevents@~2.3.1":
   "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
   "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   "version" "2.3.2"
 
-=======
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
@@ -3111,8 +3102,6 @@
     "iconv-lite" "0.4.24"
     "unpipe" "1.0.0"
 
-<<<<<<< HEAD
-=======
 "react-alert@^7.0.3":
   "integrity" "sha512-cZ2ZhxytECTxljDfBKpQmwWbfJQFzFf2Qf03L/IB5shbEXtWhDD2JjiW60rwmKT1oZoU+GEnUQw5MFM5+f0B6A=="
   "resolved" "https://registry.npmjs.org/react-alert/-/react-alert-7.0.3.tgz"
@@ -3121,7 +3110,6 @@
     "prop-types" "^15.7.2"
     "react-transition-group" "^4.4.1"
 
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
 "react-bootstrap@^2.0.3":
   "integrity" "sha512-gIRzQf170SGKS09azr8Cl9+8FxBf3J9jyFf/8sWNWXtRcgbRzTog9bFCS4ua5Wv1U/A7W7hRlnrKxzy+wl+5Rw=="
   "resolved" "https://registry.npmjs.org/react-bootstrap/-/react-bootstrap-2.0.3.tgz"
@@ -3155,12 +3143,9 @@
   "resolved" "https://registry.npmjs.org/react-daypicker/-/react-daypicker-3.0.10.tgz"
   "version" "3.0.10"
 
-<<<<<<< HEAD
-"react-dom@^17.0.2":
-=======
+
 "react-dom@^16.8.1 || ^17", "react-dom@^17.0.2":
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
-  "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
+ "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
   dependencies:
@@ -3221,11 +3206,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-<<<<<<< HEAD
-"react@^17.0.2":
-=======
 "react@^16.8.1 || ^17", "react@^17.0.2":
->>>>>>> 674b97e11b2f97c946aa5312b80fa767d0b57bcf
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
