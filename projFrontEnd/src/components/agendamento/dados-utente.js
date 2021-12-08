@@ -17,7 +17,7 @@ export default function DadosUtente() {
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
+    //event.preventDefault();
   }
 
   return (

@@ -14,15 +14,11 @@ const App = (props) => {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  if (typeof window !== 'undefined') {
-    localStorage.setItem("login", false);
-  }
-
   return (
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          Material Kit Pro
+          Vaccination Desk
         </title>
         <meta
           name="viewport"
