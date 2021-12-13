@@ -1,7 +1,9 @@
 import { FormControl, FormHelperText, TextField, Button } from '@mui/material';
 import React, { useState } from "react";
+import { useRouter } from 'next/router';
 
 export default function FormVaccinationInfo() {
+    const router = useRouter();
 
     const [utente, setUtente] = useState("");
     const [nome, setNome] = useState("");
@@ -12,13 +14,14 @@ export default function FormVaccinationInfo() {
 
     function handleSubmit(event) {
         //alert("HELLO");
-        //event.preventDefault();
+        event.preventDefault();
+        router.push('/vaccination_info');
     }
 
     return (
         <form
         component="form" 
-        action="/vaccination_info"
+        //action="/vaccination_info"
         onSubmit={(e) => {
             handleSubmit(e);
           }} >

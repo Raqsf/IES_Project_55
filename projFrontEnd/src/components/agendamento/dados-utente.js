@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { FormControl,FormHelperText,Button, Container } from '@mui/material';
 import { Box } from "@mui/system";
+import NextLink from 'next/link';
 
 export default function DadosUtente(props) {
   const { history } = props;
@@ -54,16 +55,17 @@ export default function DadosUtente(props) {
                       />
                   </Stack>
               </LocalizationProvider>
-              <Button 
-                onClick={() => history.push('/success')}
-                variant="contained" 
-                size="lg" 
-                type="submit" 
-                disabled={!validateForm()}
-                style={{ marginTop: "20px" }}
-              >
-                  Validação
-              </Button>
+              <NextLink href="/success" passHref>
+                <Button 
+                  variant="contained" 
+                  size="lg" 
+                  type="submit" 
+                  disabled={!validateForm()}
+                  style={{ marginTop: "20px" }}
+                >
+                    Validação
+                </Button>
+              </NextLink>
           </FormControl>
       </Box>
     </Container>

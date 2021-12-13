@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
+import { BrowserRouter as Router } from "react-router-dom";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -28,7 +29,7 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
+            {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>
       </LocalizationProvider>
     </CacheProvider>
