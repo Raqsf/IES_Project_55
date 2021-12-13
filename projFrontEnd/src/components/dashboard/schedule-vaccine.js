@@ -3,10 +3,7 @@ import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import NextLink from 'next/link';
 
 export const Schedule = (props) => (
-  <Card
-    sx={{ height: '100%' }}
-    {...props}
-  >
+  <Card {...props}>
     <CardContent>
       <Grid
         container

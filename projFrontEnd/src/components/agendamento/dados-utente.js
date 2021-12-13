@@ -7,7 +7,9 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { FormControl,FormHelperText,Button, Container } from '@mui/material';
 import { Box } from "@mui/system";
 
-export default function DadosUtente() {
+export default function DadosUtente(props) {
+  const { history } = props;
+
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
   const [date, setDate] = useState(new Date());
@@ -53,7 +55,7 @@ export default function DadosUtente() {
                   </Stack>
               </LocalizationProvider>
               <Button 
-                href="/success" 
+                onClick={() => history.push('/success')}
                 variant="contained" 
                 size="lg" 
                 type="submit" 
