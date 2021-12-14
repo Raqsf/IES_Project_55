@@ -86,6 +86,8 @@ class Generator:
         print('\033[94m' + message.__str__() + '\033[0m')
         
     def generate_people_getting_vaccinated(self, date):
+        #TODO: Try to understand why it only "get vaccinated" the odd indexs of self.waiting_list
+        #TODO: and put the ones left behind getting the vaccine as well 
         """Generates the people getting vaccinated"""
         if len(self.waiting_list) > 0:
             for person in self.waiting_list:
