@@ -62,6 +62,7 @@ class Generator:
                 return random_n_utente
             else:
                 random_n_utente = randint(1000,9999)
+                                          
     def generate_vaccines_quantity(self):
         """Generates randomly vaccines quantity"""
         self.number_of_vaccines = randint(10, 50)
@@ -70,7 +71,7 @@ class Generator:
         print('\033[92m' + message.__str__() +  '\033[0m')
                 
     def changing_center_capacity(self):
-        """Destribute vaccines to vaccination centers"""
+        """Changing maximum capacity of vaccination centers"""
         centers_list = list(self.vaccination_centers.keys())
         center = [random.choice(centers_list), randint(20,30)] #[center's id, new capacity]
         message = {"type": "changing_center_capacity", "centers": center}
@@ -90,7 +91,6 @@ class Generator:
             for person in self.waiting_list:
                 if person["data_vacina"] == date:
                     self.waiting_list.remove(person)
-
                     message = {"type": "people_getting_vaccinated", "utente": self.people[int(person["n_utente"])]}
                     #self.send("people_getting_vaccinated", message)        
                     print('\033[93m' + message.__str__() + '\033[0m')
@@ -100,6 +100,7 @@ if __name__ == '__main__':
     counter_days = -1
     date = datetime.datetime(2021,12,24)
     while True:
+        time.sleep(0.1)
         if counter_days == 16 or counter_days == -1:
             g.generate_vaccines_quantity()
             g.generate_people_getting_vaccinated(date.strftime("%x"))
