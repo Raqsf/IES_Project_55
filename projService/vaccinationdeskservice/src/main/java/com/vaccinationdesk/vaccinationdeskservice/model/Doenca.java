@@ -28,7 +28,7 @@ public class Doenca {
     @JoinColumn(name="utente")
     private Utente utente;
 
-    public Doenca(){};
+    public Doenca(){}
     public Doenca(int id, String name, Utente utente){
         this.id=id;
         this.name=name;
