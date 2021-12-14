@@ -4,6 +4,7 @@ import javax.persistence.ManyToOne;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
@@ -19,27 +20,29 @@ import lombok.NoArgsConstructor;
 @Table(name="doenca")
 // TODO
 public class Doenca {
-    @Column(name="")
+    @Column(name="id")
     private int id;
-    @Column(name="")
-    private String name;
+    @Column(name="nome")
+    private String nome;
     @ManyToOne
     // TODO
     @JoinColumn(name="utente")
     private Utente utente;
 
     public Doenca(){}
-    public Doenca(int id, String name, Utente utente){
+    public Doenca(int id, String nome, Utente utente){
         this.id=id;
-        this.name=name;
+        this.nome=nome;
         this.utente=utente;
     }
+
+    @Id
     public int getId(){
         return id;
     }
 
-    public String getName(){
-        return name;
+    public String getNome(){
+        return nome;
     }
 
     public Utente getUtente(){

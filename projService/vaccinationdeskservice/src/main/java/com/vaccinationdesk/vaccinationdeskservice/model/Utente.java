@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "pessoa")
+@Table(name = "Pessoa")
 public class Utente {
     @Column(name="n_utente")
     private int nUtente;
@@ -44,6 +45,8 @@ public class Utente {
     public String getNome(){
         return nome;
     }
+    
+    @Id
     public int nUtente(){
         return nUtente;
     }
