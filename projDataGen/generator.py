@@ -102,8 +102,8 @@ if __name__ == '__main__':
     counter_days = -1
     date = datetime.datetime(2021,12,24)
     while True:
-        time.sleep(0.1)
-        if counter_days == 16 or counter_days == -1:
+        time.sleep(0.5)
+        if counter_days == 6 or counter_days == -1:
             g.generate_vaccines_quantity()
             g.generate_people_getting_vaccinated(date.strftime("%x"))
             date = date + datetime.timedelta(days=1)

@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `Pessoa` (
 );
 GO
 
-
 CREATE TABLE IF NOT EXISTS `Vacina` (
     `n_vacina`			    INT		  AUTO_INCREMENT          NOT NULL,
     'lote'		            INT         		NOT NULL,
@@ -57,4 +56,11 @@ CREATE TABLE IF NOT EXISTS `Lote` (
 
     PRIMARY KEY(`id`)
     FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `Centro_vacinacao`(`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `Agendameto_Vacina` (
+    `n_utente`			            INT  	            NOT NULL,
+    `data_agendada`	        	    TEXT         		NOT NULL,
+
+    PRIMARY KEY(`n_utente`)
 );
