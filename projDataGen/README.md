@@ -10,3 +10,6 @@ Criar um ambiente virtual primeiro
 E depois instalar os requisitos:
 
 `$ pip install -r requirements.txt`
+
+
+http://localhost:15672/ 
