@@ -31,7 +31,7 @@ public class Utente {
     @Column(name="doencas")
     private Doenca doencas;
 
-    public Utente(){};
+    public Utente(){}
 
     public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento, Doenca doencas){
         this.nome = nome;
