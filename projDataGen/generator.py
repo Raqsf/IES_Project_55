@@ -18,10 +18,10 @@ class Generator:
         self.vaccines = vaccines
         self.waiting_list = list()
 
-    def send(self, topic=None, message=None):
+    def send(self, topic="vaccination_queue", mes=None):
         """Send the message to the broker"""
         try:
-            message = json.dumps(message)
+            message = json.dumps(mes)
             self.channel.basic_publish(exchange='', routing_key=topic, body=message)
             #print('Topic', topic, 'Sent message', json.loads(message))
         except:
@@ -46,14 +46,14 @@ class Generator:
         """Generates randomly vaccines quantity"""
         self.number_of_vaccines = randint(10, 50)
         message = {"type" : "vaccines_quantity", "quantity": self.number_of_vaccines}
-        self.send("vaccines_quantity", message)
+        self.send(mes=message)
         print('\033[92m' + message.__str__() +  '\033[0m')
                 
     def changing_center_capacity(self):
         """Changing maximum capacity of vaccination centers"""
         centers_list = list(self.vaccination_centers.keys())
         center = [random.choice(centers_list), randint(20,30)] #[center's id, new capacity]
-        message = {"type": "changing_center_capacity", "centers": center}
+        message = {"type": "vaccination_queue", "centers": center}
         print(message)
     
     def add_to_waiting_list(self, date):
@@ -61,7 +61,7 @@ class Generator:
         n_utente = self.get_random_person(date)
         self.waiting_list.append(copy.deepcopy(self.people[n_utente])) 
         message = {"type": "schedule_vaccine", "utente": self.people[n_utente] }
-        self.send("schedule_vaccine", message)
+        self.send(mes=message)
         print('\033[94m' + message.__str__() + '\033[0m')
         
     def generate_people_getting_vaccinated(self, date):
@@ -73,7 +73,7 @@ class Generator:
                 if person["data_vacina"] == date:
                     self.waiting_list.remove(person)
                     message = {"type": "people_getting_vaccinated", "utente": self.people[int(person["n_utente"])]}
-                    self.send("people_getting_vaccinated", message)        
+                    self.send(mes=message)        
                     print('\033[93m' + message.__str__() + '\033[0m')
         
 if __name__ == '__main__':
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     counter_days = -1
     date = datetime.datetime(2021,12,24)
     while True:
-        time.sleep(0.2)
+        time.sleep(0.5)
         if counter_days == 6 or counter_days == -1:
             g.generate_vaccines_quantity()
             g.generate_people_getting_vaccinated(date.strftime("%x"))
