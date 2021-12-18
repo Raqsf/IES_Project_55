@@ -7,10 +7,10 @@ services:
         image: mysql:8.0
         command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: sandbox
-#           MYSQL_USER: sandbox_user
-#           MYSQL_PASSWORD: passpass
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: vaccinationdb
+            MYSQL_USER: ies
+            MYSQL_PASSWORD: password
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         ports:
             - '3306:3306'
@@ -21,34 +21,34 @@ services:
     
 
     # springboot server
-    app:
-        build:
-            context: "./server" # path to springboot application
-        container_name: "backend"
-        restart: always
-        ports: 
-            - 8080:8080
-            - 9229:9229
-        volumes: 
-            - ./server:/usr/app
-        links:
-            - database
-        depends_on:
-            - database
+#    app:
+#        build:
+#            context: "./server" # path to springboot application
+#        container_name: "backend"
+#        restart: always
+#        ports: 
+#            - 8080:8080
+#            - 9229:9229
+#        volumes: 
+#            - ./projService/vaccinationdeskservice:/usr/app
+#        links:
+#            - database
+#        depends_on:
+#            - database
 
     
 
-    # react application 
-    client:
-        build:
-            context: "./client"   # path to react application
-        container_name: "frontend"
-        restart: always
-        ports: 
-            - 3000:3000
-        volumes: 
-            - ./client:/usr/app
-        links:
-            - app
-        depends_on:
-            - app
+#    # react application 
+#    client:
+#        build:
+#            context: "./client"   # path to react application
+#        container_name: "frontend"
+#        restart: always
+#        ports: 
+#            - 3000:3000
+#        volumes: 
+#            - ./client:/usr/app
+#        links:
+#            - app
+#        depends_on:
+#            - app
