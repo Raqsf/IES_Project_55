@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+    # mysql
+    database:
+
+    # springboot server
+    app:
+        build:
+            context: "./server" # path to springboot application
+        container_name: "backend"
+        restart: always
+        ports: 
+            - 3333:3333
+            - 9229:9229
+        volumes: 
+            - ./server:/usr/app
+        links:
+            - database
+        depends_on:
+            - database
+
+    
+
+    # react application 
+    client:
+        build:
+            context: "./client"   # path to react application
+        container_name: "frontend"
+        restart: always
+        ports: 
+            - 3000:3000
+        volumes: 
+            - ./client:/usr/app
+        links:
+            - app
+        depends_on:
+            - app
