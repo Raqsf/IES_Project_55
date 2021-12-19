@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UtenteRepository extends JpaRepository<Utente, Integer> {
-    List<Utente> findUtenteByNome(String nome);
-    List<Utente> findUtenteByNumUtente(String nome);
+    //!have to comment the following line so that dont crash on start
+    //List<Utente> findUtenteByNome(String nome);
+    //List<Utente> findUtenteByNumUtente(String nome);
 }
