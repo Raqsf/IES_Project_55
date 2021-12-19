@@ -10,12 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "Vacina")
 public class Vacina {
