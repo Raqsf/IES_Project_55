@@ -21,11 +21,16 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 ## DevOps
 ### Docker-compose
-Na raiz do projeto basta correr o comando
+Na raiz do projeto basta correr o comando.  
     docker-compose up  
 Na primeira execução deve tambem criar as tabelas na base de dados.  
-Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.  
-Para interromper o docker compose basta correr o comando  
+Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.
+db connection:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: vaccinationdb
+            MYSQL_USER: ies
+            MYSQL_PASSWORD: password
+Para interromper o docker compose basta correr o comando.  
     docker-compose down  
 
 
