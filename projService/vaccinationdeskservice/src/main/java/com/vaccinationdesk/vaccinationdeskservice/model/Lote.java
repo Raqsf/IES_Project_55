@@ -10,8 +10,6 @@ public class Lote {
     private Date dataValidade;
     private CentroVacinacao centroVacinacao;
 
-    public Lote(){}
-
     public Lote(int id, int quantidade, Date validade, CentroVacinacao centro){
         this.id = id;
         this.quantidade = quantidade;

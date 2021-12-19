@@ -29,7 +29,6 @@ public class Doenca {
     @JoinColumn(name="utente")
     private Utente utente;
 
-    public Doenca(){}
     public Doenca(int id, String nome, Utente utente){
         this.id=id;
         this.nome=nome;

@@ -16,22 +16,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Pessoa")
+@Table(name = "pessoa")
 public class Utente {
-    @Column(name="n_utente")
+    @Column(name="n_utente", nullable = false, unique = true)
     private int nUtente;
-    @Column(name="nome")
+    @Column(name="nome", nullable = false)
     private String nome;
-    @Column(name="email")
+    @Column(name="email", nullable = false)
     private String email;
-    @Column(name="morada")
+    @Column(name="morada", nullable = false)
     private String morada;
-    @Column(name="data_nascimento")
+    @Column(name="data_nascimento", nullable = false)
     private Date dataNascimento;
     @Column(name="doencas")
     private Doenca doencas;
-
-    public Utente(){}
 
     public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento, Doenca doencas){
         this.nome = nome;

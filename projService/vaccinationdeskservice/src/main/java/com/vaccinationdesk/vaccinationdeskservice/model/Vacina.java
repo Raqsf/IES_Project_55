@@ -18,24 +18,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Vacina")
+@Table(name = "vacina")
 public class Vacina {
-    @Column(name="n_vacina")
+    @Column(name="n_vacina", nullable = false, unique = true)
     private int id;
     @ManyToOne
-    @JoinColumn(name="lote")
+    @JoinColumn(name="lote", nullable = false)
     private Lote lote;
-    @Column(name="nome")
+    @Column(name="nome", nullable = false)
     private String nome;
-    @Column(name="data_rececao")
+    @Column(name="data_rececao", nullable = false)
     private Date rececao;
     @OneToOne
     @JoinColumn(name="administrada_a")
     private Utente utente;
     @Column(name="data_administracao")
     private Date administracao;
-
-    public Vacina(){}
 
     public Vacina(int id, Lote lote, String nome, Date rececao, Utente utente, Date administracao){
         this.id = id;

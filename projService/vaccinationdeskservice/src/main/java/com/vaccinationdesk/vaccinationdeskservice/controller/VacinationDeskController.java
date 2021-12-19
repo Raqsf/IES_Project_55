@@ -2,9 +2,8 @@ package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.util.List;
 
-import com.vaccinationdesk.vaccinationdeskservice.UtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
-
+import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;

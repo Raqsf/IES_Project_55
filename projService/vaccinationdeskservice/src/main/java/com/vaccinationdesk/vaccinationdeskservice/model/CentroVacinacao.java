@@ -13,20 +13,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Centro vacinacao")
+@Table(name = "centro_vacinacao")
 public class CentroVacinacao {
-    @Column(name="id")
+    @Column(name="id", nullable = false, unique = true)
     private int id;
-    @Column(name="nome")
+    @Column(name="nome", nullable = false)
     private String nome;
-    @Column(name="morada")
+    @Column(name="morada", nullable = false)
     private String morada;
-    @Column(name="capacidade_max")
+    @Column(name="capacidade_max", nullable = false)
     private int capacidadeMax;
     @Column(name="capacidade_atual")
     private int capacidadeAtual;
-
-    public CentroVacinacao(){}
 
     public CentroVacinacao(int id, String nome, String morada, int max, int atual){
         this.id = id;
