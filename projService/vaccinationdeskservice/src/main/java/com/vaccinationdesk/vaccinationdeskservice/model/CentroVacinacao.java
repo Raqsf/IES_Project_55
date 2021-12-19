@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Centro vacinacao")
 public class CentroVacinacao {
+    @Id
     @Column(name="id")
     private int id;
     @Column(name="nome")
@@ -36,7 +37,7 @@ public class CentroVacinacao {
         this.capacidadeAtual = atual;
     }
 
-    @Id
+    
     public int getID(){
         return this.id;
     }

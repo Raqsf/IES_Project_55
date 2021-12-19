@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Pessoa")
 public class Utente {
+    @Id
     @Column(name="n_utente")
     private int nUtente;
     @Column(name="nome")
