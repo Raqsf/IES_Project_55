@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+// @NoArgsConstructor
 @Entity
 @Table(name = "Pessoa")
 public class Utente {
+    @Id
     @Column(name="n_utente")
     private int nUtente;
     @Column(name="nome")
@@ -31,7 +32,7 @@ public class Utente {
     @Column(name="doencas")
     private Doenca doencas;
 
-    public Utente(){}
+    // public Utente(){}
 
     public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento, Doenca doencas){
         this.nome = nome;
@@ -46,7 +47,6 @@ public class Utente {
         return nome;
     }
     
-    @Id
     public int nUtente(){
         return nUtente;
     }

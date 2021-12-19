@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+// @NoArgsConstructor
 @Entity
 @Table(name = "Centro vacinacao")
 public class CentroVacinacao {
+    @Id
     @Column(name="id")
     private int id;
     @Column(name="nome")
@@ -26,7 +27,7 @@ public class CentroVacinacao {
     @Column(name="capacidade_atual")
     private int capacidadeAtual;
 
-    public CentroVacinacao(){}
+    // public CentroVacinacao(){}
 
     public CentroVacinacao(int id, String nome, String morada, int max, int atual){
         this.id = id;
@@ -36,7 +37,6 @@ public class CentroVacinacao {
         this.capacidadeAtual = atual;
     }
 
-    @Id
     public int getID(){
         return this.id;
     }

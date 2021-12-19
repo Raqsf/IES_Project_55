@@ -19,7 +19,6 @@ public class Lote {
         this.centroVacinacao=centro;
     }
 
-    @Id
     public int getID(){
         return this.id;
     }
