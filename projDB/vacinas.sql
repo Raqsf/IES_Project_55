@@ -4,7 +4,7 @@ SET TIME_ZONE = "+00:00";
 CREATE DATABASE IF NOT EXISTS `vaccinationdb` DEFAULT CHARACTER SET latin1;
 USE `vaccinationdb`;
 
-CREATE TABLE IF NOT EXISTS `Pessoa` (
+CREATE TABLE IF NOT EXISTS `pessoa` (
     `n_utente`			INT		  AUTO_INCREMENT          NOT NULL,
 	`nome`		        VARCHAR(256)		NOT NULL,
 	`email`		        VARCHAR(256)		NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Pessoa` (
 	PRIMARY KEY(`n_utente`)
 );
 
-CREATE TABLE IF NOT EXISTS `Centro_vacinacao` (
+CREATE TABLE IF NOT EXISTS `centro_vacinacao` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `nome`		                    VARCHAR(256)		NOT NULL,
     `morada`	        	        VARCHAR(256)		NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Centro_vacinacao` (
     PRIMARY KEY(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `Vacina` (
+CREATE TABLE IF NOT EXISTS `vacina` (
     `n_vacina`			    INT		  AUTO_INCREMENT          NOT NULL,
     `lote`		            INT         		NOT NULL,
     `nome`		            VARCHAR(256)		NOT NULL,
@@ -35,21 +35,21 @@ CREATE TABLE IF NOT EXISTS `Vacina` (
     `centro_vacinacao`		INT        NOT NULL,
 
     PRIMARY KEY(`n_vacina`),
-    FOREIGN KEY(`administrada_a`) REFERENCES `Pessoa`(`n_utente`),
-    FOREIGN KEY(`centro_vacinacao`) REFERENCES `Centro_vacinacao`(`id`)
+    FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
+    FOREIGN KEY(`centro_vacinacao`) REFERENCES `centro_vacinacao`(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `Lote` (
+CREATE TABLE IF NOT EXISTS `lote` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `quantidade`	        	    INT         		NOT NULL,
     `data_validade`		            DATE            	NOT NULL,
     `atribuida_ao_centro`		    INT            	    NOT NULL,
 
     PRIMARY KEY(`id`),
-    FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `Centro_vacinacao`(`id`)
+    FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
 );
 
-INSERT INTO `Centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
+INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 (1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
 (2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
 (3, 'Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
