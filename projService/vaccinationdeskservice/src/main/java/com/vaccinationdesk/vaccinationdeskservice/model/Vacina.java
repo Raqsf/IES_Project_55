@@ -20,11 +20,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Vacina")
 public class Vacina {
+    @Id
     @Column(name="n_vacina")
     private int id;
-    @ManyToOne
-    @JoinColumn(name="lote")
-    private Lote lote;
+    // @ManyToOne
+    // @JoinColumn(name="lote")
+    // private Lote lote;
     @Column(name="nome")
     private String nome;
     @Column(name="data_rececao")
@@ -37,23 +38,22 @@ public class Vacina {
 
     public Vacina(){}
 
-    public Vacina(int id, Lote lote, String nome, Date rececao, Utente utente, Date administracao){
+    public Vacina(int id, /* Lote lote, */ String nome, Date rececao, Utente utente, Date administracao){
         this.id = id;
-        this.lote=lote;
+        // this.lote=lote;
         this.nome=nome;
         this.rececao = rececao;
         this.utente = utente;
         this.administracao=administracao;
     }
 
-    @Id
     public int getID(){
         return this.id;
     }
 
-    public Lote getLote(){
-        return this.lote;
-    }
+    // public Lote getLote(){
+    //     return this.lote;
+    // }
 
     public String getNome(){
         return this.nome;

@@ -29,25 +29,24 @@ public class Utente {
     private String morada;
     @Column(name="data_nascimento")
     private Date dataNascimento;
-    @Column(name="doencas")
-    private Doenca doencas;
+    //@Column(name="doencas")
+    //private Doenca doencas;
 
     public Utente(){}
 
-    public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento, Doenca doencas){
+    public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento/*, Doenca doencas*/){
         this.nome = nome;
         this.nUtente = numUtente;
         this.email = email;
         this.morada=morada;
         this.dataNascimento = dataNascimento;
-        this.doencas = doencas;
+        //this.doencas = doencas;
     }
 
     public String getNome(){
         return nome;
     }
     
-    @Id
     public int nUtente(){
         return nUtente;
     }
@@ -60,8 +59,8 @@ public class Utente {
     public String getMorada(){
         return morada;
     }
-    public Doenca getDoencas(){
+    /*public Doenca getDoencas(){
         return doencas;
-    }
+    }*/
 
 }
