@@ -32,8 +32,12 @@ export default function DadosUtente(props) {
     const user = {
       id: utente,
       nome: nome,
-      dataNascimento: date
+      dataNascimento: date.toISOString()
     };
+    
+    console.log(date)
+    console.log(user.dataNascimento)
+    console.log(date.toISOString())
     console.log("HERE ");
     api
         .post(`/utente`, user, headers)
@@ -77,7 +81,6 @@ export default function DadosUtente(props) {
                   <Stack spacing={2} style={{ marginTop: "20px" }}>
                       <DesktopDatePicker
                       label="Data de Nascimento"
-                      
                       disableFuture
                       value={date}
                       minDate={new Date('1900-01-01')}

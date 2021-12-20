@@ -52,6 +52,11 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteByNome(nome);
     }
 
+    @GetMapping("/utente/{id}")
+    public Utente getUtenteByIDUtente(@PathVariable Integer id) {
+        return utenteRepository.findUtenteById(id);
+    }
+
     /*@GetMapping("/utente/{n_utente}")
     public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
         return utenteRepository.findUtenteByNumUtente(n_utente);
@@ -73,6 +78,11 @@ public class VaccinationDeskController {
         if (utenteRepository.findUtenteById(utente.getID()) != null){
             long millis=System.currentTimeMillis();  
             Agendamento a = new Agendamento(utente, new Date(millis), new CentroVacinacao());
+            try {
+                agendamentoRepository.save(a);
+            } catch(Exception e) {
+                return ResponseEntity.badRequest().build();
+            }
             return ResponseEntity.ok(agendamentoRepository.save(a));
         }
 
