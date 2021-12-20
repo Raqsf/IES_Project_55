@@ -30,10 +30,10 @@ public class MQConsumer {
     private UtenteRepository utenteRepository;
 
     @Autowired
-    private CentroVacinacaoRepository centroVacinacaoRepository;
+    private AgendamentoRepository agendamentoRepository;
 
     @Autowired
-    private AgendamentoRepository agendamentoRepository;
+    private CentroVacinacaoRepository centroVacinacaoRepository;
 
     @RabbitListener(queues = MQConfig.QUEUE)
     public void listen(String input) throws ParseException {
@@ -64,16 +64,22 @@ public class MQConsumer {
         String local = json.getJSONObject("utente").getString("local");
         String doencas = json.getJSONObject("utente").getString("doença");
         String data_agendamento = json.getJSONObject("utente").getString("data_vacina");
-        Date data_nascimento = (Date) new SimpleDateFormat("dd/MM/yy").parse(data_nasc);
-        Date data_agenda = (Date) new SimpleDateFormat("dd/MM/yy").parse(data_agendamento);
+
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        
+        Date data_nascimento = new Date(format.parse(data_nasc).getTime());
+        
+        Date data_agenda = new Date(format.parse(data_agendamento).getTime());
         
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
+
+        //para guardar o utente na base de dados
+        utenteRepository.save(utente);
+
+
         List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
         CentroVacinacao cv = all_cv.get(new Random().nextInt(all_cv.size()));
         Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
-        
-        //para guardar o utente na base de dados
-        utenteRepository.save(utente);
 
         // guardar agendamento na bd
         agendamentoRepository.save(agendamento);
