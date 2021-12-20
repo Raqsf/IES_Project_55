@@ -1,26 +1,54 @@
 import React, { useState } from "react";
-import TextField from '@mui/material/TextField';
+import { TextField, Stack, FormControl,FormHelperText,Button, Container } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import Stack from '@mui/material/Stack';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { FormControl,FormHelperText,Button, Container } from '@mui/material';
 import { Box } from "@mui/system";
-import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import api from '../../api';
+//import axios from 'axios';
 
 export default function DadosUtente(props) {
+  const router = useRouter();
   const { history } = props;
 
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
   const [date, setDate] = useState(new Date());
+  const [resposta, setResposta] = useState();
 
   function validateForm() {
     return utente.length > 0 && nome.length > 0;
   }
 
   function handleSubmit(event) {
-    //event.preventDefault();
+    event.preventDefault();
+
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    };
+
+    const user = {
+      id: utente,
+      nome: nome,
+      dataNascimento: date
+    };
+    console.log("HERE ");
+    api
+        .post(`/utente`, user, headers)
+        .then((response) => { setResposta(response.data); console.log(response.data);})
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+        });
+    // router.push('/success');
+
+    // axios.get(`http://localhost:8080/api/v1/centrovacinacao`, headers)
+    //   .then(res => {
+    //     const persons = res.data;
+    //     this.setState({ persons });
+    //     console.log(persons);
+    //   })
   }
 
   return (
@@ -30,6 +58,11 @@ export default function DadosUtente(props) {
           justifyContent: 'center',
           pt: 3
         }}>
+        <form
+        component="form" 
+        onSubmit={(e) => {
+            handleSubmit(e);
+          }} >
         <FormControl variant="outlined">
               <TextField fullWidth label="Número de Utente"
                   value={utente}
@@ -55,7 +88,7 @@ export default function DadosUtente(props) {
                       />
                   </Stack>
               </LocalizationProvider>
-              <NextLink href="/success" passHref>
+              {/* <NextLink href="/success" passHref> */}
                 <Button 
                   variant="contained" 
                   size="lg" 
@@ -65,8 +98,9 @@ export default function DadosUtente(props) {
                 >
                     Validação
                 </Button>
-              </NextLink>
+              {/* </NextLink> */}
           </FormControl>
+          </form>
       </Box>
     </Container>
   );
