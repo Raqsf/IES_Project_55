@@ -37,7 +37,7 @@ class Generator:
                 person = random.choice(people_list)
                 self.people[random_n_utente] = copy.deepcopy(self.people[person])
                 self.people[random_n_utente]['n_utente'] = copy.deepcopy(random_n_utente)
-                self.people[random_n_utente]["data_vacina"] = date.strftime("%x")
+                self.people[random_n_utente]["data_vacina"] = date.strftime("%m/%d/%Y")
                 return random_n_utente
             else:
                 random_n_utente = randint(1000,9999)
@@ -78,16 +78,16 @@ class Generator:
         
 if __name__ == '__main__':
     #people = {n_utente: [informações do utente]}  
-    people =  {1234:{'n_utente':'1234','nome':'John','email':'john@email.com', 'local':'Aveiro', 'data_nasc':'01/01/2000', 'doença':'nada', 'data_vacina':"12/25/21"},
-              1235: {'n_utente':'1235','nome':'Jane', 'email':'jane@email.com', 'local':'Aveiro', 'data_nasc':'01/01/1987', 'doença':'cardiaca','data_vacina': "12/24/21"},
-              1236: {'n_utente':'1236','nome':'Johnny', 'email':'johny@email.com', 'local':'Porto', 'data_nasc':'01/01/1986', 'doença':'pulmunar','data_vacina': "12/25/21"},
-              1237: {'n_utente':'1237','nome':'Duarte','email': 'duarte@email.com', 'local':'Porto', 'data_nasc':'01/01/1999', 'doença':'nada', 'data_vacina':"12/25/21"},
-              1238: {'n_utente':'1238','nome':'Tiago', 'email':'tiago@email.com','local': 'Lisboa', 'data_nasc':'01/01/2012', 'doença':'nada', 'data_vacina':"12/26/21"},
-              1239: {'n_utente':'1239','nome':'Filipa','email': 'filipa@email.com', 'local':'Lisboa', 'data_nasc':'01/01/2003', 'doença':'cardiaca','data_vacina': "12/24/21"},
-              1240: {'n_utente':'1240','nome':'Sebastiana', 'email':'sebastiana@email.com','local': 'Coimbra', 'data_nasc':'01/01/1966', 'doença':'nada', 'data_vacina':"12/26/21"},
-              1241: {'n_utente':'1241','nome':'Goncalo','email': 'goncalo@email.com', 'local':'Coimbra', 'data_nasc':'01/01/1939','doença': 'nada', 'data_vacina':"12/26/21"},
-              1242: {'n_utente':'1242','nome':'Sofia', 'email':'sofia@email.com','local': 'Setubal', 'data_nasc':'01/01/1949','doença': 'sanguinia', 'data_vacina':"12/24/21"},
-              1243: {'n_utente':'1243','nome':'Lara', 'email':'lara@email.com','local': 'Setubal', 'data_nasc':'01/01/1974','doença': 'nada', 'data_vacina':"12/24/21"}
+    people =  {1234:{'n_utente':'1234','nome':'John','email':'john@email.com', 'local':'Aveiro', 'data_nasc':'01/01/2000', 'doença':'nada', 'data_vacina':"12/25/2021"},
+              1235: {'n_utente':'1235','nome':'Jane', 'email':'jane@email.com', 'local':'Aveiro', 'data_nasc':'01/01/1987', 'doença':'cardiaca','data_vacina': "12/24/2021"},
+              1236: {'n_utente':'1236','nome':'Johnny', 'email':'johny@email.com', 'local':'Porto', 'data_nasc':'01/01/1986', 'doença':'pulmunar','data_vacina': "12/25/2021"},
+              1237: {'n_utente':'1237','nome':'Duarte','email': 'duarte@email.com', 'local':'Porto', 'data_nasc':'01/01/1999', 'doença':'nada', 'data_vacina':"12/25/2021"},
+              1238: {'n_utente':'1238','nome':'Tiago', 'email':'tiago@email.com','local': 'Lisboa', 'data_nasc':'01/01/2012', 'doença':'nada', 'data_vacina':"12/26/2021"},
+              1239: {'n_utente':'1239','nome':'Filipa','email': 'filipa@email.com', 'local':'Lisboa', 'data_nasc':'01/01/2003', 'doença':'cardiaca','data_vacina': "12/24/2021"},
+              1240: {'n_utente':'1240','nome':'Sebastiana', 'email':'sebastiana@email.com','local': 'Coimbra', 'data_nasc':'01/01/1966', 'doença':'nada', 'data_vacina':"12/26/2021"},
+              1241: {'n_utente':'1241','nome':'Goncalo','email': 'goncalo@email.com', 'local':'Coimbra', 'data_nasc':'01/01/1939','doença': 'nada', 'data_vacina':"12/26/2021"},
+              1242: {'n_utente':'1242','nome':'Sofia', 'email':'sofia@email.com','local': 'Setubal', 'data_nasc':'01/01/1949','doença': 'sanguinia', 'data_vacina':"12/24/2021"},
+              1243: {'n_utente':'1243','nome':'Lara', 'email':'lara@email.com','local': 'Setubal', 'data_nasc':'01/01/1974','doença': 'nada', 'data_vacina':"12/24/2021"}
               }
     #! The vaccination centers may be in DB from the beggining, in the data generation I think 
     #! that the only thing is needed is changing the capacity of the centers
@@ -106,8 +106,9 @@ if __name__ == '__main__':
         time.sleep(0.5)
         if counter_days == 6 or counter_days == -1:
             g.generate_vaccines_quantity()
-            g.generate_people_getting_vaccinated(date.strftime("%x"))
+            g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
             date = date + datetime.timedelta(days=1)
             counter_days = 0
         counter_days += 1
         g.add_to_waiting_list(date + datetime.timedelta(days=3))
+        
