@@ -8,19 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "Pessoa")
 public class Utente {
     @Id
     @Column(name="n_utente")
-    private int nUtente;
+    private int id;
     @Column(name="nome")
     private String nome;
     @Column(name="email")
@@ -34,9 +30,15 @@ public class Utente {
 
     public Utente(){}
 
+    public Utente( int numUtente, String nome, Date dataNascimento){
+        this.id = numUtente;
+        this.nome = nome;
+        this.dataNascimento=dataNascimento;
+    }
+
     public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento/*, Doenca doencas*/){
         this.nome = nome;
-        this.nUtente = numUtente;
+        this.id = numUtente;
         this.email = email;
         this.morada=morada;
         this.dataNascimento = dataNascimento;
@@ -47,8 +49,8 @@ public class Utente {
         return nome;
     }
     
-    public int nUtente(){
-        return nUtente;
+    public int getID(){
+        return id;
     }
     public Date getDataNascimento(){
         return dataNascimento;

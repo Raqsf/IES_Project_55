@@ -6,14 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "Centro_vacinacao")
+@Table(name = "centro_vacinacao")
 public class CentroVacinacao {
     @Id
     @Column(name="id")
