@@ -11,7 +11,7 @@ class Generator:
         credentials = pika.PlainCredentials('myuser', 'mypassword')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue='vaccination_queue')
+        self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.number_of_vaccines = 0
         self.people = people
         self.vaccination_centers = vaccination_centers
