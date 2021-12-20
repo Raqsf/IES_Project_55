@@ -11,7 +11,7 @@ class Generator:
         credentials = pika.PlainCredentials('myuser', 'mypassword')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue='vaccination_queue')
+        self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.number_of_vaccines = 0
         self.people = people
         self.vaccination_centers = vaccination_centers
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     counter_days = -1
     date = datetime.datetime(2021,12,24)
     while True:
-        time.sleep(0.8)
+        time.sleep(0.5)
         if counter_days == 6 or counter_days == -1:
             g.generate_vaccines_quantity()
             g.generate_people_getting_vaccinated(date.strftime("%x"))
