@@ -49,6 +49,16 @@ CREATE TABLE IF NOT EXISTS `lote` (
     FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `agendamento` (
+    `dia_vacinacao`             DATE        NOT NULL,
+    `n_utente`                INT           NOT NULL,
+    `centro_vacinacao`          INT,
+
+    PRIMARY KEY(`n_utente`),
+    FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`), 
+    FOREIGN KEY(`centro_vacinacao`) REFERENCES `centro_vacinacao`(`id`)
+);
+
 INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 (1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
 (2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
