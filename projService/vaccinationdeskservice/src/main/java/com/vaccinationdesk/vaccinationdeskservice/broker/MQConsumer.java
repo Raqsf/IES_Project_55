@@ -7,8 +7,13 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
+import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
+import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
 import org.json.JSONObject;
@@ -23,6 +28,12 @@ public class MQConsumer {
 
     @Autowired
     private UtenteRepository utenteRepository;
+
+    @Autowired
+    private CentroVacinacaoRepository centroVacinacaoRepository;
+
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
     @RabbitListener(queues = MQConfig.QUEUE)
     public void listen(String input) throws ParseException {
@@ -57,9 +68,15 @@ public class MQConsumer {
         Date data_agenda = (Date) new SimpleDateFormat("dd/MM/yy").parse(data_agendamento);
         
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
+        List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
+        CentroVacinacao cv = all_cv.get(new Random().nextInt(all_cv.size()));
+        Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
         
         //para guardar o utente na base de dados
         utenteRepository.save(utente);
+
+        // guardar agendamento na bd
+        agendamentoRepository.save(agendamento);
         
         scheduleVaccineMap.put(n_utente, utente);
     }
