@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-public class CentroVacinacaoController {
+public class VaccinationDeskController {
     @Autowired
     private CentroVacinacaoRepository centroVacinacaoRepository;
     @Autowired
