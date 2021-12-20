@@ -5,6 +5,7 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,11 +20,12 @@ import lombok.Data;
 @Table(name = "agendamento")
 public class Agendamento implements Serializable{
     @Id
-    @Column(name="n_utente", insertable = false, updatable = false)
-    private int num_utente;
+    @Column(name="id")
+    @GeneratedValue()
+    private int id;
     @OneToOne
     @JoinColumn(name="n_utente")
-    private Utente nUtente;
+    private Utente utente;
     @Column(name="dia_vacinacao")
     private Date diaVacinacao;
     @ManyToOne
@@ -32,15 +34,17 @@ public class Agendamento implements Serializable{
 
     public Agendamento(){}
 
-    public Agendamento(Utente nUtente, Date diaVacinacao, CentroVacinacao centro_vacinacao){
-        this.num_utente = nUtente.getID();
-        this.nUtente = nUtente;
+    public Agendamento(Utente utente, Date diaVacinacao, CentroVacinacao centro_vacinacao){
+        this.utente = utente;
         this.diaVacinacao = diaVacinacao;
         this.centro_vacinacao = centro_vacinacao;
     }
+    public int getId(){
+        return this.id;
+    }
 
-    public Utente getNUtente(){
-        return this.nUtente;
+    public Utente getUtente(){
+        return this.utente;
     }
 
     public Date getDiaVacinacao(){

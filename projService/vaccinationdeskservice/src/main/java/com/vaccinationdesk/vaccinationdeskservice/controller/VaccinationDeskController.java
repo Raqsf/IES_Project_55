@@ -50,6 +50,11 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteByNome(nome);
     }
 
+    @GetMapping("/utente/{id}")
+    public Utente getUtenteByIDUtente(@PathVariable Integer id) {
+        return utenteRepository.findUtenteById(id);
+    }
+
     /*@GetMapping("/utente/{n_utente}")
     public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
         return utenteRepository.findUtenteByNumUtente(n_utente);
