@@ -28,10 +28,12 @@ public class MQConsumer {
 
     @Autowired
     private UtenteRepository utenteRepository;
-    @Autowired
-    private CentroVacinacaoRepository centroVacinacaoRepository;
+
     @Autowired
     private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private CentroVacinacaoRepository centroVacinacaoRepository;
 
     @RabbitListener(queues = MQConfig.QUEUE)
     public void listen(String input) throws ParseException {
@@ -58,39 +60,29 @@ public class MQConsumer {
         int n_utente = json.getJSONObject("utente").getInt("n_utente");
         String nome = json.getJSONObject("utente").getString("nome");
         String email = json.getJSONObject("utente").getString("email");
-        System.out.println("EMAIL\t"+email);
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
-        System.out.println("DATA NASCIMENTO\t"+data_nasc);
         String local = json.getJSONObject("utente").getString("local");
-        System.out.println("LOCAL\t"+local);
         String doencas = json.getJSONObject("utente").getString("doença");
-        System.out.println("DOECA\t"+doencas);
         String data_agendamento = json.getJSONObject("utente").getString("data_vacina");
-        System.out.println("DATA AGENDAMENTO\t"+data_agendamento);
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        System.out.println("DATA NASCIMENTO\t"+data_agendamento);
         
         Date data_agenda = new Date(format.parse(data_agendamento).getTime());
-        System.out.println("DATA AGENDA\t"+data_agenda);
         
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
         //para guardar o utente na base de dados
         utenteRepository.save(utente);
-        System.out.println("I JUST SAVED UTENTE");
 
 
         List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
         CentroVacinacao cv = all_cv.get(new Random().nextInt(all_cv.size()));
         Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
-        System.out.println("I JUST CREATED AGENDAMENTO\n"+agendamento);
 
         // guardar agendamento na bd
         agendamentoRepository.save(agendamento);
-        System.out.println("I JUST SAVED AGENDAMENTO\n"+agendamento);
         
         scheduleVaccineMap.put(n_utente, utente);
     }
