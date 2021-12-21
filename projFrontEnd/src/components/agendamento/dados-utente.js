@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { TextField, Stack, FormControl,FormHelperText,Button, Container } from '@mui/material';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import { TextField, Stack, FormControl, FormHelperText, Button, Container } from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { Box } from "@mui/system";
-import { useRouter } from 'next/router';
-import api from '../../api';
+import { useRouter } from "next/router";
+import api from "../../api";
 //import axios from 'axios';
 
 export default function DadosUtente(props) {
@@ -32,19 +32,20 @@ export default function DadosUtente(props) {
     const user = {
       id: utente,
       nome: nome,
-      dataNascimento: date.toISOString()
+      dataNascimento: date.toISOString(),
     };
-    
-    console.log(date)
-    console.log(user.dataNascimento)
-    console.log(date.toISOString())
-    console.log("HERE ");
+
     api
-        .post(`/utente`, user, headers)
-        .then((response) => { setResposta(response.data); console.log(response.data);})
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-        });
+      .post(`/utente`, user, headers)
+      .then((response) => {
+        setResposta(response.data);
+        console.log(response.data);
+        router.push("/success");
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        alert("Erro");
+      });
     // router.push('/success');
 
     // axios.get(`http://localhost:8080/api/v1/centrovacinacao`, headers)
@@ -57,53 +58,66 @@ export default function DadosUtente(props) {
 
   return (
     <Container>
-      <Box className="DadosUtente" onSubmit={handleSubmit} sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pt: 3
-        }}>
+      <Box
+        className="DadosUtente"
+        onSubmit={handleSubmit}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          pt: 3,
+        }}
+      >
         <form
-        component="form" 
-        onSubmit={(e) => {
+          component="form"
+          onSubmit={(e) => {
             handleSubmit(e);
-          }} >
-        <FormControl variant="outlined">
-              <TextField fullWidth label="Número de Utente"
-                  value={utente}
-                  onChange={(e) => setUtente(e.target.value)}
-                  style={{ marginTop: "20px" }}/>
-              <FormHelperText id="user-number-helper-text">Campo Nº Utente Saúde no Cartão de Cidadão.</FormHelperText> 
-              <TextField fullWidth label="Nome Completo"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      style={{ marginTop: "20px" }}/>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Stack spacing={2} style={{ marginTop: "20px" }}>
-                      <DesktopDatePicker
-                      label="Data de Nascimento"
-                      disableFuture
-                      value={date}
-                      minDate={new Date('1900-01-01')}
-                      onChange={(newValue) => {
-                          setDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                      />
-                  </Stack>
-              </LocalizationProvider>
-              {/* <NextLink href="/success" passHref> */}
-                <Button 
-                  variant="contained" 
-                  size="lg" 
-                  type="submit" 
-                  disabled={!validateForm()}
-                  style={{ marginTop: "20px" }}
-                >
-                    Validação
-                </Button>
-              {/* </NextLink> */}
+          }}
+        >
+          <FormControl variant="outlined">
+            <TextField
+              fullWidth
+              label="Número de Utente"
+              value={utente}
+              onChange={(e) => setUtente(e.target.value)}
+              style={{ marginTop: "20px" }}
+            />
+            <FormHelperText id="user-number-helper-text">
+              Campo Nº Utente Saúde no Cartão de Cidadão.
+            </FormHelperText>
+            <TextField
+              fullWidth
+              label="Nome Completo"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              style={{ marginTop: "20px" }}
+            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Stack spacing={2} style={{ marginTop: "20px" }}>
+                <DesktopDatePicker
+                  label="Data de Nascimento"
+                  disableFuture
+                  value={date}
+                  minDate={new Date("1900-01-01")}
+                  onChange={(newValue) => {
+                    setDate(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Stack>
+            </LocalizationProvider>
+            {/* <NextLink href="/success" passHref> */}
+            <Button
+              variant="contained"
+              size="lg"
+              type="submit"
+              disabled={!validateForm()}
+              style={{ marginTop: "20px" }}
+            >
+              Validação
+            </Button>
+            {/* </NextLink> */}
           </FormControl>
-          </form>
+        </form>
       </Box>
     </Container>
   );
