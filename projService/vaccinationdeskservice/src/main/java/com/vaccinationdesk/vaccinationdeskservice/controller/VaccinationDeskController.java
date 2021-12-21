@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3000"})
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
 public class VaccinationDeskController {
     @Autowired
     private CentroVacinacaoRepository centroVacinacaoRepository;
@@ -57,10 +57,12 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteById(id);
     }
 
-    /*@GetMapping("/utente/{n_utente}")
-    public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
-        return utenteRepository.findUtenteByNumUtente(n_utente);
-    }*/
+    /*
+     * @GetMapping("/utente/{n_utente}")
+     * public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
+     * return utenteRepository.findUtenteByNumUtente(n_utente);
+     * }
+     */
 
     @GetMapping("/lote/{id}")
     public Lote getUtenteByNome(@PathVariable Integer lote) {
@@ -73,17 +75,20 @@ public class VaccinationDeskController {
     }
 
     @PostMapping("/utente")
-    public ResponseEntity<Agendamento> createAppointment(@Valid @RequestBody Utente utente ){
-        
-        if (utenteRepository.findUtenteById(utente.getID()) != null){
-            long millis=System.currentTimeMillis();  
-            Agendamento a = new Agendamento(utente, new Date(millis), new CentroVacinacao());
+    public ResponseEntity<Agendamento> createAppointment(@Valid @RequestBody Utente utente) {
+
+        if (utenteRepository.findUtenteById(utente.getID()) != null) {
+            long millis = System.currentTimeMillis();
+            utente = utenteRepository.findUtenteById(utente.getID());
+            System.out.println(utente);
+            CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(1);
+            Agendamento a = new Agendamento(utente, new Date(millis), cv);
             try {
                 agendamentoRepository.save(a);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(agendamentoRepository.save(a));
+            return ResponseEntity.ok(a);
         }
 
         return ResponseEntity.notFound().build();
@@ -91,7 +96,7 @@ public class VaccinationDeskController {
 
     // @GetMapping("/int")
     // public Integer getInt() {
-    //     return 123456;
+    // return 123456;
     // }
-    
+
 }
