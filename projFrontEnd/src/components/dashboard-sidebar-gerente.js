@@ -14,6 +14,8 @@ import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 // import { Users as UsersIcon } from '../icons/users';
 import { Vaccine as VaccineIcon } from '../icons/vaccine';
 import { Calendar as CalendarIcon } from '../icons/calendar';
+import { ChartLine as ChartLineIcon } from '../icons/chart-line';
+import { StoreCog as StoreCogIcon } from '../icons/store-cog';
 // import { XCircle as XCircleIcon } from '../icons/x-circle';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
@@ -26,12 +28,12 @@ const items = [
   },
   { 
     href: '/statistics',
-    icon: (<VaccineIcon fontSize="small" />),
+    icon: (<ChartLineIcon fontSize="small" />),
     title: 'Estatísticas'
   },
   {
-    href: '/check_schedule',
-    icon: (<CalendarIcon fontSize="small" />),
+    href: '/vaccines',
+    icon: (<StoreCogIcon fontSize="small" />),
     title: 'Gerir'
   },
   // {

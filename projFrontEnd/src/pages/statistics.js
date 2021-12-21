@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Box, Container } from "@mui/material";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 
+// TODO: Última semana, último mês, último ano
 const Statistics = () => {
   return (
     <>

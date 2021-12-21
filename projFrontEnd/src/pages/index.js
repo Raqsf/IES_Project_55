@@ -3,6 +3,8 @@ import { Box, Container, Grid } from "@mui/material";
 // import { Budget } from "../components/dashboard/budget";
 import { Schedule } from "../components/dashboard/schedule-vaccine";
 import { Check } from "../components/dashboard/check-schedule";
+import { ManageVaccines } from "../components/gerente/manage";
+import { Statistics } from "../components/gerente/statistics";
 // import { LatestOrders } from "../components/dashboard/latest-orders";
 // import { LatestProducts } from "../components/dashboard/latest-products";
 // import { Sales } from "../components/dashboard/sales";
@@ -45,7 +47,15 @@ const Dashboard = () => {
         >
           {username 
             ? (<Container maxWidth={false}>
-                <h1>GERENTE</h1>
+                <h1>Gerente</h1>
+                <Grid container spacing={2}>
+                <Grid item lg={6} sm={6} xl={6} xs={12}>
+                  <Statistics />
+                </Grid>
+                <Grid item xl={6} lg={6} sm={6} xs={12}>
+                  <ManageVaccines />
+                </Grid>
+              </Grid>
               </Container>) 
             : (<Container maxWidth={false}>
               <h1>Vacinação</h1>

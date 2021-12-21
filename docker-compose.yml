@@ -25,7 +25,7 @@ services:
     # springboot server
 #    app:
 #        build:
-#            context: "./server" # path to springboot application
+#            context: "./projService/vaccinationdeskservice" # path to springboot application
 #        container_name: "backend"
 #        restart: always
 #        ports: 

@@ -1,8 +1,8 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NextLink from 'next/link';
 
-export const Schedule = (props) => (
+export const ManageVaccines = (props) => (
   <Card {...props}>
     <CardContent>
       <Grid
@@ -20,7 +20,7 @@ export const Schedule = (props) => (
             color="textPrimary"
             variant="h5"
           >
-            Agende a sua Vacina
+            Gerir Vacinas
           </Typography>
         </Grid>
         <Grid item
@@ -36,7 +36,7 @@ export const Schedule = (props) => (
               width: 56
             }}
           >
-            <HealthAndSafetyIcon />
+            <ManageAccountsIcon />
           </Avatar>
         </Grid>
       </Grid>
@@ -52,9 +52,7 @@ export const Schedule = (props) => (
             gutterBottom
             variant="body2"
         >
-            Depois de efetuar o pedido de agendamento é realizada uma validação para confirmar se reúne os critérios de elegibilidade em vigor, para a toma da vacina. 
-            Irá receber um código QR por email/sms/site juntamente com a indicação da hora e local onde se realizará a vacinação. 
-            Terá de apresentar o código QR quando for levar a dose.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </Typography>
         {/* <ArrowDownwardIcon color="error" />
         <Typography
@@ -79,13 +77,14 @@ export const Schedule = (props) => (
           alignItems: 'center'
         }}
       >
-        <NextLink href="/agendamento" passHref>
+        <NextLink href="/vaccines" passHref>
           <Button
             color="secondary"
             variant="contained"
             sx={{ mr: 1 }}
+            // href="/agendamento"
           >
-            Agendar
+            Gerir
           </Button>
         </NextLink>
       </Box>
