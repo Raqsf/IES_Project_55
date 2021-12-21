@@ -76,7 +76,6 @@ public class MQConsumer {
         //para guardar o utente na base de dados
         utenteRepository.save(utente);
 
-
         List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
         CentroVacinacao cv = all_cv.get(new Random().nextInt(all_cv.size()));
         Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
