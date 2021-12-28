@@ -19,23 +19,37 @@ import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+
 public class MQConsumer {
 
     private Map<Integer, Utente> scheduleVaccineMap = new HashMap<Integer, Utente>();
     private Map<Integer, Utente> gettingVaccineMap = new HashMap<Integer, Utente>();
-    private int quantityForDay; 
-
+    private int quantityForDay;
+    
     @Autowired
     private UtenteRepository utenteRepository;
-
+    
     @Autowired
     private AgendamentoRepository agendamentoRepository;
-
+    
     @Autowired
     private CentroVacinacaoRepository centroVacinacaoRepository;
+    
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @RabbitListener(queues = MQConfig.QUEUE)
-    public void listen(String input) throws ParseException {
+    public void listen(String input) throws ParseException, MessagingException {
         JSONObject json = new JSONObject(input);
         String messageType = json.getString("type");
         switch (messageType) {
@@ -54,7 +68,7 @@ public class MQConsumer {
         }
     }
 
-    public void addScheduleVaccines(JSONObject json) throws ParseException {
+    public void addScheduleVaccines(JSONObject json) throws ParseException, MessagingException {
         int n_utente = json.getJSONObject("utente").getInt("n_utente");
         String nome = json.getJSONObject("utente").getString("nome");
         String email = json.getJSONObject("utente").getString("email");
@@ -64,11 +78,11 @@ public class MQConsumer {
         String data_agendamento = json.getJSONObject("utente").getString("data_vacina");
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        
+
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        
+
         Date data_agenda = new Date(format.parse(data_agendamento).getTime());
-        
+
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
         //para guardar o utente na base de dados
@@ -77,12 +91,44 @@ public class MQConsumer {
         List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
         CentroVacinacao cv = all_cv.get(1 + (int) (Math.random() * ((all_cv.size() - 1))));
         Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
-        
+
         // guardar agendamento na bd
         agendamentoRepository.save(agendamento);
+
+        //----------------------------------------------
+
+        try {
+            sendEmail("pedroalexandre.sobral5@gmail.com");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //----------------------------------------------
+
         //scheduleVaccineMap.put(n_utente, utente);
     }
+    
+    void sendEmail(String email) throws MessagingException, IOException {
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
+        helper.setTo(email);
+        helper.setSubject("Agendamento da Vacina");
+        
+        //default = text/plain
+        //helper.setText("Check attachment for image!");
 
+        //true = text/html
+        helper.setText("<h1>Vacinação marcada para o <b>25/12/2021</b>!</h1>", true);
+
+        //? Código para enviar um ficheiro neste caso uma imagem (codigo qr) que seria lido depois pelo raspberry p
+        //FileSystemResource file = new FileSystemResource(new File("classpath:android.png"));
+        //Resource resource = new ClassPathResource("android.png");
+        //InputStream input = resource.getInputStream();
+        //ResourceUtils.getFile("classpath:android.png");
+        
+        javaMailSender.send(msg);
+    }
+    
     public void addGettingVaccine(JSONObject json) throws ParseException {
         /*int n_utente = json.getJSONObject("utente").getInt("n_utente");
         String nome = json.getJSONObject("utente").getString("nome");
