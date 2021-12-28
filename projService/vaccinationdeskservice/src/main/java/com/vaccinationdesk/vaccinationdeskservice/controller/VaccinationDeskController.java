@@ -47,10 +47,10 @@ public class VaccinationDeskController {
         return centroVacinacaoRepository.findAll();
     }
 
-    @GetMapping("/utente/{nome}")
+    /*@GetMapping("/utente/{nome}")
     public Utente getUtenteByNome(@PathVariable String nome) {
         return utenteRepository.findUtenteByNome(nome);
-    }
+    }*/
 
     @GetMapping("/utente/{id}")
     public Utente getUtenteByIDUtente(@PathVariable Integer id) {

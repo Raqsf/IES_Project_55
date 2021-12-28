@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
@@ -24,7 +23,7 @@ public class MQConsumer {
 
     private Map<Integer, Utente> scheduleVaccineMap = new HashMap<Integer, Utente>();
     private Map<Integer, Utente> gettingVaccineMap = new HashMap<Integer, Utente>();
-    private List<Integer> quantityList = new ArrayList<Integer>();
+    private int quantityForDay; 
 
     @Autowired
     private UtenteRepository utenteRepository;
@@ -41,15 +40,14 @@ public class MQConsumer {
         String messageType = json.getString("type");
         switch (messageType) {
             case "people_getting_vaccinated":
-                addGettingVaccine(json);
+                //addGettingVaccine(json);
                 break;
             case "schedule_vaccine":
                 addScheduleVaccines(json);
                 break;
             case "vaccines_quantity":
                 int quantity = json.getInt("quantity");
-                quantityList.clear();
-                quantityList.add(quantity);
+                quantityForDay = quantity;
                 break;
             default:
                 break;                
@@ -77,17 +75,16 @@ public class MQConsumer {
         utenteRepository.save(utente);
 
         List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
-        CentroVacinacao cv = all_cv.get(new Random().nextInt(all_cv.size()));
+        CentroVacinacao cv = all_cv.get(1 + (int) (Math.random() * ((all_cv.size() - 1))));
         Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
-
+        
         // guardar agendamento na bd
         agendamentoRepository.save(agendamento);
-        
-        scheduleVaccineMap.put(n_utente, utente);
+        //scheduleVaccineMap.put(n_utente, utente);
     }
 
     public void addGettingVaccine(JSONObject json) throws ParseException {
-        int n_utente = json.getJSONObject("utente").getInt("n_utente");
+        /*int n_utente = json.getJSONObject("utente").getInt("n_utente");
         String nome = json.getJSONObject("utente").getString("nome");
         String email = json.getJSONObject("utente").getString("email");
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
@@ -99,7 +96,7 @@ public class MQConsumer {
         
         //para guardar o utente na base de dados
         utenteRepository.save(utente);
-        gettingVaccineMap.put(n_utente, utente);
+        gettingVaccineMap.put(n_utente, utente);*/
     }
 
     public Map<Integer, Utente> getScheduleVaccineMap() {
@@ -110,7 +107,7 @@ public class MQConsumer {
         return gettingVaccineMap;
     }
 
-    public List<Integer> getQuantityList() {
-        return quantityList;
+    public int getQuantityForDay() {
+        return quantityForDay;
     }
 }

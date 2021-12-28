@@ -29,7 +29,7 @@ public class Agendamento implements Serializable{
     private Utente utente;
     @Column(name="dia_vacinacao")
     private Date diaVacinacao;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="centro_vacinacao", referencedColumnName = "id")
     private CentroVacinacao centro_vacinacao;
 

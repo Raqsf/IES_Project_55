@@ -102,11 +102,12 @@ if __name__ == '__main__':
     g = Generator(people, vaccination_centers, vaccines)
     counter_days = -1
     date = datetime.datetime(2021,12,24)
+    quantity = 0
     while True:
         time.sleep(0.5)
-        if counter_days == 6 or counter_days == -1:
+        if counter_days == quantity or counter_days == -1:
             g.generate_vaccines_quantity()
-            g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
+            #g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
             date = date + datetime.timedelta(days=1)
             counter_days = 0
         counter_days += 1
