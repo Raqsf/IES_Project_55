@@ -49,11 +49,9 @@ public class Distribuicao {
     //! levar a vacina
     public void distribuirVacinasPorOrdemMarcacao() throws MessagingException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        List<String> moradaCentrosVacincao = centrosVacinacao.stream().map(CentroVacinacao::getMorada)
-                .collect(Collectors.toList());
 
         List<ListaEspera> listaEspera = listaesperaRepository.findAll();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) { //! o for deverá iterar até ao máximo de vacinas que ha naquele dia
             ListaEspera pedido = listaEspera.get(i);
             listaEspera.remove(pedido);
 
@@ -70,18 +68,15 @@ public class Distribuicao {
                     agendamentoRepository.save(agendamento);
 
                     try {
-                        sendEmail(pedido, "2020-05-01", centro); //pass = joaosilveira8--
+                        sendEmail(pedido, "2020-05-01", centro); 
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    //10472
                     break;
-
                 }
             }
-
         }
     }
     
@@ -89,7 +84,7 @@ public class Distribuicao {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
         //helper.setTo(pedido.getUtente().getEmail());
-        helper.setTo("joaosilveirasantos8@gmail.com");
+        helper.setTo("joaosilveirasantos8@gmail.com"); //pass = joaosilveira8--
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome()+ " - Nº Utente - " + pedido.getUtente().getID();
         helper.setSubject(subject);
         helper.setText("A sua vacina encontra-se agendada para o dia " + dataVacina + " no "
