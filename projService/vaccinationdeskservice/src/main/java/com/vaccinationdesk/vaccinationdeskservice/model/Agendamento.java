@@ -33,7 +33,9 @@ public class Agendamento implements Serializable{
     @JoinColumn(name="centro_vacinacao", referencedColumnName = "id")
     private CentroVacinacao centro_vacinacao;
 
-    public Agendamento(){}
+    public Agendamento(Utente utente) {
+        this.utente = utente;
+    }
 
     public Agendamento(Utente utente, Date diaVacinacao, CentroVacinacao centro_vacinacao){
         this.utente = utente;
