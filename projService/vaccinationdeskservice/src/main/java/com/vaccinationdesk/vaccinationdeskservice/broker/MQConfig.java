@@ -28,22 +28,6 @@ public class MQConfig {
 		return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
 	}
 
-    /*
-	@Bean
-	public MessageConverter jsonMessageConverter() {
-		return new Jackson2JsonMessageConverter();
-	}
-    */
-
-    /*
-    @Bean
-	public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-		rabbitTemplate.setMessageConverter(jsonMessageConverter());
-		return rabbitTemplate;
-	}
-    */
-
     @Bean
     public MQConsumer receiver() {
         return new MQConsumer();

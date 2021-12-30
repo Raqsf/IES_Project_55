@@ -3,7 +3,6 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -53,7 +52,7 @@ public class Distribuicao {
         List<ListaEspera> listaEspera = listaesperaRepository.findAll();
         for (int i = 0; i < 5; i++) { //! o for deverá iterar até ao máximo de vacinas que ha naquele dia
             ListaEspera pedido = listaEspera.get(i);
-            listaEspera.remove(pedido);
+            listaEspera.remove(pedido);//!como estou a iterar pelo id e este e sequencial, nem faz grande sentido fazer o remove a lista, see this later
 
             //fazer o delete na base de dados da lista de espera
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
