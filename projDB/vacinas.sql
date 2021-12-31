@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `agendamento` (
 CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `n_utente`                INT           NOT NULL,
+    `data_inscricao`        DATE            NOT NULL,
 
     PRIMARY KEY(`id`),
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`), 

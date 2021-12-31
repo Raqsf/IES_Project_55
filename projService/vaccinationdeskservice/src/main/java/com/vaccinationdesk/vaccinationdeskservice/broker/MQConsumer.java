@@ -59,6 +59,7 @@ public class MQConsumer {
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
         String local = json.getJSONObject("utente").getString("local");
         String doencas = json.getJSONObject("utente").getString("doença");
+        //!adicionar campo na tabela lista_de_espera sobre a data de agendamento
         String data_agendamento = json.getJSONObject("utente").getString("data_vacina");
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
@@ -73,7 +74,7 @@ public class MQConsumer {
         //Agendamento agendamento = new Agendamento(utente);
         //agendamentoRepository.save(agendamento);
         
-        ListaEspera lista_de_espera = new ListaEspera(utente);
+        ListaEspera lista_de_espera = new ListaEspera(utente, data_agenda);
         listaEsperaRepository.save(lista_de_espera);
         
 

@@ -26,18 +26,17 @@ public class ListaEspera implements Serializable {
     @JoinColumn(name = "n_utente")
     private Utente utente;
 
-
-    /*@OnetoOne
     @Column(name = "data_inscricao")
-    private Date dataInscricao;*/
-
-    /*public ListaEspera(Utente utente, Date dataInscricao) {
-        this.utente = utente;
-        this.dataInscricao = dataInscricao;
-    }*/
+    private Date dataInscricao;
 
     public ListaEspera() {
     }
+
+    public ListaEspera(Utente utente, Date dataInscricao) {
+        this.utente = utente;
+        this.dataInscricao = dataInscricao;
+    }
+
 
     public ListaEspera(int id, Utente utente) {
         this.id = id;
@@ -64,15 +63,11 @@ public class ListaEspera implements Serializable {
         this.utente = utente;
     }
 
-    /*public Date getDataInscricao() {
+    public Date getDataInscricao() {
         return dataInscricao;
     }
 
     public void setDataInscricao(Date dataInscricao) {
         this.dataInscricao = dataInscricao;
-    }*/
-
-
-    
-
+    }
 }
