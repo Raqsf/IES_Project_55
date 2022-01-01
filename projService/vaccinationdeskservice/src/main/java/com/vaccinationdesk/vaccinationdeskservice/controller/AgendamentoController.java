@@ -1,10 +1,12 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
+import com.google.zxing.WriterException;
 import com.vaccinationdesk.vaccinationdeskservice.Service.Distribuicao;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
@@ -28,9 +30,14 @@ public class AgendamentoController {
     @Autowired
     private Distribuicao distribuicao;
 
-    @GetMapping("/listaespera")
-    public List<ListaEspera> getAllListaEspera() throws MessagingException {
+    // serve só para ver se está tudo a funcionar bem
+    @GetMapping("/agendar")
+    public void agendar() throws MessagingException, WriterException, IOException {
         distribuicao.distribuirVacinasPorOrdemMarcacao();
+    }
+
+    @GetMapping("/listaespera")
+    public List<ListaEspera> getAllListaEspera() {
         return listaesperaRepository.findAll();
     }
 

@@ -1,14 +1,22 @@
 package com.vaccinationdesk.vaccinationdeskservice.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
@@ -19,7 +27,12 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaReposito
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -44,46 +57,64 @@ public class Distribuicao {
     private JavaMailSender javaMailSender;
 
     // private MQConsumer consumer;
-    // ! ver como ir buscar a capacidade para o dia
-    int capacidadeDia = 20;
+    // ! ver como ir buscar a capacidade para o dia e atualiza-lo a cada dia que passa
+    int capacidadeDia = 5;
 
     public Distribuicao() {
-        // MQConsumer consumer = new MQConsumer();
-        // capacidadeDia = consumer.getQuantityForDay();
     }
 
-    // ! aqui dividir de forma "igual" o numero de vacinas que ha, com o numero de
-    // pessoas para determinado dia
-    // ! e ainda fazer as contas, com o sitio de onde sao as pessoas e para que
-    // centro de vacinacao deveriam ir
+    // ! aqui dividir de forma "igual" o numero de vacinas que ha, com o numero de pessoas para determinado dia
+    // ! e ainda fazer as contas, com o sitio de onde sao as pessoas e para que centro de vacinacao deveriam ir
     // ! levar a vacina
-    public void distribuirVacinasPorOrdemMarcacao() throws MessagingException {
+    /**
+     * 
+     * Esta funcao faz um destribuicao/agendamento das vacinas pela ordem de marcacao,
+     * podendo esta ser considerado o agendamento por defeito. 
+     * @throws MessagingException - excecao de email
+     * @throws IOException
+     * @throws WriterException
+     */
+    public void distribuirVacinasPorOrdemMarcacao() throws MessagingException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de
         int quantidadeDeCentros = centrosVacinacao.size();
+        String moradasCentrosAPI = "";
 
-        for (int i = 0; i < 5; i++) { // ! o for deverá iterar até ao máximo de vacinas que ha naquele dia
+        for (CentroVacinacao centro : centrosVacinacao) {
+            moradasCentrosAPI += centro.getMorada() + "|";
+        }
+    
+        for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
-
-            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), "Porto|Lisboa|Coimbra|Aveiro");
+            
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
+                    
+                    //TODO: fazer parte da data da vacina
                     Date dataVacina = Date.valueOf("2020-05-01");
+
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
+                    
+                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
+                            + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
+
+                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+
                     //! ver se dá para executar este codigo de enviar emails com thread, pq demora 1.8 +/- segundos a enviar o email
-                    //! e torna o processo de agendamento lento.
+                    //! e torna o processo de agendamento lento. oq seria feito em 0.6/0.7s chega a demorar 2.2s
                     //? https://spring.io/guides/gs/async-method/ <- ver se isto resovle o problema
-                   /*try {
-                        sendEmail(pedido, "2020-05-01", centro);
+                    try {
+                        sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }*/
+                    }
                     break;
                 }
             }
@@ -109,36 +140,55 @@ public class Distribuicao {
 
     private static String calculateShorterPath(String responseString, int quantidadeCentros) {
         try {
-            JSONObject jsonobj = new JSONObject(responseString);
-            JSONArray dist = (JSONArray) jsonobj.get("rows");
-            JSONObject obj2 = (JSONObject) dist.get(0);
             int indexLocation = 0;
             double minorDistance = 1000;
 
+            JSONObject jsonObject = new JSONObject(responseString);
+            JSONArray rows = (JSONArray) jsonObject.get("rows");
+            JSONObject firstRow = (JSONObject) rows.get(0);
+
             for (int i = 0; i < quantidadeCentros; i++) {
-                JSONArray disting = (JSONArray) obj2.get("elements");
-                JSONObject obj3 = (JSONObject) disting.get(i);
-                JSONObject obj4 = (JSONObject) obj3.get("distance");
-                String distance = (String) obj4.get("text");
-                distance = distance.replace("km", "").replace("m", "").replace(",", ".");
-                double distanceDouble = Double.parseDouble(distance);
-                if (distanceDouble < minorDistance) {
-                    minorDistance = distanceDouble;
+                JSONArray cities = (JSONArray) firstRow.get("elements");
+                JSONObject city = (JSONObject) cities.get(i);
+                JSONObject distanceAPI = (JSONObject) city.get("distance");
+                String distanceString = (String) distanceAPI.get("text");
+                distanceString = distanceString.replace("km", "").replace("m", "").replace(",", ".");
+                double distance = Double.parseDouble(distanceString);
+                if (distance < minorDistance) {
+                    minorDistance = distance;
                     indexLocation = i;
                 }
             }
-
-            JSONArray local = (JSONArray) jsonobj.get("destination_addresses");
-            String cidade = (String) local.get(indexLocation);
+            JSONArray locais = (JSONArray) jsonObject.get("destination_addresses");
+            String cidade = (String) locais.get(indexLocation);
             cidade = cidade.replace(", Portugal", "");
 
             return cidade;
-
         } catch (Exception e) {
-            System.err.println("ERROR: Calculating shorter path - " + e.getMessage());
+            System.err.println("ERROR: Calculating Shorter Path - " + e.getMessage());
         }
         return null;
     }
+    
+    public static void generateQRCodeImage(String text, int i)
+	            throws WriterException, IOException {
+	        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+	        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
+            
+	        Path path = FileSystems.getDefault().getPath("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            
+            //!nem com esta martelada isto funciona :(
+            try {
+                File f = new File("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
+                while (!f.exists()) {
+                    Thread.sleep(1000);
+                    System.out.println("adasdada");
+                }
+            }catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            } 
+	    }
         
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
@@ -154,18 +204,16 @@ public class Distribuicao {
         helper.setSubject(subject);
         helper.setText("A sua vacina encontra-se agendada para o dia " + dataVacina + " no "
                 + centro.getNome() + " sendo a morada do mesmo: " + centro.getMorada()
+                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelicida."
                 + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda a esta mensagem.");
-        // ? Código para enviar um ficheiro neste caso uma imagem (codigo qr) que seria
-        // lido depois pelo raspberry p
-        // FileSystemResource file = new FileSystemResource(new
-        // File("classpath:android.png"));
-        // Resource resource = new ClassPathResource("android.png");
-        // InputStream input = resource.getInputStream();
-        // ResourceUtils.getFile("classpath:android.png");
+        
+        helper.addInline("qrcode.png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
         javaMailSender.send(msg);
+        File f = new File("./src/main/resources/images/qr" + pedido.getUtente().getID() + ".png");
+        f.delete();
+     
         stop = System.nanoTime();  // clock snapshot after
         delta = (stop - start) / 1e9; // convert nanoseconds to milliseconds
         System.out.println("send email: " + delta);
     }
-
 }
