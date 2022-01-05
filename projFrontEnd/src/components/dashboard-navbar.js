@@ -78,7 +78,7 @@ export const DashboardNavbar = (props) => {
           >
             <UserCircleIcon fontSize="small" />
           </Avatar> */}
-          <Tooltip>
+          <Tooltip title="Gerente">
             <Button
               color="secondary"
               variant="contained"

@@ -89,7 +89,6 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -135,18 +134,11 @@ const EnhancedTableToolbar = () => {
         >
           Vacinas
       </Typography>
-      
-
-      {/* <Tooltip title="Filter list">
-        <IconButton>
-          <FilterListIcon />
-        </IconButton>
-      </Tooltip> */}
     </Toolbar>
   );
 };
 
-const TableVaccines = () => { 
+const TableVaccines = (props) => { 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [page, setPage] = React.useState(0);
@@ -233,7 +225,6 @@ const TableVaccines = () => {
                     <TableCell
                       component="th"
                       scope="row"
-                      padding="none"
                     >
                       {row.centro_vacinacao}
                     </TableCell>
