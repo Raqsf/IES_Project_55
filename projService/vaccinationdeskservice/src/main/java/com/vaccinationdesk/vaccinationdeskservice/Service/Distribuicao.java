@@ -2,12 +2,10 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -27,12 +25,9 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaReposito
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -63,9 +58,6 @@ public class Distribuicao {
     public Distribuicao() {
     }
 
-    // ! aqui dividir de forma "igual" o numero de vacinas que ha, com o numero de pessoas para determinado dia
-    // ! e ainda fazer as contas, com o sitio de onde sao as pessoas e para que centro de vacinacao deveriam ir
-    // ! levar a vacina
     /**
      * 
      * Esta funcao faz um destribuicao/agendamento das vacinas pela ordem de marcacao,
@@ -79,7 +71,7 @@ public class Distribuicao {
         List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
-
+        
         for (CentroVacinacao centro : centrosVacinacao) {
             moradasCentrosAPI += centro.getMorada() + "|";
         }
@@ -87,19 +79,24 @@ public class Distribuicao {
         for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
-            
+
+            //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
             String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
-                    
-                    //TODO: fazer parte da data da vacina
-                    Date dataVacina = Date.valueOf("2020-05-01");
 
+                    
+                    long millis = System.currentTimeMillis();  
+                    Date dataVacina = new java.sql.Date(millis);
+                     
+                    //plusdays = é a funcao que permite somar dias
+                    dataVacina = Date.valueOf(dataVacina.toLocalDate().plusDays(3));
+                    
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
-                    
+            
                     String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
                             + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
 
@@ -207,10 +204,18 @@ public class Distribuicao {
                 + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelicida."
                 + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda a esta mensagem.");
         
-        helper.addInline("qrcode.png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
-        javaMailSender.send(msg);
+        /*
+        * POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
         File f = new File("./src/main/resources/images/qr" + pedido.getUtente().getID() + ".png");
+        while (true) {
+            if (f.exists()) {
+                helper.addInline("qrcode.png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
+                break;
+            }
+        }
         f.delete();
+        */
+        javaMailSender.send(msg);
      
         stop = System.nanoTime();  // clock snapshot after
         delta = (stop - start) / 1e9; // convert nanoseconds to milliseconds

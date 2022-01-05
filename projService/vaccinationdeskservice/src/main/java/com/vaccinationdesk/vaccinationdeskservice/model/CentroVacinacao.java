@@ -24,7 +24,12 @@ public class CentroVacinacao {
     @Column(name="capacidade_atual")
     private int capacidadeAtual;
 
-    public CentroVacinacao(){}
+    public CentroVacinacao() {
+    }
+    
+    public CentroVacinacao(int id) {
+        this.id = id;
+    }
 
     public CentroVacinacao(int id, String nome, String morada, int max, int atual){
         this.id = id;
