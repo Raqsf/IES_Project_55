@@ -53,8 +53,9 @@ const NestedList = (props) => {
         <NextLink 
           href={{
             pathname: "/vaccination_center",
-            query: { center: centro.nome },
+            query: { id: centro.id },
           }} 
+          as="/centro_vacinacao"
           key={centro.id}
           passHref
         >
