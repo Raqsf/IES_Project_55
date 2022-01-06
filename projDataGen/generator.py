@@ -19,14 +19,16 @@ class Generator:
         self.vaccination_centers = vaccination_centers
         self.vaccines = vaccines
         self.waiting_list = list()
+        self.minutes = 0
+        self.hours = 8
         self.initial_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        self.date_to_change = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
     def send(self, topic="vaccination_queue", mes=None):
         """Send the message to the broker"""
         try:
             message = json.dumps(mes)
             self.channel.basic_publish(exchange='', routing_key=topic, body=message)
-            #print('Topic', topic, 'Sent message', json.loads(message))
         except:
             print('\033[91m' + "ERROR: Could not send message to broker" + '\033[0m')
 
@@ -40,7 +42,16 @@ class Generator:
                 person = random.choice(people_list)
                 self.people[random_n_utente] = copy.deepcopy(self.people[person])
                 self.people[random_n_utente]['n_utente'] = copy.deepcopy(random_n_utente)
-                self.people[random_n_utente]["data_inscricao"] = self.initial_date.strftime("%d/%m/%Y")
+                minutes_to_sum = 8
+                if (self.minutes + minutes_to_sum) > 60:
+                    if (self.hours + 1) == 24:
+                        self.date_to_change = self.date_to_change + timedelta(days=1)
+                        self.hours = 8
+                    self.hours += 1
+                    self.minutes = 0
+                self.minutes = (self.minutes + minutes_to_sum) % 60
+                seconds = randint(0, 59)
+                self.people[random_n_utente]["data_inscricao"] = self.date_to_change.replace(hour=self.hours, minute=self.minutes, second=seconds).strftime("%d/%m/%Y %H:%M:%S")
                 return random_n_utente
             else:
                 random_n_utente = randint(1000,9999)
@@ -62,7 +73,7 @@ class Generator:
         for id_center in range(1, 5):
             id_lote = random.choice(self.vaccines) + str(randint(1000, 9999)) #! criar uma lista para nao deixar haver id iguais?
             center =  id_center
-            message = {"type": "vaccines_per_centers", "id_lote": id_lote, "quantity": 10, "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center": center}
+            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
             self.send(mes=message)
             print('\033[93m' + message.__str__() +  '\033[0m')
                 
@@ -117,15 +128,12 @@ if __name__ == '__main__':
     vaccines = ['PF', 'MO', 'AZ', 'JJ']
     
     g = Generator(people, vaccination_centers, vaccines)
-    counter_days = -1
-    #date = datetime.datetime(2021,12,24)
-    quantity = 0
     while True:
         time.sleep(0.5)
-        #g.generate_vaccines_quantity()
         g.generate_vaccines_quantity()
         g.destribute_vaccines_per_centers()
-        g.add_to_waiting_list()
+        for _ in range(10):
+            g.add_to_waiting_list()
         '''if counter_days == quantity or counter_days == -1:
             #g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
             date = date + datetime.timedelta(days=1)
