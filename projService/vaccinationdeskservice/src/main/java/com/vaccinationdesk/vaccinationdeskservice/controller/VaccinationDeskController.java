@@ -1,20 +1,26 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.sql.Date;
+import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
+import javax.persistence.Query;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
+import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,10 +44,13 @@ public class VaccinationDeskController {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
-    @GetMapping("/centrovacinacao/{centro}")
-    public CentroVacinacao centroVacinacao(@PathVariable Integer centro) {
-        return centroVacinacaoRepository.findCentroVacinacaoById(centro);
-    }
+    // private EntityManager em;
+    // @GetMapping("/centrovacinacao/{centro}")
+    // public List<?> centroVacinacao(@PathVariable Integer centro) {
+    //     Query query = em.createNativeQuery("SELECT count(agendamento.id) FROM centro_vacinacao JOIN agendamento ON centro_vacinacao.id = n_utente WHERE centro_vacinacao = 1");
+    //     return query.getResultList();
+    //     // return centroVacinacaoRepository.findCentroVacinacaoById(centro);
+    // }
 
     @GetMapping("/centrovacinacao")
     public List<CentroVacinacao> centroVacinacao() {
@@ -94,6 +103,27 @@ public class VaccinationDeskController {
 
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/agendamento/{utente}")
+    public List<Agendamento> getAgendamentoByUtente(@PathVariable Integer utente){
+        return agendamentoRepository.findAllByUtente(utente);
+    }
+
+    @GetMapping("/centrovacinacao/{id}")
+    public CentroVacinacao centroVacinacao(@PathVariable Integer id) {
+        return centroVacinacaoRepository.findCentroVacinacaoById(id);
+    }
+
+    @GetMapping("/centrovacinacao/{id}/vacinas")
+    public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
+        return centroVacinacaoRepository.findVacinas(centroVacinacaoRepository.findCentroVacinacaoById(id)).size();
+    }
+
+    @GetMapping("/centrovacinacao/{id}/agendamentos")
+    public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
+        return centroVacinacaoRepository.findAgendamentos(centroVacinacaoRepository.findCentroVacinacaoById(id));
+    }
+    
 
     // @GetMapping("/int")
     // public Integer getInt() {
