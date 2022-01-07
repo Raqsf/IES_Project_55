@@ -121,7 +121,7 @@ public class VaccinationDeskController {
 
     @GetMapping("/centrovacinacao/{id}/agendamentos")
     public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findAgendamentos(centroVacinacaoRepository.findCentroVacinacaoById(id));
+        return centroVacinacaoRepository.findAgendamentos(id);
     }
     
 
