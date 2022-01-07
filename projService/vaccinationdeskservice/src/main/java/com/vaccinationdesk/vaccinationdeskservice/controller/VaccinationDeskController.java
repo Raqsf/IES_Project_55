@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import javax.persistence.Query;
 
+import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,12 +118,31 @@ public class VaccinationDeskController {
 
     @GetMapping("/centrovacinacao/{id}/vacinas")
     public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findVacinas(centroVacinacaoRepository.findCentroVacinacaoById(id)).size();
+        Integer qtd = 0;
+        for (Integer i : centroVacinacaoRepository.findVacinas(id)){
+            qtd+=i;
+        }
+        return qtd;
     }
 
     @GetMapping("/centrovacinacao/{id}/agendamentos")
     public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
         return centroVacinacaoRepository.findAgendamentos(id);
+    }
+
+    @PutMapping("/centrovacinacao/{id}/capacidade")
+    public ResponseEntity<CentroVacinacao> updateCapacidade(@PathVariable(value = "id") Integer id, 
+        @Valid @RequestBody Integer capacidade) throws ResourceNotFoundException {
+        try {
+            CentroVacinacao centro = centroVacinacaoRepository.findCentroVacinacaoById(id);
+            centro.setCapacidadeMax(capacidade);
+            CentroVacinacao updatedCentro = centroVacinacaoRepository.save(centro);
+            return ResponseEntity.ok(updatedCentro);
+        } catch (Exception e) {
+            System.err.print("Centro Vacinacao "+id+" not found"+e.getMessage());
+            throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found"+e.getMessage());
+        }
+        
     }
     
 

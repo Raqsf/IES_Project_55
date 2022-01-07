@@ -53,4 +53,8 @@ public class CentroVacinacao {
     public int getCapacidadeAtual(){
         return this.capacidadeAtual;
     }
+
+    public void setCapacidadeMax( int capacidade){
+        this.capacidadeMax = capacidade;
+    }
 }
