@@ -27,22 +27,20 @@ CREATE TABLE IF NOT EXISTS `centro_vacinacao` (
 
 CREATE TABLE IF NOT EXISTS `vacina` (
     `n_vacina`			    INT		  AUTO_INCREMENT          NOT NULL,
-    `lote`		            INT         		NOT NULL,
+    `lote`		            VARCHAR(6)         		NOT NULL,
     `nome`		            VARCHAR(256)		NOT NULL,
-    `data_rececao`	        DATE            	NOT NULL,
-    `administrada_a`		INT                 NOT NULL,
+    `data_validade`		    DATE            		NOT NULL,
+    `administrada_a`		INT,
     `data_administracao`    DATE,
-    `centro_vacinacao`		INT        NOT NULL,
 
     PRIMARY KEY(`n_vacina`),
     FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
-    FOREIGN KEY(`centro_vacinacao`) REFERENCES `centro_vacinacao`(`id`)
+    FOREIGN KEY(`lote`) REFERENCES `lote`(`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lote` (
-    `id`			                INT		  AUTO_INCREMENT          NOT NULL,
+    `id`			                VARCHAR(6)          NOT NULL,
     `quantidade`	        	    INT         		NOT NULL,
-    `data_validade`		            DATE            	NOT NULL,
     `atribuida_ao_centro`		    INT            	    NOT NULL,
 
     PRIMARY KEY(`id`),
@@ -51,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `lote` (
 
 CREATE TABLE IF NOT EXISTS `agendamento` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
-    `dia_vacinacao`             DATE        NOT NULL,
+    `dia_vacinacao`             DATE        ,
     `n_utente`                INT           NOT NULL,
     `centro_vacinacao`          INT,
 
@@ -59,6 +57,39 @@ CREATE TABLE IF NOT EXISTS `agendamento` (
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`), 
     FOREIGN KEY(`centro_vacinacao`) REFERENCES `centro_vacinacao`(`id`)
 );
+
+CREATE TABLE IF NOT EXISTS `lista_de_espera` (
+    `id`			                INT		  AUTO_INCREMENT          NOT NULL,
+    `n_utente`                INT           NOT NULL,
+    `data_inscricao`        DATE            NOT NULL,
+
+    PRIMARY KEY(`id`),
+    FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)
+);
+
+CREATE TABLE IF NOT EXISTS `doencas` (
+    `id`    INT     AUTO_INCREMENT      NOT NULL,
+    `doenca`    VARCHAR(200)    NOT NULL,
+
+    PRIMARY KEY(`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `doencas_por_utente` (
+    `n_utente`   INT     NOT NULL,
+    `doenca`    INT     NOT NULL,
+
+    PRIMARY KEY(`n_utente`, `doenca`),
+    FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`),
+    FOREIGN KEY(`doenca`) REFERENCES `doencas`(`id`)
+);
+
+INSERT INTO `doencas` (`doenca`) VALUES  
+('Doença Cardíaca'),
+('Doença Pulmonar'),
+('Diabetes'),
+('Cancro'),
+('Obesidade'),
+('Doença AutoImune');
 
 INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 (1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
