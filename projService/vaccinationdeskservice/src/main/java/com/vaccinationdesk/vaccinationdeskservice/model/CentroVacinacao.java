@@ -7,31 +7,30 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-
 @Data
 @Entity
 @Table(name = "centro_vacinacao")
 public class CentroVacinacao {
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
-    @Column(name="nome")
+    @Column(name = "nome")
     private String nome;
-    @Column(name="morada")
+    @Column(name = "morada")
     private String morada;
-    @Column(name="capacidade_max")
+    @Column(name = "capacidade_max")
     private int capacidadeMax;
-    @Column(name="capacidade_atual")
+    @Column(name = "capacidade_atual")
     private int capacidadeAtual;
 
     public CentroVacinacao() {
     }
-    
+
     public CentroVacinacao(int id) {
         this.id = id;
     }
 
-    public CentroVacinacao(int id, String nome, String morada, int max, int atual){
+    public CentroVacinacao(int id, String nome, String morada, int max, int atual) {
         this.id = id;
         this.nome = nome;
         this.morada = morada;
@@ -39,23 +38,36 @@ public class CentroVacinacao {
         this.capacidadeAtual = atual;
     }
 
-    public int getID(){
+    public int getID() {
         return this.id;
     }
 
-    public String getNome(){
+    public String getNome() {
         return this.nome;
     }
 
-    public String getMorada(){
+    public String getMorada() {
         return this.morada;
     }
 
-    public int getCapacidadeMax(){
+    public int getCapacidadeMax() {
         return this.capacidadeMax;
     }
 
-    public int getCapacidadeAtual(){
+    public int getCapacidadeAtual() {
         return this.capacidadeAtual;
     }
+
+    public void setCapacidadeAtual(int capacidadeAtual) {
+        this.capacidadeAtual = capacidadeAtual;
+    }
+
+    public void incrementCapacidadeAtual(int capacidadeAtual) {
+        this.capacidadeAtual += capacidadeAtual;
+    }
+
+    public void updateCapacidadeAtual() {
+        this.capacidadeAtual -= 1;
+    }
+
 }

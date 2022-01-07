@@ -31,7 +31,7 @@ public class VacinacaoController {
         return vacinaRepository.findAll();
     }
 
-    @GetMapping("/vacina_tomadas")
+    @GetMapping("/vacinas_a_ser_tomadas")
     public void getAllVacinasTomadas() {
         vacinacao.vacinacao();
     }

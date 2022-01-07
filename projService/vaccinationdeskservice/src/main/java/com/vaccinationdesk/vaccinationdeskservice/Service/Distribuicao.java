@@ -86,11 +86,13 @@ public class Distribuicao {
 
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
-
                     
-                    long millis = System.currentTimeMillis();  
+                    //! por a data do sql com horas, minutos, e segundos
+                    long millis = System.currentTimeMillis();
+                    millis = millis + (10 * 60 * 1000);  
                     Date dataVacina = new java.sql.Date(millis);
-                     
+                    
+                    System.out.println("Data da vacina: " + dataVacina);
                     //plusdays = é a funcao que permite somar dias
                     dataVacina = Date.valueOf(dataVacina.toLocalDate().plusDays(3));
                     
@@ -100,7 +102,7 @@ public class Distribuicao {
                     String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
                             + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
 
-                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
                     //! ver se dá para executar este codigo de enviar emails com thread, pq demora 1.8 +/- segundos a enviar o email
                     //! e torna o processo de agendamento lento. oq seria feito em 0.6/0.7s chega a demorar 2.2s

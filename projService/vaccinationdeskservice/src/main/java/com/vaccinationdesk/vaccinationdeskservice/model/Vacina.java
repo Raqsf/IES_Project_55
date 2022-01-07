@@ -32,7 +32,7 @@ public class Vacina {
     @JoinColumn(name="administrada_a")
     private Utente utente;
     @Column(name="data_administracao")
-    private Date administracao;
+    private Date data_administracao;
 
     public Vacina() {
     }
@@ -43,35 +43,60 @@ public class Vacina {
         this.dataValidade = dataValidade;
     }
 
-    public Vacina(Lote lote, String nome, Date dataValidade, Utente utente, Date administracao){
+    public Vacina(Lote lote, String nome, Date dataValidade, Utente utente, Date data_administracao){
         this.lote=lote;
         this.nome = nome;
         this.dataValidade = dataValidade;
         this.utente = utente;
-        this.administracao = administracao;
+        this.data_administracao = data_administracao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Lote getLote() {
+        return lote;
+    }
+
+    public void setLote(Lote lote) {
+        this.lote = lote;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Date getDataValidade() {
         return dataValidade;
     }
 
-    public int getID(){
-        return this.id;
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
     }
 
-    public Lote getLote(){
-        return this.lote;
+    public Utente getUtente() {
+        return utente;
     }
 
-    public String getNome(){
-        return this.nome;
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
-    public Utente getUtente(){
-        return this.utente;
+    public Date getDataAdministracao() {
+        return data_administracao;
     }
 
-    public Date getAdministracao(){
-        return this.administracao;
+    public void setDataAdministracao(Date data_administracao) {
+        this.data_administracao = data_administracao;
     }
+
 }

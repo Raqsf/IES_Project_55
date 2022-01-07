@@ -130,8 +130,8 @@ if __name__ == '__main__':
     g = Generator(people, vaccination_centers, vaccines)
     while True:
         time.sleep(0.5)
-        g.generate_vaccines_quantity()
-        g.destribute_vaccines_per_centers()
+        #g.generate_vaccines_quantity()
+        #g.destribute_vaccines_per_centers()
         for _ in range(10):
             g.add_to_waiting_list()
         '''if counter_days == quantity or counter_days == -1:

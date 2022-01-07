@@ -3,6 +3,7 @@ package com.vaccinationdesk.vaccinationdeskservice.broker;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
@@ -10,6 +11,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
@@ -27,8 +29,8 @@ public class MQConsumer {
     @Autowired
     private ListaEsperaRepository listaEsperaRepository;
 
-    //@Autowired
-    //private CapacidadeRepository capacidadeRepository;
+    @Autowired
+    private CentroVacinacaoRepository centroVacinacaoRepository;
 
     @Autowired
     private LoteRepository loteRepository;
@@ -79,16 +81,20 @@ public class MQConsumer {
         String local = json.getJSONObject("utente").getString("local");
         //! CRIAR UMA TABELA DOENCAS? SERIA MELHOR TALVEZ... NS DEPOIS PENSAR SOBRE ISSO!!!
         //! String doencas = json.getJSONObject("utente").getString("doença");
-        String data_agendamento = json.getJSONObject("utente").getString("data_inscricao");
 
+
+        //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
+        String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
+        
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        Date data_agenda = new Date(format.parse(data_agendamento).getTime());
+        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
         utenteRepository.save(utente);
         
-        ListaEspera lista_de_espera = new ListaEspera(utente, data_agenda);
+        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
         listaEsperaRepository.save(lista_de_espera);
     }
 
@@ -100,13 +106,13 @@ public class MQConsumer {
      * @throws ParseException - excecao da data
      */
     private void addCapacityForDay(JSONObject json) throws ParseException {
-        String dataString = json.getString("date");
+        /*String dataString = json.getString("date");
         int quantidade = json.getInt("quantity");
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date data = new Date(format.parse(dataString).getTime());
 
         Capacidade capacidade = new Capacidade(data, quantidade);
-        //capacidadeRepository.save(capacidade);
+        capacidadeRepository.save(capacidade);*/
     }
 
     /**
@@ -115,18 +121,25 @@ public class MQConsumer {
      * @throws ParseException
      */
     private void addVaccinesPerCenter(JSONObject json) throws ParseException {
-        String idLote = json.getString("id_lote");
+        String idLote = json.getString("lote_id");
         int quantidade = json.getInt("quantity");
         String dataValidadeString = json.getString("expiration_date");
-        int id_centro = json.getInt("center");
+        int id_centro = json.getInt("center_id");
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date dataValidade = new Date(format.parse(dataValidadeString).getTime());
-        System.out.println(dataValidade);
-        CentroVacinacao centro =  new CentroVacinacao(id_centro);
+        CentroVacinacao centro = new CentroVacinacao(id_centro);
         Lote lote = new Lote(idLote, quantidade, centro);
         loteRepository.save(lote);
 
+        //atualizar capacidade atual dos centros
+        List<CentroVacinacao> centrosVacinacaoList = centroVacinacaoRepository.findAll();
+        for (CentroVacinacao centroVacinacao : centrosVacinacaoList) {
+            centroVacinacao.incrementCapacidadeAtual(quantidade);
+            centroVacinacaoRepository.save(centroVacinacao);
+        }
+
+        //Atraves do id do lote, conseguimos saber o nome da vacina
         for (int i = 0; i < quantidade; i++) {
             String nomeVacina = "";
             if (idLote.contains("PF")) {

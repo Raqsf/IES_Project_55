@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     `data_inscricao`        DATE            NOT NULL,
 
     PRIMARY KEY(`id`),
-    FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`), 
+    FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)
 );
 
 CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
