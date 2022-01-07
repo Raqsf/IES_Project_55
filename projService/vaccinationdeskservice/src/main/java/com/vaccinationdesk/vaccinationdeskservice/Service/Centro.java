@@ -16,6 +16,9 @@ public class Centro {
 
     public void atualizarCapacidade() {
         List<CentroVacinacao> centrosVacinacaoList = centroVacinacaoRepository.findAll();
+        for (CentroVacinacao centro : centrosVacinacaoList) {
+            System.out.println(centro);
+        }
     }
     
     

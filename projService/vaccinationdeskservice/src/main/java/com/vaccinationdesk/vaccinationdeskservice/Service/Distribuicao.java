@@ -99,9 +99,9 @@ public class Distribuicao {
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
             
-                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
-                            + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
-
+                    //! codigo do qr code
+                    //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
+                    //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
                     //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
                     //! ver se dá para executar este codigo de enviar emails com thread, pq demora 1.8 +/- segundos a enviar o email
