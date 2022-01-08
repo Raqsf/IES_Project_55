@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)
 );
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS `doencas` (
     `id`    INT     AUTO_INCREMENT      NOT NULL,
     `doenca`    VARCHAR(200)    NOT NULL,
@@ -92,6 +93,16 @@ INSERT INTO `doencas` (`doenca`) VALUES
 ('Obesidade'),
 ('Doença AutoImune');
 
+=======
+CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
+    `id`			            INT		  AUTO_INCREMENT          NOT NULL,
+    `dia`                       DATE            NOT NULL,
+    `quantidade`                INT             NOT NULL,
+
+    PRIMARY KEY(`id`),
+);
+
+>>>>>>> feature/vacinacao
 INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 (1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
 (2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
