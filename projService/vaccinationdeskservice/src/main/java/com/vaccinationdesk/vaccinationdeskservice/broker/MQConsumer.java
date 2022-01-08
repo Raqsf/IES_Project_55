@@ -86,7 +86,7 @@ public class MQConsumer {
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
         
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
         Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
