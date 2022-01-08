@@ -1,6 +1,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET TIME_ZONE = "+00:00";
-
+ 
 CREATE DATABASE IF NOT EXISTS `vaccinationdb` DEFAULT CHARACTER SET latin1;
 USE `vaccinationdb`;
 
@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `doencas` (
 
     PRIMARY KEY(`id`)
 );
+
 
 CREATE TABLE IF NOT EXISTS `doencas_por_utente` (
     `n_utente`   INT     NOT NULL,

@@ -1,50 +1,37 @@
 package com.vaccinationdesk.vaccinationdeskservice.model;
 
-import javax.persistence.ManyToOne;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name="doenca")
-// TODO
+@Table(name="doencas")
 public class Doenca {
-    @Column(name="id")
-    private int id;
-    @Column(name="nome")
-    private String nome;
-    @ManyToOne
-    // TODO
-    @JoinColumn(name="utente")
-    private Utente utente;
-
-    public Doenca(int id, String nome, Utente utente){
-        this.id=id;
-        this.nome=nome;
-        this.utente=utente;
-    }
-
     @Id
-    public int getId(){
-        return id;
+    @Column(name="id")
+    @GeneratedValue()
+    private int id;
+
+    @Column(name="doenca")
+    private String doenca;
+
+    public Doenca(){}
+
+    public Doenca(int id, String doenca){
+        this.id=id;
+        this.doenca=doenca;
     }
 
-    public String getNome(){
-        return nome;
+    public int getID(){
+        return this.id;
     }
 
-    public Utente getUtente(){
-        return utente;
+    public String getDoenca(){
+        return this.doenca;
     }
 }
