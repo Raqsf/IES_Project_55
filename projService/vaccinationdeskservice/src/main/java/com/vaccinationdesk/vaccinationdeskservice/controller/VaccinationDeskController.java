@@ -62,13 +62,8 @@ public class VaccinationDeskController {
         return centroVacinacaoRepository.findAll();
     }
 
-<<<<<<< HEAD
-    @GetMapping("/utente")
+    /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
-=======
-    /*@GetMapping("/utente/{nome}")
-    public Utente getUtenteByNome(@PathVariable String nome) {
->>>>>>> feature/vacinacao
         return utenteRepository.findUtenteByNome(nome);
     }*/
 
