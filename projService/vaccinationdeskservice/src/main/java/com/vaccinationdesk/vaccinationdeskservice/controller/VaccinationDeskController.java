@@ -11,11 +11,13 @@ import javax.persistence.Query;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
+import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
@@ -45,7 +47,8 @@ public class VaccinationDeskController {
     private LoteRepository loteRepository;
     @Autowired
     private AgendamentoRepository agendamentoRepository;
-
+    @Autowired
+    private DoencaRepository doencaRepository;
     // private EntityManager em;
     // @GetMapping("/centrovacinacao/{centro}")
     // public List<?> centroVacinacao(@PathVariable Integer centro) {
@@ -59,7 +62,7 @@ public class VaccinationDeskController {
         return centroVacinacaoRepository.findAll();
     }
 
-    @GetMapping("/utente")
+    /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
         return utenteRepository.findUtenteByNome(nome);
     }
@@ -143,6 +146,11 @@ public class VaccinationDeskController {
             throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found"+e.getMessage());
         }
         
+    }
+
+    @GetMapping("/doencas")
+    public List<Doenca> doencas(){
+        return doencaRepository.findAll();
     }
     
 

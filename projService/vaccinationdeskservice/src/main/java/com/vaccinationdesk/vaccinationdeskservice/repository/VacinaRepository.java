@@ -13,4 +13,3 @@ public interface VacinaRepository extends JpaRepository<Vacina, Integer> {
     //@Query("UPDATE vacina SET administrada_a = :n_utente, data_administracao = :data WHERE n_vacina = :id")
     //void updateVacina(@Param("nome") Integer n_utente, @Param("data") Date data, @Param("id") Integer id);
 }
-
