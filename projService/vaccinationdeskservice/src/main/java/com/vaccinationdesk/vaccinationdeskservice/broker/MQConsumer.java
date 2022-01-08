@@ -1,19 +1,20 @@
 package com.vaccinationdesk.vaccinationdeskservice.broker;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
+import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
+import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
-import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,93 +22,137 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class MQConsumer {
 
-    private Map<Integer, Utente> scheduleVaccineMap = new HashMap<Integer, Utente>();
-    private Map<Integer, Utente> gettingVaccineMap = new HashMap<Integer, Utente>();
-    private int quantityForDay; 
-
     @Autowired
     private UtenteRepository utenteRepository;
 
     @Autowired
-    private AgendamentoRepository agendamentoRepository;
+    private ListaEsperaRepository listaEsperaRepository;
 
     @Autowired
     private CentroVacinacaoRepository centroVacinacaoRepository;
 
+    @Autowired
+    private LoteRepository loteRepository;
+
+    @Autowired
+    private VacinaRepository vacinaRepository;
+
+
+
+    /**
+     * Funcao que consume os dados do broker, sendo depois os mesmos
+     * separados dependendo do "type"
+     * 
+     * @param input - Dados provenientes do broker
+     * @throws ParseException - excecao da data
+     */
     @RabbitListener(queues = MQConfig.QUEUE)
     public void listen(String input) throws ParseException {
         JSONObject json = new JSONObject(input);
         String messageType = json.getString("type");
         switch (messageType) {
-            case "people_getting_vaccinated":
-                //addGettingVaccine(json);
-                break;
             case "schedule_vaccine":
                 addScheduleVaccines(json);
                 break;
             case "vaccines_quantity":
-                int quantity = json.getInt("quantity");
-                quantityForDay = quantity;
+                addCapacityForDay(json);
+                break;
+            case "vaccines_per_centers":
+                addVaccinesPerCenter(json);
                 break;
             default:
                 break;                
         }
     }
-
-    public void addScheduleVaccines(JSONObject json) throws ParseException {
+    /**
+     * Funcao para tratar da informacao que chega da geração de dados.
+     * A informcao chega num formato JSON, e é guardada na base de dados
+     * nomeadamente nas tabelas, pessoa, e lista_de_espera
+     * 
+     * @param json - informacao que chega da geração de dados
+     * @throws ParseException - excecao da data
+     */
+    private void addScheduleVaccines(JSONObject json) throws ParseException {
         int n_utente = json.getJSONObject("utente").getInt("n_utente");
         String nome = json.getJSONObject("utente").getString("nome");
         String email = json.getJSONObject("utente").getString("email");
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
         String local = json.getJSONObject("utente").getString("local");
-        String doencas = json.getJSONObject("utente").getString("doença");
-        String data_agendamento = json.getJSONObject("utente").getString("data_vacina");
+        //! CRIAR UMA TABELA DOENCAS? SERIA MELHOR TALVEZ... NS DEPOIS PENSAR SOBRE ISSO!!!
+        //! String doencas = json.getJSONObject("utente").getString("doença");
 
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
+        //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
+        String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
         
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        
-        Date data_agenda = new Date(format.parse(data_agendamento).getTime());
-        
+        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
-        //para guardar o utente na base de dados
         utenteRepository.save(utente);
-
-        List<CentroVacinacao> all_cv = centroVacinacaoRepository.findAll();
-        CentroVacinacao cv = all_cv.get(1 + (int) (Math.random() * ((all_cv.size() - 1))));
-        Agendamento agendamento = new Agendamento(utente, data_agenda, cv);
         
-        // guardar agendamento na bd
-        agendamentoRepository.save(agendamento);
-        //scheduleVaccineMap.put(n_utente, utente);
+        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
+        listaEsperaRepository.save(lista_de_espera);
     }
 
-    public void addGettingVaccine(JSONObject json) throws ParseException {
-        /*int n_utente = json.getJSONObject("utente").getInt("n_utente");
-        String nome = json.getJSONObject("utente").getString("nome");
-        String email = json.getJSONObject("utente").getString("email");
-        String data_nasc = json.getJSONObject("utente").getString("data_nasc");
-        String local = json.getJSONObject("utente").getString("local");
-        String doencas = json.getJSONObject("utente").getString("doença");
-        //String data_vacina = json.getJSONObject("utente").getString("data_vacina");
-        Date data_nascimento = (Date) new SimpleDateFormat("dd/MM/yy").parse(data_nasc);  
-        Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
-        
-        //para guardar o utente na base de dados
-        utenteRepository.save(utente);
-        gettingVaccineMap.put(n_utente, utente);*/
+    /**
+     * Funcao que recebe a informacao da geracao de dados, sobre a capacidade
+     * de todo o sistema para um dadod dia.
+     * 
+     * @param json - informacao que chega da geração de dados
+     * @throws ParseException - excecao da data
+     */
+    private void addCapacityForDay(JSONObject json) throws ParseException {
+        /*String dataString = json.getString("date");
+        int quantidade = json.getInt("quantity");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = new Date(format.parse(dataString).getTime());
+
+        Capacidade capacidade = new Capacidade(data, quantidade);
+        capacidadeRepository.save(capacidade);*/
     }
 
-    public Map<Integer, Utente> getScheduleVaccineMap() {
-        return scheduleVaccineMap;
-    }
+    /**
+     * 
+     * @param json
+     * @throws ParseException
+     */
+    private void addVaccinesPerCenter(JSONObject json) throws ParseException {
+        String idLote = json.getString("lote_id");
+        int quantidade = json.getInt("quantity");
+        String dataValidadeString = json.getString("expiration_date");
+        int id_centro = json.getInt("center_id");
 
-    public Map<Integer, Utente> getGettingVaccineMap() {
-        return gettingVaccineMap;
-    }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataValidade = new Date(format.parse(dataValidadeString).getTime());
+        CentroVacinacao centro = new CentroVacinacao(id_centro);
+        Lote lote = new Lote(idLote, quantidade, centro);
+        loteRepository.save(lote);
 
-    public int getQuantityForDay() {
-        return quantityForDay;
+        //atualizar capacidade atual dos centros
+        List<CentroVacinacao> centrosVacinacaoList = centroVacinacaoRepository.findAll();
+        for (CentroVacinacao centroVacinacao : centrosVacinacaoList) {
+            centroVacinacao.incrementCapacidadeAtual(quantidade);
+            centroVacinacaoRepository.save(centroVacinacao);
+        }
+
+        //Atraves do id do lote, conseguimos saber o nome da vacina
+        for (int i = 0; i < quantidade; i++) {
+            String nomeVacina = "";
+            if (idLote.contains("PF")) {
+                nomeVacina = "Pfizer";
+            } else if (idLote.contains("MO")) {
+                nomeVacina = "Moderna";
+            } else if (idLote.contains("AZ")) {
+                nomeVacina = "Astrazeneca";
+            } else {
+                nomeVacina = "J&J";
+            }
+
+            Vacina vacina = new Vacina(lote, nomeVacina, dataValidade);
+            vacinaRepository.save(vacina);
+        }
     }
 }

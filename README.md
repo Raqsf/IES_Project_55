@@ -11,6 +11,10 @@ A distribuição de vacinas pelos centros de vacinação é feita automaticament
 
 O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
+### Relatório 
+Em progresso
+https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrgvn6NY8cXZja3s/edit?usp=sharing
+
 ## Equipa
 | NMEC | NOME| Papel |
 |----:|-----|-----|
@@ -22,7 +26,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 ## DevOps
 ### Docker-compose
 Na raiz do projeto basta correr o comando.  
-    docker-compose up  
+    `docker-compose up`  
 Na primeira execução deve tambem criar as tabelas na base de dados.  
 Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.
 db connection:
@@ -31,7 +35,7 @@ db connection:
             MYSQL_USER: ies  
             MYSQL_PASSWORD: password  
 Para interromper o docker compose basta correr o comando.  
-    docker-compose down  
+    `docker-compose down`  
 
 
 ### MySQL docker image
