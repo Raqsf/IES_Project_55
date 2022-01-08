@@ -22,6 +22,7 @@ export default function DadosUtente(props) {
   }
 
   function handleSubmit(event) {
+    console.log("HEY")
     event.preventDefault();
 
     const headers = {
@@ -31,8 +32,8 @@ export default function DadosUtente(props) {
 
     const user = {
       id: utente,
-      // nome: nome,
-      // dataNascimento: date.toISOString(),
+      nome: nome,
+      dataNascimento: date.toISOString(),
     };
 
     api
@@ -40,7 +41,7 @@ export default function DadosUtente(props) {
       .then((response) => {
         setResposta(response.data);
         console.log(response.data);
-        //router.push("/success");
+        // router.push("/success");
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -69,9 +70,7 @@ export default function DadosUtente(props) {
       >
         <form
           component="form"
-          onSubmit={(e) => {
-            handleSubmit(e);
-          }}
+          onSubmit={handleSubmit}
         >
           <FormControl variant="outlined">
             <TextField
