@@ -1,6 +1,7 @@
 import { FormControl, FormHelperText, TextField, Button } from '@mui/material';
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
+import api from '../../api';
 
 export default function FormVaccinationInfo() {
     const router = useRouter();
@@ -15,7 +16,33 @@ export default function FormVaccinationInfo() {
     function handleSubmit(event) {
         //alert("HELLO");
         event.preventDefault();
-        router.push('/vaccination_info');
+        const headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+        };
+
+        const user = {
+            id: utente,
+            nome: nome,
+        };
+        console.log(user);
+        api
+        .get(`/agendamento/${user.id}`, headers)
+        .then((response) => {
+            // setResposta(response.data);
+            console.log(response.data);
+            if(response.data.length == 0)  {
+                // TODO: passar essa info para a pagina vaccination_info
+                alert("Não existe agendamento")
+            } else {
+                router.push("/vaccination_info");
+            }
+        })
+        .catch((err) => {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Erro");
+        });
+        // router.push('/vaccination_info');
     }
 
     return (
