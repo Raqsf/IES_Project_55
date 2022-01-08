@@ -39,9 +39,13 @@ export default function DadosUtente(props) {
     api
       .post(`/utente`, user, headers)
       .then((response) => {
+        // if (response.status >= 200 && response.status < 300)
+        console.log(response)
         setResposta(response.data);
-        console.log(response.data);
-        // router.push("/success");
+        router.push({
+          pathname: "/success",
+          search: `?response=${resposta}`
+        });
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -61,7 +65,6 @@ export default function DadosUtente(props) {
     <Container>
       <Box
         className="DadosUtente"
-        onSubmit={handleSubmit}
         sx={{
           display: "flex",
           justifyContent: "center",

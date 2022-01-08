@@ -4,7 +4,9 @@ import { DashboardLayout } from '../components/dashboard-layout';
 //import { customers } from '../__mocks__/customers';
 import Success from 'src/components/agendamento/success';
 
-const Agendamento = () => (
+const Agendamento = () => {
+  
+  return (
   <>
     <Head>
       <title>
@@ -29,7 +31,8 @@ const Agendamento = () => (
       </Container>
     </Box>
   </>
-);
+  );
+}
 Agendamento.getLayout = (page) => (
   <DashboardLayout>
     {page}

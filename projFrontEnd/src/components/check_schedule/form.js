@@ -33,7 +33,7 @@ export default function FormVaccinationInfo() {
             console.log(response.data);
             if(response.data.length == 0)  {
                 // TODO: passar essa info para a pagina vaccination_info
-                alert("Não existe agendamento")
+                alert("Não existe agendamento");
             } else {
                 router.push("/vaccination_info");
             }

@@ -17,25 +17,27 @@ const Manage = () => {
   // };
   // function getVaccinationCenters() {
     
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json",
-    };
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
 
-    React.useEffect(() => {
-      const getData = async () => {
-        const data = await api.get(
-          `/centrovacinacao`, headers
-        ).then((response) => {
-          setCentros(response.data);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        });
-      };
-      getData();
-    }, []);
+  React.useEffect(() => {
+    console.log("HEY")
+    const getData = async () => {
+      const data = await api.get(
+        `/centrovacinacao`, headers
+      ).then((response) => {
+        setCentros(response.data);
+        console.log(response.data)
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        alert("Erro");
+      });
+    };
+    getData();
+  }, []);
   return (
   <>
     <Head>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ListSubheader, List, ListItemButton, ListItemText, LinearProgress, Box } from '@mui/material';
 import NextLink from 'next/link';
-import api from "../../api";
 
 // const centros = ['Centro de Vacinação de Aveiro', 'Centro de Vacinação do Porto','Centro de Vacinação de Lisboa', 'Centro de Vacinação de Coimbra','Centro de Vacinação de Setubal','Centro de Vacinação de Faro'];
 
