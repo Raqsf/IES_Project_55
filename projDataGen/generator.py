@@ -51,7 +51,7 @@ class Generator:
                     self.minutes = 0
                 self.minutes = (self.minutes + minutes_to_sum) % 60
                 seconds = randint(0, 59)
-                self.people[random_n_utente]["data_inscricao"] = self.date_to_change.replace(hour=self.hours, minute=self.minutes, second=seconds).strftime("%d/%m/%Y %H:%M:%S")
+                self.people[random_n_utente]["data_inscricao"] = self.date_to_change.replace(hour=self.hours, minute=self.minutes, second=seconds).strftime("%Y-%m-%d %H:%M:%S")
                 return random_n_utente
             else:
                 random_n_utente = randint(1000,9999)

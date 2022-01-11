@@ -1,7 +1,7 @@
 package com.vaccinationdesk.vaccinationdeskservice.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,12 +27,12 @@ public class ListaEspera implements Serializable {
     private Utente utente;
 
     @Column(name = "data_inscricao")
-    private Date dataInscricao;
+    private Timestamp dataInscricao;
 
     public ListaEspera() {
     }
 
-    public ListaEspera(Utente utente, Date dataInscricao) {
+    public ListaEspera(Utente utente, Timestamp dataInscricao) {
         this.utente = utente;
         this.dataInscricao = dataInscricao;
     }
@@ -63,11 +63,11 @@ public class ListaEspera implements Serializable {
         this.utente = utente;
     }
 
-    public Date getDataInscricao() {
+    public Timestamp getDataInscricao() {
         return dataInscricao;
     }
 
-    public void setDataInscricao(Date dataInscricao) {
+    public void setDataInscricao(Timestamp dataInscricao) {
         this.dataInscricao = dataInscricao;
     }
 }

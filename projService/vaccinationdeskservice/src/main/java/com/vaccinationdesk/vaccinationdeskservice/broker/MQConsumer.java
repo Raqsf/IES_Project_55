@@ -1,6 +1,7 @@
 package com.vaccinationdesk.vaccinationdeskservice.broker;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,7 +22,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MQConsumer {
-
+    private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
     @Autowired
     private UtenteRepository utenteRepository;
 
@@ -84,11 +86,11 @@ public class MQConsumer {
 
         //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
-        
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());
+        Timestamp data_inscricaoSQL = new Timestamp(DATE_TIME_FORMAT.parse(data_inscricao).getTime());
+
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
         utenteRepository.save(utente);

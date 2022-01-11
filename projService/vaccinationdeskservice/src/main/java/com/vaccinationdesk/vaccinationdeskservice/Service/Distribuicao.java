@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -88,15 +90,17 @@ public class Distribuicao {
                 if (centroEscolhido.equals(centro.getMorada())) {
                     
                     //! por a data do sql com horas, minutos, e segundos
-                    long millis = System.currentTimeMillis();
-                    millis = millis + (10 * 60 * 1000);  
-                    Date dataVacina = new java.sql.Date(millis);
+                    System.out.println("Data: " + pedido.getDataInscricao());
+                    Timestamp data = pedido.getDataInscricao();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(data);
+                    cal.add(Calendar.DAY_OF_WEEK, 14);
+                    data.setTime(cal.getTime().getTime()); // or
+                    data = new Timestamp(cal.getTime().getTime());
                     
-                    System.out.println("Data da vacina: " + dataVacina);
-                    //plusdays = é a funcao que permite somar dias
-                    dataVacina = Date.valueOf(dataVacina.toLocalDate().plusDays(3));
+                    System.out.println("Data da vacina: " + data);
                     
-                    Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
+                    Agendamento agendamento = new Agendamento(pedido.getUtente(), data, centro);
                     agendamentoRepository.save(agendamento);
             
                     //! codigo do qr code
@@ -104,11 +108,9 @@ public class Distribuicao {
                     //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
                     //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
-                    //! ver se dá para executar este codigo de enviar emails com thread, pq demora 1.8 +/- segundos a enviar o email
-                    //! e torna o processo de agendamento lento. oq seria feito em 0.6/0.7s chega a demorar 2.2s
-                    //? https://spring.io/guides/gs/async-method/ <- ver se isto resovle o problema
+                    //* Falei com o prof, não há problema em isto demorar 1.5/2 (s) a enviar o email                    
                     try {
-                        sendEmail(pedido, dataVacina.toString(), centro);
+                        sendEmail(pedido, data.toString(), centro);
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -191,9 +193,6 @@ public class Distribuicao {
         
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
-        double start, stop, delta;
-        start = System.nanoTime();
-                
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
         // helper.setTo(pedido.getUtente().getEmail());
@@ -218,9 +217,5 @@ public class Distribuicao {
         f.delete();
         */
         javaMailSender.send(msg);
-     
-        stop = System.nanoTime();  // clock snapshot after
-        delta = (stop - start) / 1e9; // convert nanoseconds to milliseconds
-        System.out.println("send email: " + delta);
     }
 }

@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `lote` (
 
 CREATE TABLE IF NOT EXISTS `agendamento` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
-    `dia_vacinacao`             DATE        ,
+    `dia_vacinacao`             DATETIME        ,
     `n_utente`                INT           NOT NULL,
     `centro_vacinacao`          INT,
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `agendamento` (
 CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `n_utente`                INT           NOT NULL,
-    `data_inscricao`        DATE            NOT NULL,
+    `data_inscricao`        smalldatetime            NOT NULL,
 
     PRIMARY KEY(`id`),
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)
