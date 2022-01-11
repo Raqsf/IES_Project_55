@@ -68,9 +68,62 @@ public class Distribuicao {
      * @throws IOException
      * @throws WriterException
      */
-    public void distribuirVacinasPorOrdemMarcacao() throws MessagingException, WriterException, IOException {
+    public void distribuirVacinasPorOrdemMarcacao() {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de
+        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
+        int quantidadeDeCentros = centrosVacinacao.size();
+        String moradasCentrosAPI = "";
+
+        for (CentroVacinacao centro : centrosVacinacao) {
+            moradasCentrosAPI += centro.getMorada() + "|";
+        }
+
+        for (int i = 0; i < capacidadeDia; i++) {
+            ListaEspera pedido = listaEspera.get(i);
+            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+
+            //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
+            String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
+
+            for (CentroVacinacao centro : centrosVacinacao) {
+                if (centroEscolhido.equals(centro.getMorada())) {
+                    //escolher a data em que o utente irá tomar a vacina                    
+                    Timestamp dataVacina = pedido.getDataInscricao();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dataVacina);
+                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    dataVacina.setTime(cal.getTime().getTime());
+
+                    Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
+                    agendamentoRepository.save(agendamento);
+
+                    //! codigo do qr code
+                    //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
+                    //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
+                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+
+                    //* Falei com o prof, não há problema em isto demorar 1.5/2 (s) a enviar o email                    
+                    try {
+                        sendEmail(pedido, dataVacina.toString(), centro);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
+
+    public void distribuirVacinasPorFiltros(String filtros) {
+
+        List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
+        //! fazer filtros de pesquisa na base de dados de acordo com oq é escolhido no front end
+        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
+
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
         
@@ -88,19 +141,14 @@ public class Distribuicao {
 
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
-                    
-                    //! por a data do sql com horas, minutos, e segundos
-                    System.out.println("Data: " + pedido.getDataInscricao());
-                    Timestamp data = pedido.getDataInscricao();
+                    //escolher a data em que o utente irá tomar a vacina                    
+                    Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
-                    cal.setTime(data);
-                    cal.add(Calendar.DAY_OF_WEEK, 14);
-                    data.setTime(cal.getTime().getTime()); // or
-                    data = new Timestamp(cal.getTime().getTime());
+                    cal.setTime(dataVacina);
+                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    dataVacina.setTime(cal.getTime().getTime());
                     
-                    System.out.println("Data da vacina: " + data);
-                    
-                    Agendamento agendamento = new Agendamento(pedido.getUtente(), data, centro);
+                    Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
             
                     //! codigo do qr code
@@ -110,7 +158,7 @@ public class Distribuicao {
 
                     //* Falei com o prof, não há problema em isto demorar 1.5/2 (s) a enviar o email                    
                     try {
-                        sendEmail(pedido, data.toString(), centro);
+                        sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     } catch (IOException e) {

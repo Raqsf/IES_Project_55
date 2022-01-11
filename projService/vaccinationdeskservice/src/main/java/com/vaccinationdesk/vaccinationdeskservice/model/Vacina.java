@@ -1,6 +1,7 @@
 package com.vaccinationdesk.vaccinationdeskservice.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class Vacina {
     @JoinColumn(name="administrada_a")
     private Utente utente;
     @Column(name="data_administracao")
-    private Date data_administracao;
+    private Timestamp data_administracao;
 
     public Vacina() {
     }
@@ -43,7 +44,7 @@ public class Vacina {
         this.dataValidade = dataValidade;
     }
 
-    public Vacina(Lote lote, String nome, Date dataValidade, Utente utente, Date data_administracao){
+    public Vacina(Lote lote, String nome, Date dataValidade, Utente utente, Timestamp data_administracao){
         this.lote=lote;
         this.nome = nome;
         this.dataValidade = dataValidade;
@@ -91,11 +92,11 @@ public class Vacina {
         this.utente = utente;
     }
 
-    public Date getDataAdministracao() {
+    public Timestamp getDataAdministracao() {
         return data_administracao;
     }
 
-    public void setDataAdministracao(Date data_administracao) {
+    public void setDataAdministracao(Timestamp data_administracao) {
         this.data_administracao = data_administracao;
     }
 
