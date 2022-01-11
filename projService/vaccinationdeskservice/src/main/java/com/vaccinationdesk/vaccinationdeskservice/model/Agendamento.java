@@ -3,7 +3,6 @@ package com.vaccinationdesk.vaccinationdeskservice.model;
 import java.io.Serializable;
 import java.sql.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,11 +28,16 @@ public class Agendamento implements Serializable{
     private Utente utente;
     @Column(name="dia_vacinacao")
     private Date diaVacinacao;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="centro_vacinacao", referencedColumnName = "id")
     private CentroVacinacao centro_vacinacao;
 
-    public Agendamento(){}
+    public Agendamento() {
+    }
+
+    public Agendamento(Utente utente) {
+        this.utente = utente;
+    }
 
     public Agendamento(Utente utente, Date diaVacinacao, CentroVacinacao centro_vacinacao){
         this.utente = utente;
