@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `vacina` (
     `nome`		            VARCHAR(256)		NOT NULL,
     `data_validade`		    DATE            		NOT NULL,
     `administrada_a`		INT,
-    `data_administracao`    DATE,
+    `data_administracao`    DATETIME,
 
     PRIMARY KEY(`n_vacina`),
     FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
