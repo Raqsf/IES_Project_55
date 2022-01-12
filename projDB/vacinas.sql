@@ -30,17 +30,19 @@ CREATE TABLE IF NOT EXISTS `vacina` (
     `nome`		            VARCHAR(256)		NOT NULL,
     `data_validade`		    DATE            		NOT NULL,
     `administrada_a`		INT,
-    `data_administracao`    DATE,
+    `data_administracao`    DATETIME,
 
     PRIMARY KEY(`n_vacina`),
     FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
     FOREIGN KEY(`lote`) REFERENCES `lote`(`id`)
 );
-
+drop table vacina
+DROP TABLE lote
 CREATE TABLE IF NOT EXISTS `lote` (
     `id`			                VARCHAR(6)          NOT NULL,
     `quantidade`	        	    INT         		NOT NULL,
     `atribuida_ao_centro`		    INT            	    NOT NULL,
+    `data_chegada`                  DATE                NOT NULL,
 
     PRIMARY KEY(`id`),
     FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
@@ -48,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `lote` (
 
 CREATE TABLE IF NOT EXISTS `agendamento` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
-    `dia_vacinacao`             DATE        ,
+    `dia_vacinacao`             DATETIME        ,
     `n_utente`                INT           NOT NULL,
     `centro_vacinacao`          INT,
 
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `agendamento` (
 CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `n_utente`                INT           NOT NULL,
-    `data_inscricao`        DATE            NOT NULL,
+    `data_inscricao`        datetime            NOT NULL,
 
     PRIMARY KEY(`id`),
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)

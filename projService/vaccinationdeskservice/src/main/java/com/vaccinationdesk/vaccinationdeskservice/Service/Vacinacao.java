@@ -1,6 +1,6 @@
 package com.vaccinationdesk.vaccinationdeskservice.Service;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
@@ -33,7 +33,7 @@ public class Vacinacao {
         int i = 0;
         for (Vacina vacina : vacinaList) {
             Agendamento agendamento = agendamentoList.get(i);
-            Date data_toma_vacina = agendamento.getDiaVacinacao();
+            Timestamp data_toma_vacina = agendamento.getDiaVacinacao();
             Utente utente_vacina_administrada = agendamento.getUtente();
             CentroVacinacao centro = agendamento.getCentro();
             vacina.setUtente(utente_vacina_administrada);

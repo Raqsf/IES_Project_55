@@ -2,6 +2,7 @@ package com.vaccinationdesk.vaccinationdeskservice.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ public class Agendamento implements Serializable{
     @JoinColumn(name="n_utente")
     private Utente utente;
     @Column(name="dia_vacinacao")
-    private Date diaVacinacao;
+    private Timestamp diaVacinacao;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="centro_vacinacao", referencedColumnName = "id")
     private CentroVacinacao centro_vacinacao;
@@ -40,7 +41,7 @@ public class Agendamento implements Serializable{
         this.utente = utente;
     }
 
-    public Agendamento(Utente utente, Date diaVacinacao, CentroVacinacao centro_vacinacao){
+    public Agendamento(Utente utente, Timestamp diaVacinacao, CentroVacinacao centro_vacinacao){
         this.utente = utente;
         this.diaVacinacao = diaVacinacao;
         this.centro_vacinacao = centro_vacinacao;
@@ -53,7 +54,7 @@ public class Agendamento implements Serializable{
         return this.utente;
     }
 
-    public Date getDiaVacinacao(){
+    public Timestamp getDiaVacinacao(){
         return this.diaVacinacao;
     }
 
