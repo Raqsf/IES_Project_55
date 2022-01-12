@@ -73,7 +73,9 @@ class Generator:
         for id_center in range(1, 5):
             id_lote = random.choice(self.vaccines) + str(randint(1000, 9999)) #! criar uma lista para nao deixar haver id iguais?
             center =  id_center
-            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
+            #arrived_date = self.initial_date + timedelta(days=randint(1,5))
+            arriving_date = self.initial_date + timedelta(days=3)
+            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "arriving_date": arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
             self.send(mes=message)
             print('\033[93m' + message.__str__() +  '\033[0m')
                 
@@ -106,15 +108,15 @@ class Generator:
         
 if __name__ == '__main__':
     #people = {n_utente: [informações do utente]}  
-    people =  {1234:{'n_utente':'1234','nome':'John','email':'john@email.com', 'local':'Aveiro', 'data_nasc':'01/01/2000', 'doença':'nada', 'data_inscricao':"12/25/2021"},
-              1235: {'n_utente':'1235','nome':'Jane', 'email':'jane@email.com', 'local':'Aveiro', 'data_nasc':'01/01/1987', 'doença':'cardiaca','data_inscricao': "12/24/2021"},
-              1236: {'n_utente':'1236','nome':'Johnny', 'email':'johny@email.com', 'local':'Porto', 'data_nasc':'01/01/1986', 'doença':'pulmunar','data_inscricao': "12/25/2021"},
-              1237: {'n_utente':'1237','nome':'Duarte','email': 'duarte@email.com', 'local':'Porto', 'data_nasc':'01/01/1999', 'doença':'nada', 'data_inscricao':"12/25/2021"},
-              1238: {'n_utente':'1238','nome':'Tiago', 'email':'tiago@email.com','local': 'Lisboa', 'data_nasc':'01/01/2012', 'doença':'nada', 'data_inscricao':"12/26/2021"},
-              1239: {'n_utente':'1239','nome':'Filipa','email': 'filipa@email.com', 'local':'Lisboa', 'data_nasc':'01/01/2003', 'doença':'cardiaca','data_inscricao': "12/24/2021"},
+    people =  {1234:{'n_utente':'1234','nome':'John','email':'john@email.com', 'local':'Aveiro', 'data_nasc':'01/01/2000', 'doença':'Doença Cardíaca', 'data_inscricao':"12/25/2021"},
+              1235: {'n_utente':'1235','nome':'Jane', 'email':'jane@email.com', 'local':'Aveiro', 'data_nasc':'01/01/1987', 'doença':'Doença Pulmonar','data_inscricao': "12/24/2021"},
+              1236: {'n_utente':'1236','nome':'Johnny', 'email':'johny@email.com', 'local':'Porto', 'data_nasc':'01/01/1986', 'doença':'Diabetes','data_inscricao': "12/25/2021"},
+              1237: {'n_utente':'1237','nome':'Duarte','email': 'duarte@email.com', 'local':'Porto', 'data_nasc':'01/01/1999', 'doença':'Cancro', 'data_inscricao':"12/25/2021"},
+              1238: {'n_utente':'1238','nome':'Tiago', 'email':'tiago@email.com','local': 'Lisboa', 'data_nasc':'01/01/2012', 'doença':'nada', 'Obesidade':"12/26/2021"},
+              1239: {'n_utente':'1239','nome':'Filipa','email': 'filipa@email.com', 'local':'Lisboa', 'data_nasc':'01/01/2003', 'doença':'Doença AutoImune','data_inscricao': "12/24/2021"},
               1240: {'n_utente':'1240','nome':'Sebastiana', 'email':'sebastiana@email.com','local': 'Coimbra', 'data_nasc':'01/01/1966', 'doença':'nada', 'data_inscricao':"12/26/2021"},
               1241: {'n_utente':'1241','nome':'Goncalo','email': 'goncalo@email.com', 'local':'Coimbra', 'data_nasc':'01/01/1939','doença': 'nada', 'data_inscricao':"12/26/2021"},
-              1242: {'n_utente':'1242','nome':'Sofia', 'email':'sofia@email.com','local': 'Setubal', 'data_nasc':'01/01/1949','doença': 'sanguinia', 'data_inscricao':"12/24/2021"},
+              1242: {'n_utente':'1242','nome':'Sofia', 'email':'sofia@email.com','local': 'Setubal', 'data_nasc':'01/01/1949','doença': 'Diabetes', 'data_inscricao':"12/24/2021"},
               1243: {'n_utente':'1243','nome':'Lara', 'email':'lara@email.com','local': 'Setubal', 'data_nasc':'01/01/1974','doença': 'nada', 'data_inscricao':"12/24/2021"}
               }
     #! The vaccination centers may be in DB from the beggining, in the data generation I think 
