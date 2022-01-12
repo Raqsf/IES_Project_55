@@ -27,12 +27,12 @@ public class ListaEspera implements Serializable {
     private Utente utente;
 
     @Column(name = "data_inscricao")
-    private Date dataInscricao;
+    private long dataInscricao;
 
     public ListaEspera() {
     }
 
-    public ListaEspera(Utente utente, Date dataInscricao) {
+    public ListaEspera(Utente utente, long dataInscricao) {
         this.utente = utente;
         this.dataInscricao = dataInscricao;
     }
@@ -63,11 +63,11 @@ public class ListaEspera implements Serializable {
         this.utente = utente;
     }
 
-    public Date getDataInscricao() {
+    public long getDataInscricao() {
         return dataInscricao;
     }
 
-    public void setDataInscricao(Date dataInscricao) {
+    public void setDataInscricao(long dataInscricao) {
         this.dataInscricao = dataInscricao;
     }
 }

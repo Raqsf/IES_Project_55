@@ -84,16 +84,19 @@ public class MQConsumer {
 
         //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
+        //System.out.println("ORIGINAL:\t"+data_inscricao);
         
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+        //System.out.println("\t"+formatHours);
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());
+        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());     // we might not need this
+        //System.out.println("|||||getTime():\t"+data_inscricaoSQL.getTime()+"\t DATE:"+data_inscricaoSQL);
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
 
         utenteRepository.save(utente);
         
-        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
+        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);   //Idk Pedro change this
         listaEsperaRepository.save(lista_de_espera);
     }
 
