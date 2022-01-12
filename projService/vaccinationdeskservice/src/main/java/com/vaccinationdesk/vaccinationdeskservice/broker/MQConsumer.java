@@ -40,7 +40,6 @@ public class MQConsumer {
     private VacinaRepository vacinaRepository;
 
 
-
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
      * separados dependendo do "type"
@@ -80,9 +79,7 @@ public class MQConsumer {
         String email = json.getJSONObject("utente").getString("email");
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
         String local = json.getJSONObject("utente").getString("local");
-        //! CRIAR UMA TABELA DOENCAS? SERIA MELHOR TALVEZ... NS DEPOIS PENSAR SOBRE ISSO!!!
-        //! String doencas = json.getJSONObject("utente").getString("doença");
-
+        String doencaGeracaoDados = json.getJSONObject("utente").getString("doença");
 
         //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
@@ -90,10 +87,13 @@ public class MQConsumer {
         SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
         Timestamp data_inscricaoSQL = new Timestamp(DATE_TIME_FORMAT.parse(data_inscricao).getTime());
-
+        
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
-
         utenteRepository.save(utente);
+        
+        //Doenca doenca = new Doenca(doencaGeracaoDados);
+        //DoencaUtente dpu = new DoencaUtente(utente, doenca);
+        //doencaUtenteRepository.save(dpu);
         
         ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
         listaEsperaRepository.save(lista_de_espera);
@@ -124,13 +124,15 @@ public class MQConsumer {
     private void addVaccinesPerCenter(JSONObject json) throws ParseException {
         String idLote = json.getString("lote_id");
         int quantidade = json.getInt("quantity");
+        String dataChegadaString = json.getString("arriving_date");
         String dataValidadeString = json.getString("expiration_date");
         int id_centro = json.getInt("center_id");
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date dataValidade = new Date(format.parse(dataValidadeString).getTime());
+        Date dataChegada = new Date(format.parse(dataChegadaString).getTime());
         CentroVacinacao centro = new CentroVacinacao(id_centro);
-        Lote lote = new Lote(idLote, quantidade, centro);
+        Lote lote = new Lote(idLote, quantidade, centro, dataChegada);
         loteRepository.save(lote);
 
         //atualizar capacidade atual dos centros
