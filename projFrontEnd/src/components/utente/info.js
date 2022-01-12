@@ -16,70 +16,13 @@ import { useRouter } from 'next/router';
     place: 'Centro Vacinação Aveiro'
   };
 
-
-    let state;
-    if (user.scheduled) {
-        state = (
-            <>
-            <Box
-            sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column'
-            }}
-            >
-                <Typography
-                    color="textPrimary"
-                    gutterBottom
-                    variant="h5"
-                >
-                    Estado: Agendado
-                </Typography>
-                <Typography
-                    color="textSecondary"
-                    variant="subtitle2"
-                >
-                    {user.date}
-                </Typography>
-                <Typography
-                    color="textSecondary"
-                    variant="subtitle2"
-                >
-                    {user.place}
-                </Typography>
-            </Box>
-            </>
-        );
-    } else {
-        state = (
-            <>
-            <Box
-            sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column'
-            }}
-            >
-                <Typography
-                    color="textPrimary"
-                    gutterBottom
-                    variant="h5"
-                >
-                    Estado: Não Agendado
-                </Typography>
-            </Box>
-            </>
-        ); 
-    }    
   
   export const Info = () => {
-    // const router = useRouter();
-    // const {
-    //     query: { response },
-    // } = router
-    // console.log(response)
-
     const router = useRouter();
+    const {
+        query: { utente_nome, utente_num, centro, morada, data }
+    } = router
+    console.log(utente_nome, utente_num, centro, morada, data)
 
   return (
     <Card>
@@ -102,20 +45,69 @@ import { useRouter } from 'next/router';
             color="textSecondary"
             variant="subtitle2"
           >
-            {user.name}
+            {utente_nome}
           </Typography>
           <Typography
             color="textSecondary"
             variant="subtitle2"
           >
-            {user.number}
+            {utente_num}
           </Typography>
         </Box>
       </CardContent>
       <Divider />
       <CardContent>
-        
-        
+        {user.scheduled ? 
+          <Box
+            sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column'
+            }}
+            >
+              <Typography
+                  color="textPrimary"
+                  gutterBottom
+                  variant="h5"
+              >
+                  Estado: Agendado
+              </Typography>
+              <Typography
+                  color="textSecondary"
+                  variant="subtitle2"
+              >
+                  {data}
+              </Typography>
+              <Typography
+                  color="textSecondary"
+                  variant="subtitle2"
+              >
+                  {centro}
+              </Typography>
+              <Typography
+                  color="textSecondary"
+                  variant="subtitle2"
+              >
+                  {morada}
+              </Typography>
+          </Box>
+          : 
+          <Box
+            sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column'
+            }}
+          >
+              <Typography
+                  color="textPrimary"
+                  gutterBottom
+                  variant="h5"
+              >
+                  Estado: Não Agendado
+              </Typography>
+          </Box>
+        }
       </CardContent>
     </Card>
   );
