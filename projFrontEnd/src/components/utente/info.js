@@ -5,7 +5,9 @@ import {
     Divider,
     Typography
   } from '@mui/material';
-  
+import { useRouter } from 'next/router';
+
+ 
   const user = {
     scheduled: true,
     date: '10/10/2021 11:13',
@@ -70,8 +72,17 @@ import {
         ); 
     }    
   
-  export const Info = (props) => (
-    <Card {...props}>
+  export const Info = () => {
+    // const router = useRouter();
+    // const {
+    //     query: { response },
+    // } = router
+    // console.log(response)
+
+    const router = useRouter();
+
+  return (
+    <Card>
       <CardContent>
         <Box
           sx={{
@@ -103,8 +114,10 @@ import {
       </CardContent>
       <Divider />
       <CardContent>
-        {state}
+        
+        
       </CardContent>
     </Card>
   );
+}
   

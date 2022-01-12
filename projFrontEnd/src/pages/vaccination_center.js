@@ -5,7 +5,6 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 //import { customers } from '../__mocks__/customers';
 import { useRouter } from "next/router";
 import api from "../api";
-// import { createBrowserHistory  as createHistory} from 'history';
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
 
@@ -13,6 +12,7 @@ const VaccinationCenter = () => {
     // const history = createHistory();
     // console.log(window.location.hrefs)
     // history.push()
+    // NOTA: acho q dá com o router
     // window.addEventListener('load', history.go(0), false);
     const router = useRouter();
     const [centro, setCentro] = React.useState('');

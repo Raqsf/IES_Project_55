@@ -10,6 +10,7 @@ import api from "../api";
 
 const Manage = () => {
   const [centros, setCentros] = React.useState([]);
+  const [doencas, setDoencas] = React.useState([]);
 
   // const handleClick = () => {
   //   alert("HELLO");
@@ -23,13 +24,36 @@ const Manage = () => {
   };
 
   React.useEffect(() => {
-    console.log("HEY")
     const getData = async () => {
       const data = await api.get(
         `/centrovacinacao`, headers
       ).then((response) => {
         setCentros(response.data);
         console.log(response.data)
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        alert("Erro");
+      });
+    };
+    getData();
+  }, []);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const data = await api.get(
+        `/doencas`, headers
+      ).then((response) => {
+        let dict = [];
+        for (const [key, value] of Object.entries(response.data)) {
+          dict.push({
+            id: key,
+            doenca: value.doenca,
+            checked: false
+          })
+        }
+        // console.log(dict)
+        setDoencas(dict);
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -64,7 +88,7 @@ const Manage = () => {
             <NestedList centros={centros} />
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
-            <VaccinationOrder />
+            <VaccinationOrder doencas={doencas}/>
             {/* <Check /> */}
           </Grid>
         </Grid>

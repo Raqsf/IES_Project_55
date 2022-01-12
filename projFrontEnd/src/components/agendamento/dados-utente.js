@@ -10,7 +10,6 @@ import api from "../../api";
 
 export default function DadosUtente(props) {
   const router = useRouter();
-  const { history } = props;
 
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
@@ -22,7 +21,6 @@ export default function DadosUtente(props) {
   }
 
   function handleSubmit(event) {
-    console.log("HEY")
     event.preventDefault();
 
     const headers = {

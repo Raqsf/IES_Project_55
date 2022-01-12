@@ -25,7 +25,7 @@ export default function FormVaccinationInfo() {
             id: utente,
             nome: nome,
         };
-        console.log(user);
+        
         api
         .get(`/agendamento/${user.id}`, headers)
         .then((response) => {
@@ -35,7 +35,10 @@ export default function FormVaccinationInfo() {
                 // TODO: passar essa info para a pagina vaccination_info
                 alert("Não existe agendamento");
             } else {
-                router.push("/vaccination_info");
+                router.push({ pathname: "/vaccination_info",
+                    // search: `?response=${response.data}`
+                    state: { detail: "hello"}
+                });
             }
         })
         .catch((err) => {
