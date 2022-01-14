@@ -25,10 +25,10 @@ public class DoencaPorUtente implements Serializable{
     private DoencaId id;
 
     public Utente getUser() {
-        return id.utente;
+        return id.getUtente();
     }
 
     public Doenca getDoenca() {
-        return id.doenca;
+        return id.getDoenca();
     }
 }

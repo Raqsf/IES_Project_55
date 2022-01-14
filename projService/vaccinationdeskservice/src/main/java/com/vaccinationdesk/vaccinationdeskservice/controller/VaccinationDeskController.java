@@ -13,12 +13,14 @@ import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundExce
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
@@ -55,6 +57,8 @@ public class VaccinationDeskController {
     private DoencaRepository doencaRepository;
     @Autowired
     private ListaEsperaRepository listaEsperaRepository;
+    @Autowired
+    private DoencaPorUtenteRepository dpuRepository;
     // private EntityManager em;
     // @GetMapping("/centrovacinacao/{centro}")
     // public List<?> centroVacinacao(@PathVariable Integer centro) {
@@ -99,17 +103,17 @@ public class VaccinationDeskController {
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws Exception {
         
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
-            // System.out.println(utenteRepository.findUtenteById(utente.getID()) );
-            // if (listaEsperaRepository.findUtenteInListaEspera(utente.getID())!=null){
-            //     throw new Exception("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
-            // }
+            System.out.println(utenteRepository.findUtenteById(utente.getID()) );
+            if (listaEsperaRepository.findUtenteInListaEspera(utente.getID())!=null){
+                throw new Exception("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
+            }
             Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
-            // if (!utente.getNome().equals(utenteDB.getNome()) || 
-            //     !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
-            //     throw new Exception("Dados inválidos");
-            // }
+            if (!utente.getNome().equals(utenteDB.getNome()) || 
+                !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
+                throw new Exception("Dados inválidos");
+            }
             long millis = System.currentTimeMillis();
-            ListaEspera le = new ListaEspera(utenteDB, millis);
+            ListaEspera le = new ListaEspera(utenteDB, new Date(millis));
             try {
                 listaEsperaRepository.save(le);
             } catch (Exception e) {
@@ -124,6 +128,12 @@ public class VaccinationDeskController {
     @GetMapping("/agendamento/{utente}")
     public List<Agendamento> getAgendamentoByUtente(@PathVariable Integer utente){
         return agendamentoRepository.findAllByUtente(utente);
+    }
+
+    @GetMapping("/deoncaPorUtente/{id}")
+    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id){
+        Utente u = utenteRepository.findUtenteById(id);
+        return dpuRepository.findByIdUtente(u);
     }
 
     @GetMapping("/centrovacinacao/{id}")
