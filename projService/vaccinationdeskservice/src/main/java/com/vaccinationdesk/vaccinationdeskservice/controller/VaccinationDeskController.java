@@ -97,13 +97,14 @@ public class VaccinationDeskController {
             utente = utenteRepository.findUtenteById(utente.getID());
             System.out.println(utente);
             CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(1);
-            Agendamento a = new Agendamento(utente, new Date(millis), cv);
+            /*Agendamento a = new Agendamento(utente, new Date(millis), cv);
             try {
                 agendamentoRepository.save(a);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
             return ResponseEntity.ok(a);
+            */
         }
 
         return ResponseEntity.notFound().build();

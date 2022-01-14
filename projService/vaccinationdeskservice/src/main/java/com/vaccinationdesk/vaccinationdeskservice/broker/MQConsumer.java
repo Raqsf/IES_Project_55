@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
+import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaId;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
@@ -39,6 +42,8 @@ public class MQConsumer {
     @Autowired
     private VacinaRepository vacinaRepository;
 
+    //@Autowired
+    //private DoencaPorUtenteRepository doencaPorUtenteRepository;
 
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
@@ -91,10 +96,11 @@ public class MQConsumer {
         Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
         utenteRepository.save(utente);
         
-        //Doenca doenca = new Doenca(doencaGeracaoDados);
-        //DoencaUtente dpu = new DoencaUtente(utente, doenca);
-        //doencaUtenteRepository.save(dpu);
-        
+        Doenca doenca = new Doenca(doencaGeracaoDados);
+        //DoencaPorUtente doencaPorUtente = new DoencaPorUtente();
+        //DoencaId doenca_id = new DoencaId(utente, doenca);
+        //doencaPorUtenteRepository.save(doenca_id);
+
         ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
         listaEsperaRepository.save(lista_de_espera);
     }
