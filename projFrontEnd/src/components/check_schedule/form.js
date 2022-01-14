@@ -2,7 +2,10 @@ import { FormControl, FormHelperText, TextField, Button } from '@mui/material';
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import api from '../../api';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export default function FormVaccinationInfo() {
     const router = useRouter();
 
@@ -25,22 +28,35 @@ export default function FormVaccinationInfo() {
             id: utente,
             nome: nome,
         };
-        console.log(user);
+        
         api
         .get(`/agendamento/${user.id}`, headers)
         .then((response) => {
             // setResposta(response.data);
             console.log(response.data);
+            console.log(response.data[0].id);
             if(response.data.length == 0)  {
                 // TODO: passar essa info para a pagina vaccination_info
-                alert("Não existe agendamento");
+                // alert("Não existe agendamento");
+                toast.info("Não existe agendamento", {position: toast.POSITION.TOP_CENTER, autoClose: false});
             } else {
-                router.push("/vaccination_info");
+                router.push({ pathname: "/vaccination_info",
+                    query: {
+                        utente_nome: response.data[0].utente.nome,
+                        utente_num: response.data[0].utente.id,
+                        // utente: {nome:response.data[0].utente.nome, id:response.data[0].utente.nome},
+                        centro: response.data[0].centro.nome,
+                        morada: response.data[0].centro.morada,
+                        data: response.data[0].diaVacinacao
+                        }
+                    // search: `?response=${response.data}`
+                    // state: { detail: "hello"}
+                }, "/vaccination_info");
             }
         })
         .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
+            toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
         });
         // router.push('/vaccination_info');
     }

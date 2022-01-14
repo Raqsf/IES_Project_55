@@ -7,10 +7,12 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import api from "../../api";
 //import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export default function DadosUtente(props) {
   const router = useRouter();
-  const { history } = props;
 
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
@@ -22,7 +24,6 @@ export default function DadosUtente(props) {
   }
 
   function handleSubmit(event) {
-    console.log("HEY")
     event.preventDefault();
 
     const headers = {
@@ -41,6 +42,7 @@ export default function DadosUtente(props) {
       .then((response) => {
         // if (response.status >= 200 && response.status < 300)
         console.log(response)
+        // NOTA: podemos fazer com um alert
         setResposta(response.data);
         router.push({
           pathname: "/success",
@@ -49,7 +51,8 @@ export default function DadosUtente(props) {
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+        // alert("Erro");
+        toast.error("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
       });
     // router.push('/success');
 
