@@ -13,6 +13,7 @@ import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundExce
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaId;
 import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
@@ -130,9 +131,10 @@ public class VaccinationDeskController {
         return agendamentoRepository.findAllByUtente(utente);
     }
 
-    @GetMapping("/deoncaPorUtente/{id}")
+    @GetMapping("/doencaPorUtente/{id}")
     public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id){
         Utente u = utenteRepository.findUtenteById(id);
+        //dpuRepository.save(new DoencaPorUtente( new Utente(), new Doenca()))
         return dpuRepository.findByIdUtente(u);
     }
 

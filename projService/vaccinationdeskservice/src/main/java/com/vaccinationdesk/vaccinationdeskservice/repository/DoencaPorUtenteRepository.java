@@ -9,7 +9,8 @@ import com.vaccinationdesk.vaccinationdeskservice.model.DoencaId;
 import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 
+
 public interface DoencaPorUtenteRepository extends JpaRepository<DoencaPorUtente, DoencaId> {
-    // @Query(value="SELECT d FROM DoencaPorUtente d WHERE d.DoencaId.n_utente = :id")
+    // @Query(value="SELECT d FROM DoencaPorUtente d WHERE d.DoencaId.n_utente = :utente")
     List<DoencaPorUtente> findByIdUtente(Utente utente);
 }

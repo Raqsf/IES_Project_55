@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
+
 import lombok.Data;
 
 
@@ -24,11 +26,18 @@ public class DoencaPorUtente implements Serializable{
     @EmbeddedId
     private DoencaId id;
 
-    public Utente getUser() {
-        return id.getUtente();
+    public DoencaPorUtente(){}
+
+    public DoencaPorUtente(DoencaId id){
+        this.id=id;
     }
 
-    public Doenca getDoenca() {
-        return id.getDoenca();
+    public DoencaPorUtente(Utente u, Doenca d){
+        this.id = new DoencaId(u, d);
     }
+
+    public DoencaId getID() {
+        return id;
+    }
+
 }
