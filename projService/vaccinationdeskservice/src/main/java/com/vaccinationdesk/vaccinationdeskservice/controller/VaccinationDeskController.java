@@ -134,6 +134,11 @@ public class VaccinationDeskController {
     @GetMapping("/doencaPorUtente/{id}")
     public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id){
         Utente u = utenteRepository.findUtenteById(id);
+        // SAVE DA DOENCA
+        Doenca d = doencaRepository.findDoencaById(4);
+        System.out.println(d);
+        dpuRepository.save(new DoencaPorUtente( u, d));
+        // FIM
         //dpuRepository.save(new DoencaPorUtente( new Utente(), new Doenca()))
         return dpuRepository.findByIdUtente(u);
     }
