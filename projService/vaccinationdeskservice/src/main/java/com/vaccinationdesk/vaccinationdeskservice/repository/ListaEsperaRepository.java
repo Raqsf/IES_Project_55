@@ -15,7 +15,7 @@ public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Intege
     List<ListaEspera> findAll();
     ListaEspera findListaEsperaByid(Integer id);
     void deleteListaEsperaByid(Integer id);
-    @Query("SELECT l FROM ListaEspera as l WHERE n_utente = :utente")
-    List<Utente> findUtenteInListaEspera(@Param("utente") Integer utente);
+    @Query("SELECT l.utente FROM ListaEspera as l WHERE l.utente = :utente")
+    List<Utente> findUtenteInListaEspera(@Param("utente") Utente utente);
 }
     
