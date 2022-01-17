@@ -1,6 +1,7 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,10 +62,10 @@ public class VaccinationDeskController {
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
         return utenteRepository.findUtenteByNome(nome);
-    }
+    }*/
 
     @GetMapping("/utente/{id}")
-    public Utente getUtenteByIDUtente(@PathVariable Integer id) {
+    public Utente getUtenteByIDUtente(@RequestBody Integer id) {
         return utenteRepository.findUtenteById(id);
     }
 
@@ -81,7 +83,8 @@ public class VaccinationDeskController {
 
     @GetMapping("/lote")
     public List<Lote> getUtenteByNome() {
-        return loteRepository.findAll();
+        Date d = new Date(System.currentTimeMillis());
+        return loteRepository.findAllAfterDate(d);
     }
 
     @PostMapping("/utente")
@@ -99,25 +102,33 @@ public class VaccinationDeskController {
                 throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
-            utente = utenteRepository.findUtenteById(utente.getID());
-            System.out.println(utente);
-            CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(1);
-            /*Agendamento a = new Agendamento(utente, new Date(millis), cv);
+            ListaEspera le = new ListaEspera(utenteDB, new Timestamp(millis));
             try {
                 listaEsperaRepository.save(le);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(a);
-            */
+            return ResponseEntity.ok(le);
         }
 
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/agendamento/{utente}")
-    public List<Agendamento> getAgendamentoByUtente(@PathVariable Integer utente){
-        return agendamentoRepository.findAllByUtente(utente);
+    @GetMapping("/agendamento/{id}")
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws ResourceNotFoundException{
+        if ( utente !=null)
+            try{
+                if (utenteRepository.findUtenteById(utente.getID()) != null){
+                    Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
+                    if (!utente.getNome().equals(utenteDB.getNome())){
+                        throw new ConflictException("Dados inválidos");
+                    }
+                    return agendamentoRepository.findAllByUtente(utente.getID());
+                }
+            }catch(Exception e){
+                throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+            }
+        return agendamentoRepository.findAllByUtente(id);
     }
 
     @GetMapping("/doencaPorUtente/{id}")

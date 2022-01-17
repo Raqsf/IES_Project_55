@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VacinaRepository extends JpaRepository<Vacina, Integer> {
-    List<Vacina> findAll();
-
     @Query("SELECT v FROM Vacina v WHERE v.utente IS NOT NULL AND v.data_administracao IS NOT NULL")
     List<Vacina> findAllVacinnated();
 
