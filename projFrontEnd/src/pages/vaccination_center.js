@@ -7,35 +7,67 @@ import { useRouter } from "next/router";
 import api from "../api";
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
+// import { useParams } from "react-router-dom";
+import { useState } from 'react';
 
 const VaccinationCenter = () => {
+    const router = useRouter();
+    const [param1, setParam] = useState();
+    const {
+        query: { id },
+    } = router
+    
+    // console.log(typeof window !== undefined )
+    // if (typeof window !== undefined) {
+    //   const c = new URLSearchParams(window.location.search);
+    //   alert("It's loaded!")
+    //   console.log(c.get('id'))
+    // }
+    // console.log(router)
+    // React.useEffect(() => { 
+    //   if(router && router.query.length !== 0) {
+    //     console.log(router.query)
+    //   }
+    // }, [router]);
+
+    // console.log(param1)
+    
+    // console.log(id);
+    
     // const history = createHistory();
     // console.log(window.location.hrefs)
     // history.push()
     // NOTA: acho q dá com o router
-    // window.addEventListener('load', history.go(0), false);
-    const router = useRouter();
+    // window.addEventListener('onbeforeunload', alert("HI"));
+    
+    // React.useEffect(() => {
+    //   window.addEventListener("beforeunload", router.reload({pathname: "/vaccination_center", query: id}));
+    //   return () => {
+    //     window.removeEventListener("beforeunload", null);
+    //   };
+    // }, []);
     const [centro, setCentro] = React.useState('');
-    const {
-        query: { id },
-    } = router
 
     const headers = {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
-    };
+    };    
 
+    // while(id == null) {
+
+    // }
+    
     React.useEffect(() => {
       const getData = async () => {
-        const data = await api.get(
-          `/centrovacinacao/${id}`, headers
-        ).then((response) => {
-          setCentro(response.data);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        });
+          const data = await api.get(
+            `/centrovacinacao/${id}`, headers
+          ).then((response) => {
+            setCentro(response.data);
+          })
+          .catch((err) => {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Erro");
+          });
       };
       getData();
     }, []);

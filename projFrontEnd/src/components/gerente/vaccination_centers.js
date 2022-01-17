@@ -55,7 +55,7 @@ const NestedList = (props) => {
             pathname: "/vaccination_center",
             query: { id: centro.id },
           }} 
-          as="/centro_vacinacao"
+          // as="/vaccination_center"
           key={centro.id}
           passHref
         >
