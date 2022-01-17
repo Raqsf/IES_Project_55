@@ -106,3 +106,30 @@ INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capac
 (2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
 (3, 'Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
 (4, 'Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
+
+
+CREATE PROCEDURE getListaEsperaByAge(IN age int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where TIMESTAMPDIFF(year,p.data_nascimento,CURRENT_DATE) > age;
+END
+
+
+CREATE PROCEDURE getListaEsperaByAgeAndDoenca(IN age int, IN doenca int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where TIMESTAMPDIFF(year,p.data_nascimento,CURRENT_DATE) > age
+    AND dpu.doenca = doenca;
+END
+
+CREATE PROCEDURE getListaEsperaByDoenca(IN doenca int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where dpu.doenca = doenca;
+END

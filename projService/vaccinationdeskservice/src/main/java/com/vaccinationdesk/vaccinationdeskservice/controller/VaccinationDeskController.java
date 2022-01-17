@@ -1,12 +1,9 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.sql.Date;
-import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
-import javax.persistence.Query;
 
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
@@ -14,16 +11,13 @@ import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
-import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
-import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
