@@ -10,5 +10,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer>{
     @Query("SELECT a FROM Agendamento as a WHERE n_utente = :utente")
-    List<Agendamento> findAllByUtente(@Param("utente") Integer utente);
+    Agendamento findAllByUtente(@Param("utente") Integer utente);
 }

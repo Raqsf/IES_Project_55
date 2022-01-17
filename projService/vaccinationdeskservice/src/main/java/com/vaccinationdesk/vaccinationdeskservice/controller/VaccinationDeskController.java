@@ -63,9 +63,9 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteByNome(nome);
     }*/
 
-    @GetMapping("/utente/{id}")
-    public Utente getUtenteByIDUtente(@PathVariable Integer id) {
-        return utenteRepository.findUtenteById(id);
+    @GetMapping("/utente")
+    public Utente getUtenteByIDUtente(@RequestBody Utente utente) {
+        return utenteRepository.findUtenteById(utente.getID());
     }
 
     /*
@@ -113,9 +113,21 @@ public class VaccinationDeskController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/agendamento/{utente}")
-    public List<Agendamento> getAgendamentoByUtente(@PathVariable Integer utente){
-        return agendamentoRepository.findAllByUtente(utente);
+    @GetMapping("/agendamento/{id}")
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws ResourceNotFoundException{
+        if ( utente !=null)
+            try{
+                if (utenteRepository.findUtenteById(utente.getID()) != null){
+                    Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
+                    if (!utente.getNome().equals(utenteDB.getNome())){
+                        throw new ConflictException("Dados inválidos");
+                    }
+                    return agendamentoRepository.findAllByUtente(utente.getID());
+                }
+            }catch(Exception e){
+                throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+            }
+        return agendamentoRepository.findAllByUtente(id);
     }
 
     @GetMapping("/doencaPorUtente/{id}")
