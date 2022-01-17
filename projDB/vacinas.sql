@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS `pessoa` (
 	`email`		        VARCHAR(256)		NOT NULL,
 	`morada`		    VARCHAR(256)		NOT NULL,
 	`data_nascimento`	DATE            	NOT NULL,
-	`doencas`		    VARCHAR(500),
 
 	PRIMARY KEY(`n_utente`)
 );
@@ -25,31 +24,32 @@ CREATE TABLE IF NOT EXISTS `centro_vacinacao` (
     PRIMARY KEY(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `vacina` (
-    `n_vacina`			    INT		  AUTO_INCREMENT          NOT NULL,
+CREATE TABLE `lote` (
+    `id`			                VARCHAR(6)          NOT NULL,
+    `quantidade`	        	    INT         		NOT NULL,
+    `atribuida_ao_centro`		    INT            	    NOT NULL,
+    `data_chegada`                  DATE                NOT NULL,
+
+    PRIMARY KEY(`id`),
+    FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
+);
+
+CREATE TABLE `vacina` (
+    `n_vacina`			    INT		  AUTO_INCREMENT    NOT NULL,
     `lote`		            VARCHAR(6)         		NOT NULL,
     `nome`		            VARCHAR(256)		NOT NULL,
     `data_validade`		    DATE            		NOT NULL,
     `administrada_a`		INT,
-    `data_administracao`    DATE,
+    `data_administracao`    DATETIME,
 
     PRIMARY KEY(`n_vacina`),
     FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
     FOREIGN KEY(`lote`) REFERENCES `lote`(`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `lote` (
-    `id`			                VARCHAR(6)          NOT NULL,
-    `quantidade`	        	    INT         		NOT NULL,
-    `atribuida_ao_centro`		    INT            	    NOT NULL,
-
-    PRIMARY KEY(`id`),
-    FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
-);
-
 CREATE TABLE IF NOT EXISTS `agendamento` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
-    `dia_vacinacao`             DATE        ,
+    `dia_vacinacao`             DATETIME        ,
     `n_utente`                INT           NOT NULL,
     `centro_vacinacao`          INT,
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `agendamento` (
 CREATE TABLE IF NOT EXISTS `lista_de_espera` (
     `id`			                INT		  AUTO_INCREMENT          NOT NULL,
     `n_utente`                INT           NOT NULL,
-    `data_inscricao`        DATE            NOT NULL,
+    `data_inscricao`        datetime            NOT NULL,
 
     PRIMARY KEY(`id`),
     FOREIGN KEY(`n_utente`) REFERENCES `pessoa`(`n_utente`)
@@ -107,16 +107,34 @@ INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capac
 (4, 'Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
 
 
-USE `vaccinationdb`;
+CREATE PROCEDURE getListaEsperaByAge(IN age int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where TIMESTAMPDIFF(year,p.data_nascimento,CURRENT_DATE) > age;
+END
 
-INSERT INTO `lote` (`id`, `quantidade`, `atribuida_ao_centro`) VALUES
-('lote1', 10, 1),
-('lote2', 10, 4);
 
-USE `vaccinationdb`;
+CREATE PROCEDURE getListaEsperaByAgeAndDoenca(IN age int, IN doenca int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where TIMESTAMPDIFF(year,p.data_nascimento,CURRENT_DATE) > age
+    AND dpu.doenca = doenca;
+END
 
-INSERT INTO `vacina` (`lote`, `nome`, `data_validade`, `administrada_a`, `data_administracao`) VALUES
-('lote1', 'Pfizer', '2004-01-22', 1002, '2004-01-08'),
-('lote1', 'Pfizer', '2004-01-22', 1004, '2004-01-08'),
-('lote1', 'Pfizer', '2004-01-22', 1026, '2004-01-08'),
-('lote2', 'Pfizer', '2004-01-22', 1068, '2004-01-08');
+CREATE PROCEDURE getListaEsperaByDoenca(IN doenca int)
+BEGIN
+    select * from lista_de_espera as le
+    join pessoa as p on p.n_utente = le.n_utente
+    join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
+    where dpu.doenca = doenca;
+END
+
+CREATE PROCEDURE getAgendamentosPorDia(IN dia DATE)
+BEGIN
+    select * from agendamento as a
+    WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
+END

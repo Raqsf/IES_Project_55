@@ -9,10 +9,10 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface VacinaRepository extends JpaRepository<Vacina, Integer> {
-    List<Vacina> findAll();
-
     @Query("SELECT v FROM Vacina v WHERE v.utente IS NOT NULL AND v.data_administracao IS NOT NULL")
     List<Vacina> findAllVacinnated();
 

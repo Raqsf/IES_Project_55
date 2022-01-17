@@ -1,6 +1,7 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -63,10 +64,10 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteByNome(nome);
     }*/
 
-    @GetMapping("/utente")
-    public Utente getUtenteByIDUtente(@RequestBody Utente utente) {
-        return utenteRepository.findUtenteById(utente.getID());
-    }
+    // @GetMapping("/utente")
+    // public Utente getUtenteByIDUtente(@RequestBody Utente utente) {
+    //     return utenteRepository.findUtenteById(utente.getID());
+    // }
 
     /*
      * @GetMapping("/utente/{n_utente}")
@@ -83,7 +84,7 @@ public class VaccinationDeskController {
     @GetMapping("/lote")
     public List<Lote> getUtenteByNome() {
         Date d = new Date(System.currentTimeMillis());
-        return loteRepository.findAll();
+        return loteRepository.findAllAfterDate(d);
     }
 
     @PostMapping("/utente")
@@ -101,7 +102,7 @@ public class VaccinationDeskController {
                 throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
-            ListaEspera le = new ListaEspera(utenteDB, new Date(millis));
+            ListaEspera le = new ListaEspera(utenteDB, new Timestamp(millis));
             try {
                 listaEsperaRepository.save(le);
             } catch (Exception e) {

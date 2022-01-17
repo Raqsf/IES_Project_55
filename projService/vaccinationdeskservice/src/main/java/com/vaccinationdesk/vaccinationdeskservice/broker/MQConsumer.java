@@ -1,16 +1,21 @@
 package com.vaccinationdesk.vaccinationdeskservice.broker;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
+import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
@@ -21,6 +26,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MQConsumer {
+    private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private UtenteRepository utenteRepository;
@@ -37,7 +43,11 @@ public class MQConsumer {
     @Autowired
     private VacinaRepository vacinaRepository;
 
+    @Autowired
+    private DoencaPorUtenteRepository doencaPorUtenteRepository;
 
+    @Autowired
+    private DoencaRepository doencaRepository;
 
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
@@ -61,9 +71,10 @@ public class MQConsumer {
                 addVaccinesPerCenter(json);
                 break;
             default:
-                break;                
+                break;
         }
     }
+
     /**
      * Funcao para tratar da informacao que chega da geração de dados.
      * A informcao chega num formato JSON, e é guardada na base de dados
@@ -78,25 +89,24 @@ public class MQConsumer {
         String email = json.getJSONObject("utente").getString("email");
         String data_nasc = json.getJSONObject("utente").getString("data_nasc");
         String local = json.getJSONObject("utente").getString("local");
-        //! CRIAR UMA TABELA DOENCAS? SERIA MELHOR TALVEZ... NS DEPOIS PENSAR SOBRE ISSO!!!
-        //! String doencas = json.getJSONObject("utente").getString("doença");
+        String doencaGeracaoDados = json.getJSONObject("utente").getString("doença");
 
-
-        //! nao está a guardar na BD as horas, nem os minutos, nem os segundos
+        // ! nao está a guardar na BD as horas, nem os minutos, nem os segundos
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
-        //System.out.println("ORIGINAL:\t"+data_inscricao);
-        
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatHours = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-        //System.out.println("\t"+formatHours);
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
-        Date data_inscricaoSQL = new Date(formatHours.parse(data_inscricao).getTime());     // we might not need this
-        //System.out.println("|||||getTime():\t"+data_inscricaoSQL.getTime()+"\t DATE:"+data_inscricaoSQL);
-        Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
+        Timestamp data_inscricaoSQL = new Timestamp(DATE_TIME_FORMAT.parse(data_inscricao).getTime());
 
+        Utente utente = new Utente(n_utente, nome, email, local, data_nascimento);
         utenteRepository.save(utente);
-        
-        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);   //Idk Pedro change this
+
+        int idDoenca = getIdFromDoenca(doencaGeracaoDados);
+        if (idDoenca != 0) { // so adiciona na tabela, caso a pessoa tenha alguma doenca
+            Doenca doenca = doencaRepository.findDoencaById(idDoenca);
+            doencaPorUtenteRepository.save(new DoencaPorUtente(utente, doenca));
+        }
+
+        ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
         listaEsperaRepository.save(lista_de_espera);
     }
 
@@ -108,13 +118,15 @@ public class MQConsumer {
      * @throws ParseException - excecao da data
      */
     private void addCapacityForDay(JSONObject json) throws ParseException {
-        /*String dataString = json.getString("date");
-        int quantidade = json.getInt("quantity");
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date data = new Date(format.parse(dataString).getTime());
-
-        Capacidade capacidade = new Capacidade(data, quantidade);
-        capacidadeRepository.save(capacidade);*/
+        /*
+         * String dataString = json.getString("date");
+         * int quantidade = json.getInt("quantity");
+         * SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+         * Date data = new Date(format.parse(dataString).getTime());
+         * 
+         * Capacidade capacidade = new Capacidade(data, quantidade);
+         * capacidadeRepository.save(capacidade);
+         */
     }
 
     /**
@@ -125,23 +137,25 @@ public class MQConsumer {
     private void addVaccinesPerCenter(JSONObject json) throws ParseException {
         String idLote = json.getString("lote_id");
         int quantidade = json.getInt("quantity");
+        String dataChegadaString = json.getString("arriving_date");
         String dataValidadeString = json.getString("expiration_date");
         int id_centro = json.getInt("center_id");
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date dataValidade = new Date(format.parse(dataValidadeString).getTime());
+        Date dataChegada = new Date(format.parse(dataChegadaString).getTime());
         CentroVacinacao centro = new CentroVacinacao(id_centro);
-        Lote lote = new Lote(idLote, quantidade, centro);
+        Lote lote = new Lote(idLote, quantidade, centro, dataChegada);
         loteRepository.save(lote);
 
-        //atualizar capacidade atual dos centros
+        // atualizar capacidade atual dos centros
         List<CentroVacinacao> centrosVacinacaoList = centroVacinacaoRepository.findAll();
         for (CentroVacinacao centroVacinacao : centrosVacinacaoList) {
             centroVacinacao.incrementCapacidadeAtual(quantidade);
             centroVacinacaoRepository.save(centroVacinacao);
         }
 
-        //Atraves do id do lote, conseguimos saber o nome da vacina
+        // Atraves do id do lote, conseguimos saber o nome da vacina
         for (int i = 0; i < quantidade; i++) {
             String nomeVacina = "";
             if (idLote.contains("PF")) {
@@ -157,5 +171,33 @@ public class MQConsumer {
             Vacina vacina = new Vacina(lote, nomeVacina, dataValidade);
             vacinaRepository.save(vacina);
         }
+    }
+
+    private int getIdFromDoenca(String doenca) {
+        int id = 0;
+        switch (doenca) {
+            case "Doença Cardíaca":
+                id = 1;
+                break;
+            case "Doença Pulmonar":
+                id = 2;
+                break;
+            case "Diabetes":
+                id = 3;
+                break;
+            case "Cancro":
+                id = 4;
+                break;
+            case "Obesidade":
+                id = 5;
+                break;
+            case "Doenca AutoImune":
+                id = 6;
+                break;
+            default:
+                id = 0;
+                break;
+        }
+        return id;
     }
 }

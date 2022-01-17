@@ -83,7 +83,7 @@ export const DashboardNavbarGerente = (props) => {
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
-          <Tooltip>
+          <Tooltip title="Logout">
             <Button
               color="secondary"
               variant="contained"
