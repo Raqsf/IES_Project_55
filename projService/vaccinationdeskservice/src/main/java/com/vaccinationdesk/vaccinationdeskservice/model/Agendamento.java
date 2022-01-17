@@ -57,7 +57,15 @@ public class Agendamento implements Serializable{
         return this.diaVacinacao;
     }
 
-    public CentroVacinacao getCentro(){
+    public CentroVacinacao getCentro() {
         return this.centro_vacinacao;
     }
+
+    @Override
+    public String toString() {
+        return "Agendamento [centro_vacinacao=" + centro_vacinacao + ", diaVacinacao=" + diaVacinacao + ", id=" + id
+                + ", utente=" + utente + "]";
+    }
+    
+    
 }
