@@ -27,4 +27,7 @@ public interface CentroVacinacaoRepository extends JpaRepository<CentroVacinacao
     @Query(value="SELECT a FROM Agendamento a WHERE a.centro_vacinacao.id = :centro ORDER BY a.diaVacinacao")
     List<Agendamento> findAgendamentos(@Param("centro") Integer centro);
 
+    @Query("SELECT cv.capacidadeAtual FROM CentroVacinacao cv WHERE cv.id = :centro")
+    Integer getVacinasDisponiveis(@Param("centro") Integer centro);
+
 }
