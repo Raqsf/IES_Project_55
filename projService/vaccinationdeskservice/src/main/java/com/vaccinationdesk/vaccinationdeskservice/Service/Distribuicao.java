@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -75,15 +74,17 @@ public class Distribuicao {
         String moradasCentrosAPI = "";
 
         for (CentroVacinacao centro : centrosVacinacao) {
+            if (centro.getMorada().equals("Porto")) {
+                moradasCentrosAPI += centro.getMorada() + ",Portugal";
+            }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-
+        
         for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
-
             //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
-            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal", moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
@@ -102,8 +103,6 @@ public class Distribuicao {
                     //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
                     //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
                     //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-
-                    //* Falei com o prof, não há problema em isto demorar 1.5/2 (s) a enviar o email                    
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (MessagingException e) {
@@ -118,25 +117,56 @@ public class Distribuicao {
     }
     
 
-    public void distribuirVacinasPorFiltros(String filtros) {
-
+    public void distribuirVacinasPorFiltros(String filtrosJSON) {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        //! fazer filtros de pesquisa na base de dados de acordo com oq é escolhido no front end
-        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
+        List<ListaEspera> listaEspera;
+        
+        JSONObject jsonObject = new JSONObject(filtrosJSON);
 
+        if (filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
+            int idade = jsonObject.getInt("idade");
+            int doenca = jsonObject.getInt("doenca");
+            listaEspera = listaesperaRepository.getListaEsperaByAgeAndDoenca(idade, doenca);
+        } else if (filtrosJSON.contains("idade") && !filtrosJSON.contains("doenca")) {
+            int idade = jsonObject.getInt("idade");
+            listaEspera = listaesperaRepository.getListaEsperaByAge(idade);
+        } else if (!filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
+            int doenca = jsonObject.getInt("doenca");
+            listaEspera = listaesperaRepository.getListaEsperaByDoenca(doenca);
+        } else {
+            System.out.println("deu merda");
+            listaEspera = listaesperaRepository.findAll();
+        }
+
+        for (ListaEspera listaEspera2 : listaEspera) {
+            System.out.println(listaEspera2);
+        }
+
+
+
+        //ver como o argumento de entrada como fazer a separacao dos filtros
+        //listaEspera = listaesperaRepository.getListaEsperaByDoenca(2);
+    
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
         
         for (CentroVacinacao centro : centrosVacinacao) {
+            if (centro.getMorada().equals("Porto")) {
+                moradasCentrosAPI += centro.getMorada() + ",Portugal";
+            }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-    
+        
+        if (listaEspera.size() < capacidadeDia) {
+            capacidadeDia = listaEspera.size();
+        }
+
         for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
-            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal", moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
@@ -156,7 +186,6 @@ public class Distribuicao {
                     //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
                     //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
-                    //* Falei com o prof, não há problema em isto demorar 1.5/2 (s) a enviar o email                    
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (MessagingException e) {
@@ -248,10 +277,11 @@ public class Distribuicao {
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);
-        helper.setText("A sua vacina encontra-se agendada para o dia " + dataVacina + " no "
+        helper.setText("Exmo.(a) Senhor(a)\n\n" + pedido.getUtente().getNome().toUpperCase() + "\nNº Utente: "+ pedido.getUtente().getID() + "\n\nA sua vacina encontra-se agendada para o dia " + dataVacina + " no "
                 + centro.getNome() + " sendo a morada do mesmo: " + centro.getMorada()
-                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelicida."
-                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda a esta mensagem.");
+                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelecida."
+                + "\n\nPode também consultar esta informação no site no nosso site, em Menu Inicial > Verificar Estado do Agendamento."
+                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda. ");
         
         /*
         * POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
