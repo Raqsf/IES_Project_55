@@ -105,3 +105,18 @@ INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capac
 (2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
 (3, 'Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
 (4, 'Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
+
+
+USE `vaccinationdb`;
+
+INSERT INTO `lote` (`id`, `quantidade`, `atribuida_ao_centro`) VALUES
+('lote1', 10, 1),
+('lote2', 10, 4);
+
+USE `vaccinationdb`;
+
+INSERT INTO `vacina` (`lote`, `nome`, `data_validade`, `administrada_a`, `data_administracao`) VALUES
+('lote1', 'Pfizer', '2004-01-22', 1002, '2004-01-08'),
+('lote1', 'Pfizer', '2004-01-22', 1004, '2004-01-08'),
+('lote1', 'Pfizer', '2004-01-22', 1026, '2004-01-08'),
+('lote2', 'Pfizer', '2004-01-22', 1068, '2004-01-08');
