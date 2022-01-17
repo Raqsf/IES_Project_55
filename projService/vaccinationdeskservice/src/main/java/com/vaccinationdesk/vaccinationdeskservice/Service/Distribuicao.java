@@ -277,10 +277,11 @@ public class Distribuicao {
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);
-        helper.setText("A sua vacina encontra-se agendada para o dia " + dataVacina + " no "
+        helper.setText("Exmo.(a) Senhor(a)\n\n" + pedido.getUtente().getNome().toUpperCase() + "\nNº Utente: "+ pedido.getUtente().getID() + "\n\nA sua vacina encontra-se agendada para o dia " + dataVacina + " no "
                 + centro.getNome() + " sendo a morada do mesmo: " + centro.getMorada()
-                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelicida."
-                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda  .");
+                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelecida."
+                + "\n\nPode também consultar esta informação no site no nosso site, em Menu Inicial > Verificar Estado do Agendamento."
+                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda. ");
         
         /*
         * POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
