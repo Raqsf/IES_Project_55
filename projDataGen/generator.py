@@ -94,17 +94,6 @@ class Generator:
         self.send(mes=message)
         print('\033[94m' + message.__str__() + '\033[0m')
         
-    def generate_people_getting_vaccinated(self, date):
-        #TODO: Try to understand why it only "get vaccinated" the odd indexs of self.waiting_list
-        #TODO: and put the ones left behind getting the vaccine as well 
-        """Generates the people getting vaccinated"""
-        if len(self.waiting_list) > 0:
-            for person in self.waiting_list:
-                if person["data_inscricao"] == date:
-                    self.waiting_list.remove(person)
-                    message = {"type": "people_getting_vaccinated", "utente": self.people[int(person["n_utente"])]}
-                    self.send(mes=message)        
-                    print('\033[93m' + message.__str__() + '\033[0m')
         
 if __name__ == '__main__':
     #people = {n_utente: [informações do utente]}  
@@ -132,14 +121,7 @@ if __name__ == '__main__':
     g = Generator(people, vaccination_centers, vaccines)
     while True:
         time.sleep(0.5)
-        #g.generate_vaccines_quantity()
-        #g.destribute_vaccines_per_centers()
         for _ in range(10):
             g.add_to_waiting_list()
             g.destribute_vaccines_per_centers()
-        '''if counter_days == quantity or counter_days == -1:
-            #g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
-            date = date + datetime.timedelta(days=1)
-            counter_days = 0
-        counter_days += 1
-        g.add_to_waiting_list(date + datetime.timedelta(days=3))'''
+            

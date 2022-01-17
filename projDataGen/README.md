@@ -1,15 +1,14 @@
-https://data-flair.training/blogs/kafka-broker/
-https://www.baeldung.com/ops/kafka-docker-setup
-
-to check if the kafka is running with the docker: nc -vz localhost 15672 <- este valor é o valor da porta
-
 Criar um ambiente virtual primeiro
 
 `$ python3 -m venv venv`
 
-E depois instalar os requisitos:
+Entrar no ambiente virtual criado
+
+`$ source venv/bin/activate`
+
+Depois instalar os requisitos:
 
 `$ pip install -r requirements.txt`
 
 
-http://localhost:15672/ 
+Para ter uma UI do broker: http://localhost:15672/ 
