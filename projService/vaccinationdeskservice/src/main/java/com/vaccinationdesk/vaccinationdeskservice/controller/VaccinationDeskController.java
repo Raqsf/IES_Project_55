@@ -64,10 +64,10 @@ public class VaccinationDeskController {
         return utenteRepository.findUtenteByNome(nome);
     }*/
 
-    // @GetMapping("/utente/{id}")
-    // public Utente getUtenteByIDUtente(@RequestBody Integer id) {
-    //     return utenteRepository.findUtenteById(id);
-    // }
+    @GetMapping("/utente/{id}")
+    public Utente getUtenteByIDUtente(@RequestBody Integer id) {
+        return utenteRepository.findUtenteById(id);
+    }
 
     /*
      * @GetMapping("/utente/{n_utente}")
