@@ -136,6 +136,7 @@ if __name__ == '__main__':
         #g.destribute_vaccines_per_centers()
         for _ in range(10):
             g.add_to_waiting_list()
+            g.destribute_vaccines_per_centers()
         '''if counter_days == quantity or counter_days == -1:
             #g.generate_people_getting_vaccinated(date.strftime("%m/%d/%Y"))
             date = date + datetime.timedelta(days=1)

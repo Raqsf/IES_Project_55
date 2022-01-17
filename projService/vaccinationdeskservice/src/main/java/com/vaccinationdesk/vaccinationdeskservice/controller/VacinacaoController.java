@@ -35,5 +35,10 @@ public class VacinacaoController {
     public void getAllVacinasTomadas() {
         vacinacao.vacinacao();
     }
+
+    @GetMapping("/real_time")
+    public List<List<String>> getVacincaoTempoReal() {
+        return vacinacao.getVacinacaoEmTempoReal();
+    }
     
 }

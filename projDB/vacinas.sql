@@ -133,3 +133,9 @@ BEGIN
     join doencas_por_utente as dpu on dpu.n_utente = le.n_utente
     where dpu.doenca = doenca;
 END
+
+CREATE PROCEDURE getAgendamentosPorDia(IN dia DATE)
+BEGIN
+    select * from agendamento as a
+    WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
+END

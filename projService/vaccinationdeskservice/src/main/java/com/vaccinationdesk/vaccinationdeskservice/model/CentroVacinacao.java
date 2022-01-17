@@ -70,7 +70,7 @@ public class CentroVacinacao {
         this.capacidadeAtual += capacidadeAtual;
     }
 
-    public void updateCapacidadeAtual() {
+    public void decreaseCapacidadeAtual() {
         this.capacidadeAtual -= 1;
     }
 
