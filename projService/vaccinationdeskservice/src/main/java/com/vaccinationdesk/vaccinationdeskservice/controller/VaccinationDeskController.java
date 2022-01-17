@@ -60,7 +60,7 @@ public class VaccinationDeskController {
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
         return utenteRepository.findUtenteByNome(nome);
-    }*/
+    }
 
     @GetMapping("/utente/{id}")
     public Utente getUtenteByIDUtente(@PathVariable Integer id) {
@@ -99,13 +99,17 @@ public class VaccinationDeskController {
                 throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
-            ListaEspera le = new ListaEspera(utenteDB, new Date(millis));
+            utente = utenteRepository.findUtenteById(utente.getID());
+            System.out.println(utente);
+            CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(1);
+            /*Agendamento a = new Agendamento(utente, new Date(millis), cv);
             try {
                 listaEsperaRepository.save(le);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(le);
+            return ResponseEntity.ok(a);
+            */
         }
 
         return ResponseEntity.notFound().build();

@@ -7,10 +7,12 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import api from "../../api";
 //import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export default function DadosUtente(props) {
   const router = useRouter();
-  const { history } = props;
 
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
@@ -38,13 +40,19 @@ export default function DadosUtente(props) {
     api
       .post(`/utente`, user, headers)
       .then((response) => {
+        // if (response.status >= 200 && response.status < 300)
+        console.log(response)
+        // NOTA: podemos fazer com um alert
         setResposta(response.data);
-        console.log(response.data);
-        router.push("/success");
+        router.push({
+          pathname: "/success",
+          search: `?response=${resposta}`
+        });
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+        // alert("Erro");
+        toast.error("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
       });
     // router.push('/success');
 
@@ -60,7 +68,6 @@ export default function DadosUtente(props) {
     <Container>
       <Box
         className="DadosUtente"
-        onSubmit={handleSubmit}
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -69,9 +76,7 @@ export default function DadosUtente(props) {
       >
         <form
           component="form"
-          onSubmit={(e) => {
-            handleSubmit(e);
-          }}
+          onSubmit={handleSubmit}
         >
           <FormControl variant="outlined">
             <TextField

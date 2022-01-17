@@ -22,8 +22,7 @@ public class Doenca {
 
     public Doenca(){}
 
-    public Doenca(int id, String doenca){
-        this.id=id;
+    public Doenca( String doenca){
         this.doenca=doenca;
     }
 

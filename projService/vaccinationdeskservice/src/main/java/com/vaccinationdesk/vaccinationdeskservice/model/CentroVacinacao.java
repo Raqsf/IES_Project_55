@@ -58,9 +58,10 @@ public class CentroVacinacao {
         return this.capacidadeAtual;
     }
 
-    public void setCapacidadeMax( int capacidade){
-        this.capacidadeMax = capacidade;
+    public void setCapacidadeMax(int capacidadeMax) {
+        this.capacidadeMax = capacidadeMax;
     }
+
     public void setCapacidadeAtual(int capacidadeAtual) {
         this.capacidadeAtual = capacidadeAtual;
     }
@@ -69,7 +70,7 @@ public class CentroVacinacao {
         this.capacidadeAtual += capacidadeAtual;
     }
 
-    public void updateCapacidadeAtual() {
+    public void decreaseCapacidadeAtual() {
         this.capacidadeAtual -= 1;
     }
 

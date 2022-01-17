@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { Box, Container } from "@mui/material";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
+import { Sales } from "../components/dashboard/sales";
+import { StatisticsToolbar } from "../components/statistics/statistics-toolbar";
 
 // TODO: Última semana, último mês, último ano
 const Statistics = () => {
@@ -17,6 +19,7 @@ const Statistics = () => {
         }}
       >
         <Container maxWidth={false}>
+          <StatisticsToolbar />
           <table className="styled-table">
             <thead>
               <tr>
@@ -33,7 +36,7 @@ const Statistics = () => {
               </tr>
             </tbody>
           </table>
-
+          <Sales />
           <img
             src="https://ichef.bbci.co.uk/news/1024/cpsprodpb/16674/production/_117346719_1mar_vax-nc.png"
             alt="grafico de vacinação "

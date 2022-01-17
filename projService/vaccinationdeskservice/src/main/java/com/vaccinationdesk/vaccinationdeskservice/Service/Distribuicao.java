@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -66,35 +67,116 @@ public class Distribuicao {
      * @throws IOException
      * @throws WriterException
      */
-    public void distribuirVacinasPorOrdemMarcacao() throws MessagingException, WriterException, IOException {
+    public void distribuirVacinasPorOrdemMarcacao() {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de
+        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
+        int quantidadeDeCentros = centrosVacinacao.size();
+        String moradasCentrosAPI = "";
+
+        for (CentroVacinacao centro : centrosVacinacao) {
+            if (centro.getMorada().equals("Porto")) {
+                moradasCentrosAPI += centro.getMorada() + ",Portugal";
+            }
+            moradasCentrosAPI += centro.getMorada() + "|";
+        }
+        
+        for (int i = 0; i < capacidadeDia; i++) {
+            ListaEspera pedido = listaEspera.get(i);
+            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+            //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal", moradasCentrosAPI);
+            String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
+
+            for (CentroVacinacao centro : centrosVacinacao) {
+                if (centroEscolhido.equals(centro.getMorada())) {
+                    //escolher a data em que o utente irá tomar a vacina                    
+                    Timestamp dataVacina = pedido.getDataInscricao();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dataVacina);
+                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    dataVacina.setTime(cal.getTime().getTime());
+
+                    Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
+                    agendamentoRepository.save(agendamento);
+
+                    //! codigo do qr code
+                    //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
+                    //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
+                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    try {
+                        sendEmail(pedido, dataVacina.toString(), centro);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
+
+    public void distribuirVacinasPorFiltros(String filtrosJSON) {
+        List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
+        List<ListaEspera> listaEspera;
+        
+        JSONObject jsonObject = new JSONObject(filtrosJSON);
+
+        if (filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
+            int idade = jsonObject.getInt("idade");
+            int doenca = jsonObject.getInt("doenca");
+            listaEspera = listaesperaRepository.getListaEsperaByAgeAndDoenca(idade, doenca);
+        } else if (filtrosJSON.contains("idade") && !filtrosJSON.contains("doenca")) {
+            int idade = jsonObject.getInt("idade");
+            listaEspera = listaesperaRepository.getListaEsperaByAge(idade);
+        } else if (!filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
+            int doenca = jsonObject.getInt("doenca");
+            listaEspera = listaesperaRepository.getListaEsperaByDoenca(doenca);
+        } else {
+            System.out.println("deu merda");
+            listaEspera = listaesperaRepository.findAll();
+        }
+
+        for (ListaEspera listaEspera2 : listaEspera) {
+            System.out.println(listaEspera2);
+        }
+
+
+
+        //ver como o argumento de entrada como fazer a separacao dos filtros
+        //listaEspera = listaesperaRepository.getListaEsperaByDoenca(2);
+    
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
         
         for (CentroVacinacao centro : centrosVacinacao) {
+            if (centro.getMorada().equals("Porto")) {
+                moradasCentrosAPI += centro.getMorada() + ",Portugal";
+            }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-    
+        
+        if (listaEspera.size() < capacidadeDia) {
+            capacidadeDia = listaEspera.size();
+        }
+
         for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
-            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada(), moradasCentrosAPI);
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal", moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
-                    
-                    //! por a data do sql com horas, minutos, e segundos
-                    long millis = System.currentTimeMillis();
-                    millis = millis + (10 * 60 * 1000);  
-                    Date dataVacina = new java.sql.Date(millis);
-                    
-                    System.out.println("Data da vacina: " + dataVacina);
-                    //plusdays = é a funcao que permite somar dias
-                    dataVacina = Date.valueOf(dataVacina.toLocalDate().plusDays(3));
+                    //escolher a data em que o utente irá tomar a vacina                    
+                    Timestamp dataVacina = pedido.getDataInscricao();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dataVacina);
+                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    dataVacina.setTime(cal.getTime().getTime());
                     
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
@@ -104,9 +186,6 @@ public class Distribuicao {
                     //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
                     //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
-                    //! ver se dá para executar este codigo de enviar emails com thread, pq demora 1.8 +/- segundos a enviar o email
-                    //! e torna o processo de agendamento lento. oq seria feito em 0.6/0.7s chega a demorar 2.2s
-                    //? https://spring.io/guides/gs/async-method/ <- ver se isto resovle o problema
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (MessagingException e) {
@@ -191,9 +270,6 @@ public class Distribuicao {
         
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
-        double start, stop, delta;
-        start = System.nanoTime();
-                
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
         // helper.setTo(pedido.getUtente().getEmail());
@@ -201,10 +277,11 @@ public class Distribuicao {
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);
-        helper.setText("A sua vacina encontra-se agendada para o dia " + dataVacina + " no "
+        helper.setText("Exmo.(a) Senhor(a)\n\n" + pedido.getUtente().getNome().toUpperCase() + "\nNº Utente: "+ pedido.getUtente().getID() + "\n\nA sua vacina encontra-se agendada para o dia " + dataVacina + " no "
                 + centro.getNome() + " sendo a morada do mesmo: " + centro.getMorada()
-                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelicida."
-                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda a esta mensagem.");
+                + "\nEm anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data estabelecida."
+                + "\n\nPode também consultar esta informação no site no nosso site, em Menu Inicial > Verificar Estado do Agendamento."
+                + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda. ");
         
         /*
         * POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
@@ -218,9 +295,5 @@ public class Distribuicao {
         f.delete();
         */
         javaMailSender.send(msg);
-     
-        stop = System.nanoTime();  // clock snapshot after
-        delta = (stop - start) / 1e9; // convert nanoseconds to milliseconds
-        System.out.println("send email: " + delta);
     }
 }
