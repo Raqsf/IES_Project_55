@@ -7,12 +7,15 @@ import { useRouter } from "next/router";
 import api from "../api";
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
+import { People } from "../components/gerente/people";
 // import { useParams } from "react-router-dom";
 import { useState } from 'react';
 
 const VaccinationCenter = () => {
     const router = useRouter();
-    const [param1, setParam] = useState();
+    // const [param1, setParam] = useState();
+    const [people, setPeople] = useState([]);
+    const [loading, setLoading] = useState(true);
     const {
         query: { id },
     } = router
@@ -58,19 +61,29 @@ const VaccinationCenter = () => {
     // }
     
     React.useEffect(() => {
-      const getData = async () => {
-          const data = await api.get(
+      setLoading(true);
+      api.get(
             `/centrovacinacao/${id}`, headers
           ).then((response) => {
             setCentro(response.data);
+            setLoading(false);
           })
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             alert("Erro");
-          });
-      };
-      getData();
+          })
+      const loop = setInterval(function() {
+            api
+              .get(`/centrovacinacao/${id}`, headers
+              ).then((response) => {
+                setCentro(response.data);
+              });
+          }, 1000);
+          return () => clearInterval(loop);
     }, []);
+
+    // TODO: pedido API utentes q estão no CV a serem vacinados
+    // TODO: usar dados API para adicionar à tabela
     
     return (
   <>
@@ -116,6 +129,12 @@ const VaccinationCenter = () => {
         <TableVaccines />      */}
       </Container>
       <Container maxWidth={false} sx={{ mt: 4 }}>
+        <Box>
+        {/* TODO: passar pessoas */}
+        <People />
+        </Box>
+      </Container>
+      <Container maxWidth={false} sx={{ mt: 4 }}>
         <Box 
           component="form"
           sx={{
@@ -130,6 +149,7 @@ const VaccinationCenter = () => {
           >
             Capacidade Máxima
           </Typography>
+          {/* TODO: retirar uma das capacidades */}
           {centro ? <TextField
             id="max-vaccines"
             label="Vacinas"
