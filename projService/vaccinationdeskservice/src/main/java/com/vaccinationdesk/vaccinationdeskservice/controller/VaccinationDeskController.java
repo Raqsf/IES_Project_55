@@ -51,13 +51,6 @@ public class VaccinationDeskController {
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
-    // private EntityManager em;
-    // @GetMapping("/centrovacinacao/{centro}")
-    // public List<?> centroVacinacao(@PathVariable Integer centro) {
-    //     Query query = em.createNativeQuery("SELECT count(agendamento.id) FROM centro_vacinacao JOIN agendamento ON centro_vacinacao.id = n_utente WHERE centro_vacinacao = 1");
-    //     return query.getResultList();
-    //     // return centroVacinacaoRepository.findCentroVacinacaoById(centro);
-    // }
 
     @GetMapping("/centrovacinacao")
     public List<CentroVacinacao> centroVacinacao() {
@@ -124,15 +117,14 @@ public class VaccinationDeskController {
     }
 
     @GetMapping("/doencaPorUtente/{id}")
-    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id){
-        Utente u = utenteRepository.findUtenteById(id);
-        // SAVE DA DOENCA
-        // Doenca d = doencaRepository.findDoencaById(4);
-        // System.out.println(d);
-        // dpuRepository.save(new DoencaPorUtente( u, d));
-        // FIM
-        //dpuRepository.save(new DoencaPorUtente( new Utente(), new Doenca()))
-        return dpuRepository.findByIdUtente(u);
+    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id) throws ResourceNotFoundException{
+        try{
+            Utente u = utenteRepository.findUtenteById(id);
+            return dpuRepository.findByIdUtente(u);
+        }catch(Exception e){
+            throw new ResourceNotFoundException("Utente "+id+" não encontrado!");
+        }
+        
     }
 
     @GetMapping("/centrovacinacao/{id}")
@@ -173,11 +165,5 @@ public class VaccinationDeskController {
     public List<Doenca> doencas(){
         return doencaRepository.findAll();
     }
-    
-
-    // @GetMapping("/int")
-    // public Integer getInt() {
-    // return 123456;
-    // }
 
 }
