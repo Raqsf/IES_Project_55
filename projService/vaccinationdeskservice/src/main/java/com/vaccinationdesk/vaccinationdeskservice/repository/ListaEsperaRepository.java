@@ -3,10 +3,14 @@ package com.vaccinationdesk.vaccinationdeskservice.repository;
 import java.util.List;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
+import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 @Repository
 public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Integer> {
     List<ListaEspera> findAll();
@@ -22,5 +26,9 @@ public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Intege
 
     @Procedure(procedureName = "getListaEsperaByDoenca")
     List<ListaEspera> getListaEsperaByDoenca(Integer doenca);
+
+
+    @Query("SELECT l.utente FROM ListaEspera as l WHERE l.utente = :utente")
+    List<Utente> findUtenteInListaEspera(@Param("utente") Utente utente);
 }
     

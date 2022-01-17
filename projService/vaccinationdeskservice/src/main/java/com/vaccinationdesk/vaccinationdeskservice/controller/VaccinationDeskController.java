@@ -5,17 +5,22 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
+import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
+import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +47,10 @@ public class VaccinationDeskController {
     private AgendamentoRepository agendamentoRepository;
     @Autowired
     private DoencaRepository doencaRepository;
+    @Autowired
+    private ListaEsperaRepository listaEsperaRepository;
+    @Autowired
+    private DoencaPorUtenteRepository dpuRepository;
     // private EntityManager em;
     // @GetMapping("/centrovacinacao/{centro}")
     // public List<?> centroVacinacao(@PathVariable Integer centro) {
@@ -83,16 +92,26 @@ public class VaccinationDeskController {
     }
 
     @PostMapping("/utente")
-    public ResponseEntity<Agendamento> createAppointment(@Valid @RequestBody Utente utente) {
-
+    public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
+        
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
+            //System.out.println(utenteRepository.findUtenteById(utente.getID()) );
+            
+            Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
+            if (!utente.getNome().equals(utenteDB.getNome()) || 
+                !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
+                throw new ConflictException("Dados inválidos");
+            }
+            if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+                throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
+            }
             long millis = System.currentTimeMillis();
             utente = utenteRepository.findUtenteById(utente.getID());
             System.out.println(utente);
             CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(1);
             /*Agendamento a = new Agendamento(utente, new Date(millis), cv);
             try {
-                agendamentoRepository.save(a);
+                listaEsperaRepository.save(le);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
@@ -106,6 +125,18 @@ public class VaccinationDeskController {
     @GetMapping("/agendamento/{utente}")
     public List<Agendamento> getAgendamentoByUtente(@PathVariable Integer utente){
         return agendamentoRepository.findAllByUtente(utente);
+    }
+
+    @GetMapping("/doencaPorUtente/{id}")
+    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id){
+        Utente u = utenteRepository.findUtenteById(id);
+        // SAVE DA DOENCA
+        // Doenca d = doencaRepository.findDoencaById(4);
+        // System.out.println(d);
+        // dpuRepository.save(new DoencaPorUtente( u, d));
+        // FIM
+        //dpuRepository.save(new DoencaPorUtente( new Utente(), new Doenca()))
+        return dpuRepository.findByIdUtente(u);
     }
 
     @GetMapping("/centrovacinacao/{id}")
@@ -136,8 +167,8 @@ public class VaccinationDeskController {
             CentroVacinacao updatedCentro = centroVacinacaoRepository.save(centro);
             return ResponseEntity.ok(updatedCentro);
         } catch (Exception e) {
-            System.err.print("Centro Vacinacao "+id+" not found"+e.getMessage());
-            throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found"+e.getMessage());
+            System.err.print("Centro Vacinacao "+id+" not found");
+            throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found");
         }
         
     }

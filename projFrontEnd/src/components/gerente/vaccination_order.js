@@ -54,18 +54,24 @@ export const VaccinationOrder = (props) => {
       for (const c of checkboxes) {
         if(c.checked) {
           res.push(c.id)
+          // TODO: alterar para mais doenças
+          break;
         }
       }
 
       let order = {};
-      if(ageCheck){
+      if(ageCheck && res.length > 0){
         order = {
-          doencas: res,
+          doenca: res[0],
           idade: age
         }
-      } else {
+      } else if(!ageCheck && res.length > 0) {
         order = {
-          doencas: res
+          doenca: res[0]
+        }
+      } else if(ageCheck && res.length === 0) {
+        order = {
+          idade: age
         }
       }
       

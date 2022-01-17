@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Typography, Box, Switch, Toolbar, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableSortLabel, Paper } from '@mui/material';
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
+import api from "../../api";
 
 function createData(centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual) {
   return { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual };
@@ -139,11 +140,34 @@ const EnhancedTableToolbar = () => {
 };
 
 const TableVaccines = (props) => { 
+  const {centros} = props;
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const data = await api.get(
+        `/lote`, headers
+      ).then((response) => {
+        alert(response.data)
+        // TODO: junção centros com lotes
+        alert(centros)
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        alert("Erro");
+      });
+    };
+    getData();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
