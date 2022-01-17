@@ -69,7 +69,6 @@ public class Vacinacao {
                 infoList.add(utente_vacina_administrada.getNome() + ", " + utente_vacina_administrada.getID() + ", "
                 + vacina.getNome() + ", " + vacina.getDataAdministracao());
                 dentroDoCentroMap.put(i, infoList);
-                System.out.println("entrou no centro: " + dentroDoCentroMap.get(i));
                 
                 if (i > 2) {
                     int j = i - 3;
