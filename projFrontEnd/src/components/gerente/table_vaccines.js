@@ -165,7 +165,7 @@ const TableVaccines = (props) => {
           res.push({"centro_vacinacao": lote.centroVacinacao.nome, "n_vacinas_a_chegar": lote.quantidade, "dia_chegada":lote.data_chegada, "n_vacinas_atual": lote.centroVacinacao.capacidadeAtual})
         }
         setRows(res);
-        alert("HEY")
+        // alert("HEY")
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
