@@ -91,7 +91,6 @@ public class VaccinationDeskController {
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
         
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
-            //System.out.println(utenteRepository.findUtenteById(utente.getID()) );
             
             Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
             if (!utente.getNome().equals(utenteDB.getNome()) || 
@@ -99,7 +98,7 @@ public class VaccinationDeskController {
                 throw new ConflictException("Dados inválidos");
             }
             if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
-                throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
+                throw new ConflictException("Utente com id "+utente.getID()+" já se encontra em lista de espera");
             }
             long millis = System.currentTimeMillis();
             ListaEspera le = new ListaEspera(utenteDB, new Timestamp(millis));
@@ -115,7 +114,7 @@ public class VaccinationDeskController {
     }
 
     @GetMapping("/agendamento/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws ResourceNotFoundException{
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)
             try{
                 if (utenteRepository.findUtenteById(utente.getID()) != null){
@@ -123,10 +122,15 @@ public class VaccinationDeskController {
                     if (!utente.getNome().equals(utenteDB.getNome())){
                         throw new ConflictException("Dados inválidos");
                     }
+                    if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+                        throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
+                    }
                     return agendamentoRepository.findAllByUtente(utente.getID());
+                }else{
+                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
                 }
             }catch(Exception e){
-                throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+                throw e;
             }
         return agendamentoRepository.findAllByUtente(id);
     }
