@@ -97,12 +97,10 @@ const Manage = () => {
             py:3
           }}
         />
-        {/* TODO: GET é diferente para a tabela */}
-        <TableVaccines centros={centros} />
+        <TableVaccines /*  centros={centros}  */ />
         {/* Selecionar centros de vacinção para definir capacidadde de vacinas (e pessoas)*/}
         {/* Definir ordem da vacinação */}
         {/* Tabela com centros de vacinação, vacinas a chegar no dia x e quantas vacinas têm*/}
-        {/* <Success/> */}
       </Container>
     </Box>
   </>

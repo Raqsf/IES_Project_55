@@ -100,11 +100,11 @@ CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
     PRIMARY KEY(`id`),
 );
 
-INSERT INTO `centro_vacinacao` (`id`, `nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
-(1, 'Centro de Vacinação do Porto', 'Porto', 15, 0),
-(2, 'Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
-(3, 'Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
-(4, 'Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
+INSERT INTO `centro_vacinacao` (`nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
+('Centro de Vacinação do Porto', 'Porto', 15, 0),
+('Centro de Vacinação do Lisboa', 'Lisboa', 23, 0),
+('Centro de Vacinação do Coimbra', 'Coimbra', 5, 0),
+('Centro de Vacinação do Aveiro', 'Aveiro', 8, 0);
 
 
 CREATE PROCEDURE getListaEsperaByAge(IN age int)
