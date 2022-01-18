@@ -15,6 +15,7 @@ const VaccinationCenter = () => {
     const router = useRouter();
     // const [param1, setParam] = useState();
     const [loading, setLoading] = useState(true);
+    const [capacity, setCapacity] = useState();
     const {
         query: { id },
     } = router
@@ -61,10 +62,6 @@ const VaccinationCenter = () => {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     };    
-
-    // while(id == null) {
-
-    // }
     
     React.useEffect(() => {
       setLoading(true);
@@ -81,6 +78,7 @@ const VaccinationCenter = () => {
           ).then((response) => {
             // console.log("Second", id)
             setCentro(response.data);
+            setCapacity(response.data.capacidadeMax);
             setLoading(false);
           })
           .catch((err) => {
@@ -99,6 +97,7 @@ const VaccinationCenter = () => {
             `/centrovacinacao/${id}`, headers
           ).then((response) => {
             setCentro(response.data);
+            setCapacity(response.data.capacidadeMax);
           })
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
@@ -110,9 +109,26 @@ const VaccinationCenter = () => {
       }, []);
     // console.log("ID",id)
 
-    // TODO: pedido API utentes q estão no CV a serem vacinados
-    // TODO: usar dados API para adicionar à tabela
+    function handleSubmit(e) {
+      e.preventDefault();
+      console.log(capacity)
     
+      api
+      .put(`/centrovacinacao/${id}/capacidade`, capacity, headers)
+      .then((response) => {
+        // if (response.status >= 200 && response.status < 300)
+        alert("Nova ordem definida")
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      })
+    }
+    
+    const handleChange = (event) => {
+      console.log(event.target.value)
+      setCapacity(event.target.value);
+    }
+
     return (
   <>
     <Head>
@@ -143,10 +159,10 @@ const VaccinationCenter = () => {
         {/* TODO: numero de pessoas vacinadas e numero vacinas em tempo real */}
         <Grid container spacing={2}>
           <Grid item lg={6} sm={6} xl={6} xs={12}>
-            <PeopleVaccinated />
+            <PeopleVaccinated id={id}/>
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
-            <VaccinesAdministered />
+            <VaccinesAdministered id={id}/>
           </Grid>
         </Grid>
         {/*<Divider 
@@ -184,6 +200,7 @@ const VaccinationCenter = () => {
             InputLabelProps={{
                 shrink: true,
             }}
+            onChange={handleChange}
           />: null}
           {/* {centro ? <TextField
             id="max-people"
@@ -204,6 +221,7 @@ const VaccinationCenter = () => {
               color="primary"
               variant="contained"
               sx={{ mr: 1 }}
+              onClick={handleSubmit}
             >
               Guardar
             </Button>
