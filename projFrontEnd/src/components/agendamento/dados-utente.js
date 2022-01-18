@@ -36,7 +36,7 @@ export default function DadosUtente(props) {
       nome: nome,
       dataNascimento: date.toISOString(),
     };
-    console.log(date)
+
     api
       .post(`/utente`, user, headers)
       .then((response) => {

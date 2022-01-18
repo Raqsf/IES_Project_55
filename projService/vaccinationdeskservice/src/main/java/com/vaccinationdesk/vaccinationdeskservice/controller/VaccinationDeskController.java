@@ -179,11 +179,6 @@ public class VaccinationDeskController {
         }
         
     }
-    /*
-    avaliação entre o grupo
-    demo
-    powerpoint
-    */
 
     @GetMapping("/doencas")
     public List<Doenca> doencas(){

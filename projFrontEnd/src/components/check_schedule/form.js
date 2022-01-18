@@ -29,6 +29,7 @@ export default function FormVaccinationInfo() {
             nome: nome
         };
         console.log(user)
+        console.log(`/agendamento/${user.id}`)
         api
         .get(`/agendamento/${user.id}`, user, headers)
         .then((response) => {
