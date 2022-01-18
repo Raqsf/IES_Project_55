@@ -14,11 +14,17 @@ import { useState } from 'react';
 const VaccinationCenter = () => {
     const router = useRouter();
     // const [param1, setParam] = useState();
-    const [people, setPeople] = useState([]);
     const [loading, setLoading] = useState(true);
     const {
         query: { id },
     } = router
+    // let param1 = id;
+    if(id) {
+      localStorage.setItem("id", id);
+    }
+    // if(id && !localStorage.getItem("id")) {
+    //   localStorage.setItem("id", id);
+    // } 
     
     // console.log(typeof window !== undefined )
     // if (typeof window !== undefined) {
@@ -62,25 +68,47 @@ const VaccinationCenter = () => {
     
     React.useEffect(() => {
       setLoading(true);
-      api.get(
+      // setParam(id);
+      // console.log(id, !id)
+      // if(id) {
+        // id = localStorage.getItem("id");
+      // }
+      // console.log("First", id)
+      if (id) {
+        // id = localStorage.getItem("id");
+        api.get(
             `/centrovacinacao/${id}`, headers
           ).then((response) => {
+            // console.log("Second", id)
             setCentro(response.data);
             setLoading(false);
           })
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
             alert("Erro");
+            // if(response.status === 500 && typeof id == undefined) {
+            //   alert("Erro")
+            // }
           })
+        }
       const loop = setInterval(function() {
-            api
-              .get(`/centrovacinacao/${id}`, headers
-              ).then((response) => {
-                setCentro(response.data);
-              });
-          }, 1000);
-          return () => clearInterval(loop);
-    }, []);
+        console.log("Loop", id)
+        id = localStorage.getItem("id");
+        // console.log("Loop", param1)
+        api.get(
+            `/centrovacinacao/${id}`, headers
+          ).then((response) => {
+            setCentro(response.data);
+          })
+          .catch((err) => {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Erro");
+          }
+        );
+        }, 1000);
+        return () => clearInterval(loop);
+      }, []);
+    // console.log("ID",id)
 
     // TODO: pedido API utentes q estão no CV a serem vacinados
     // TODO: usar dados API para adicionar à tabela
@@ -130,8 +158,7 @@ const VaccinationCenter = () => {
       </Container>
       <Container maxWidth={false} sx={{ mt: 4 }}>
         <Box>
-        {/* TODO: passar pessoas */}
-        <People />
+          <People />
         </Box>
       </Container>
       <Container maxWidth={false} sx={{ mt: 4 }}>
@@ -149,7 +176,6 @@ const VaccinationCenter = () => {
           >
             Capacidade Máxima
           </Typography>
-          {/* TODO: retirar uma das capacidades */}
           {centro ? <TextField
             id="max-vaccines"
             label="Vacinas"
@@ -159,7 +185,7 @@ const VaccinationCenter = () => {
                 shrink: true,
             }}
           />: null}
-          {centro ? <TextField
+          {/* {centro ? <TextField
             id="max-people"
             label="Pessoas"
             type="number"
@@ -167,7 +193,7 @@ const VaccinationCenter = () => {
             InputLabelProps={{
                 shrink: true,
             }}
-          />: null}
+          />: null} */}
           <Box sx={{
               pt: 2,
               display: 'flex',

@@ -157,9 +157,9 @@ const TableVaccines = (props) => {
       const data = await api.get(
         `/lote`, headers
       ).then((response) => {
-        alert(response.data)
+        console.log(response.data)
         // TODO: junção centros com lotes
-        alert(centros)
+        alert("HEY")
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);

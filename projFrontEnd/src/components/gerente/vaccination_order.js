@@ -6,7 +6,7 @@ import api from "../../api";
 export const VaccinationOrder = (props) => { 
     const {doencas} = props;
     const [age, setAge] = useState(65);
-    const [ageCheck, setAgeCheck] = useState(true);
+    const [ageCheck, setAgeCheck] = useState(false);
     const [checkboxes, setCheckboxes] = useState(doencas);
     useEffect(() => {
       // manually deep compare here before updating state
@@ -27,7 +27,7 @@ export const VaccinationOrder = (props) => {
           }
           let newDoencas = [...checkboxes];
           newDoencas[event.target.value] = {id: event.target.value, doenca: doe, checked: event.target.checked}
-          setCheckboxes(newDoencas,);
+          setCheckboxes(newDoencas);
         }
 
         if (event.target.type == "number") {
@@ -74,6 +74,7 @@ export const VaccinationOrder = (props) => {
           idade: age
         }
       }
+      console.log(order)
       
       // api
       // .post(`TODO`, order, headers)
