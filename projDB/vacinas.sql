@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `centro_vacinacao` (
     PRIMARY KEY(`id`)
 );
 
-CREATE TABLE `lote` (
+CREATE TABLE IF NOT EXISTS `lote` (
     `id`			                VARCHAR(6)          NOT NULL,
     `quantidade`	        	    INT         		NOT NULL,
     `atribuida_ao_centro`		    INT            	    NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `lote` (
     FOREIGN KEY (`atribuida_ao_centro`) REFERENCES `centro_vacinacao`(`id`)
 );
 
-CREATE TABLE `vacina` (
+CREATE TABLE IF NOT EXISTS `vacina` (
     `n_vacina`			    INT		  AUTO_INCREMENT    NOT NULL,
     `lote`		            VARCHAR(6)         		NOT NULL,
     `nome`		            VARCHAR(256)		NOT NULL,

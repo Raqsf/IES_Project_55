@@ -9,13 +9,14 @@ from datetime import datetime, timedelta
 from random import randint
 
 class Generator:
-    def __init__(self, people, vaccination_centers=None, vaccines=None):
+    def __init__(self, people, surnames, vaccination_centers=None, vaccines=None):
         credentials = pika.PlainCredentials('myuser', 'mypassword')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.number_of_vaccines_for_today = 0
         self.people = people
+        self.surnames = surnames
         self.vaccination_centers = vaccination_centers
         self.vaccines = vaccines
         self.waiting_list = list()
@@ -23,6 +24,7 @@ class Generator:
         self.hours = 8
         self.initial_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         self.date_to_change = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        self.first_name_temp = None
 
     def send(self, topic="vaccination_queue", mes=None):
         """Send the message to the broker"""
@@ -40,8 +42,11 @@ class Generator:
             if random_n_utente not in self.people.keys():
                 people_list = list(self.people.keys())
                 person = random.choice(people_list)
+                surname = random.choice(self.surnames)
                 self.people[random_n_utente] = copy.deepcopy(self.people[person])
                 self.people[random_n_utente]['n_utente'] = copy.deepcopy(random_n_utente)
+                self.people[random_n_utente]['nome'] = copy.deepcopy(self.people[random_n_utente]['nome'] + " " + surname)
+                print(self.people[random_n_utente]['nome'])
                 minutes_to_sum = 8
                 if (self.minutes + minutes_to_sum) > 60:
                     if (self.hours + 1) == 24:
@@ -55,7 +60,8 @@ class Generator:
                 return random_n_utente
             else:
                 random_n_utente = randint(1000,9999)
-                                          
+    
+    #!pode ser apagada esta funcao                                  
     def generate_vaccines_quantity(self):
         """Generates randomly vaccines quantity"""
         self.initial_date = self.initial_date + timedelta(days=1)
@@ -78,6 +84,7 @@ class Generator:
             message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "arriving_date": arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
             self.send(mes=message)
             print('\033[93m' + message.__str__() +  '\033[0m')
+            time.sleep(1.5)
                 
     def changing_center_capacity(self):
         """Changing maximum capacity of vaccination centers"""
@@ -89,10 +96,12 @@ class Generator:
     def add_to_waiting_list(self):
         """Add person to the waiting list to get a vaccine"""
         n_utente = self.get_random_person()
-        self.waiting_list.append(copy.deepcopy(self.people[n_utente])) 
+        self.waiting_list.append(copy.deepcopy(self.people[n_utente]))
         message = {"type": "schedule_vaccine", "utente": self.people[n_utente] }
         self.send(mes=message)
         print('\033[94m' + message.__str__() + '\033[0m')
+        first_name = self.people[n_utente]['nome'].split(' ')[0]
+        self.people[n_utente]['nome'] = first_name
         
         
 if __name__ == '__main__':
@@ -108,6 +117,8 @@ if __name__ == '__main__':
               1242: {'n_utente':'1242','nome':'Sofia', 'email':'sofia@email.com','local': 'Setubal', 'data_nasc':'01/01/1949','doença': 'Diabetes', 'data_inscricao':"12/24/2021"},
               1243: {'n_utente':'1243','nome':'Lara', 'email':'lara@email.com','local': 'Setubal', 'data_nasc':'01/01/1974','doença': 'nada', 'data_inscricao':"12/24/2021"}
               }
+    
+    surnames = ["Silva", "Costa", "Ferreira", "Moreira", "Dias", "Reis", "Leal", "Silveira", "Tavares", "Santos", "Oliveira", "Pereira", "Alves", "Lopes"]
     #! The vaccination centers may be in DB from the beggining, in the data generation I think 
     #! that the only thing is needed is changing the capacity of the centers
     # vacination_centers = {n_centro: [informações do centro]}
@@ -118,10 +129,13 @@ if __name__ == '__main__':
                             }
     vaccines = ['PF', 'MO', 'AZ', 'JJ']
     
-    g = Generator(people, vaccination_centers, vaccines)
+    g = Generator(people, surnames, vaccination_centers, vaccines)
     while True:
-        time.sleep(0.5)
         for _ in range(10):
-            g.add_to_waiting_list()
+            for _ in range(20):
+                g.add_to_waiting_list()
+                #time.sleep(2)
             g.destribute_vaccines_per_centers()
+            #time.sleep(2)
+            
             
