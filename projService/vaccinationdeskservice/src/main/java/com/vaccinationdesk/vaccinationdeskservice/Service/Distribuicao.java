@@ -125,16 +125,16 @@ public class Distribuicao {
 
         if (filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
             int idade = jsonObject.getInt("idade");
-            int doenca = jsonObject.getInt("doenca");
+            int doenca = Integer.parseInt(jsonObject.getString("doenca")) + 1;
             listaEspera = listaesperaRepository.getListaEsperaByAgeAndDoenca(idade, doenca);
         } else if (filtrosJSON.contains("idade") && !filtrosJSON.contains("doenca")) {
             int idade = jsonObject.getInt("idade");
             listaEspera = listaesperaRepository.getListaEsperaByAge(idade);
         } else if (!filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
-            int doenca = jsonObject.getInt("doenca");
+            int doenca = Integer.parseInt(jsonObject.getString("doenca")) + 1;
             listaEspera = listaesperaRepository.getListaEsperaByDoenca(doenca);
         } else {
-            System.out.println("deu merda");
+            //! ver oq fazer com o else
             listaEspera = listaesperaRepository.findAll();
         }
 

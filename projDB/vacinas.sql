@@ -36,8 +36,7 @@ CREATE TABLE IF NOT EXISTS `vacina` (
     FOREIGN KEY(`administrada_a`) REFERENCES `pessoa`(`n_utente`),
     FOREIGN KEY(`lote`) REFERENCES `lote`(`id`)
 );
-drop table vacina
-DROP TABLE lote
+
 CREATE TABLE IF NOT EXISTS `lote` (
     `id`			                VARCHAR(6)          NOT NULL,
     `quantidade`	        	    INT         		NOT NULL,
