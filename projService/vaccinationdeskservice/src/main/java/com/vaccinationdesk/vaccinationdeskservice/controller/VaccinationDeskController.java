@@ -98,7 +98,8 @@ public class VaccinationDeskController {
                 !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
                 throw new ConflictException("Dados inválidos");
             }
-            if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+            List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+            if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
                 throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
@@ -123,7 +124,8 @@ public class VaccinationDeskController {
                     if (!utente.getNome().equals(utenteDB.getNome())){
                         throw new ConflictException("Dados inválidos");
                     }
-                    if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+                    List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
                         throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
                     }
                     return agendamentoRepository.findAllByUtente(utente.getID());
