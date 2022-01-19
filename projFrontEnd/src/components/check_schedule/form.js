@@ -34,7 +34,7 @@ export default function FormVaccinationInfo() {
         .then((response) => {
             // setResposta(response.data);
             console.log(response.data);
-            console.log(response.data[0].id);
+            console.log(response.data.id);
             if(response.data.length == 0)  {
                 // TODO: passar essa info para a pagina vaccination_info
                 // alert("Não existe agendamento");
@@ -42,12 +42,12 @@ export default function FormVaccinationInfo() {
             } else {
                 router.push({ pathname: "/vaccination_info",
                     query: {
-                        utente_nome: response.data[0].utente.nome,
-                        utente_num: response.data[0].utente.id,
+                        utente_nome: response.data.utente.nome,
+                        utente_num: response.data.utente.id,
                         // utente: {nome:response.data[0].utente.nome, id:response.data[0].utente.nome},
-                        centro: response.data[0].centro.nome,
-                        morada: response.data[0].centro.morada,
-                        data: response.data[0].diaVacinacao
+                        centro: response.data.centro.nome,
+                        morada: response.data.centro.morada,
+                        data: response.data.diaVacinacao
                         }
                     // search: `?response=${response.data}`
                     // state: { detail: "hello"}
@@ -56,7 +56,7 @@ export default function FormVaccinationInfo() {
         })
         .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
-            toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+            //toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
         });
         // router.push('/vaccination_info');
     }
