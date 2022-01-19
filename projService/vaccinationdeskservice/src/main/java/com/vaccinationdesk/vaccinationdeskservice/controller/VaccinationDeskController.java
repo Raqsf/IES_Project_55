@@ -39,25 +39,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
 public class VaccinationDeskController {
-    @Autowired
-    private CentroVacinacaoRepository centroVacinacaoRepository;
+    
     @Autowired
     private UtenteRepository utenteRepository;
     @Autowired
     private LoteRepository loteRepository;
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
     @Autowired
     private DoencaRepository doencaRepository;
     @Autowired
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
-
-    @GetMapping("/centrovacinacao")
-    public List<CentroVacinacao> centroVacinacao() {
-        return centroVacinacaoRepository.findAll();
-    }
 
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
@@ -68,13 +60,6 @@ public class VaccinationDeskController {
     public Utente getUtenteByIDUtente(@RequestBody Integer id) {
         return utenteRepository.findUtenteById(id);
     }
-
-    /*
-     * @GetMapping("/utente/{n_utente}")
-     * public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
-     * return utenteRepository.findUtenteByNumUtente(n_utente);
-     * }
-     */
 
     @GetMapping("/lote/{id}")
     public Lote getUtenteByNome(@PathVariable Integer lote) {
@@ -97,8 +82,9 @@ public class VaccinationDeskController {
                 !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
                 throw new ConflictException("Dados inválidos");
             }
-            if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty()){
-                throw new ConflictException("Utente com id "+utente.getID()+" já se encontra em lista de espera");
+            List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+            if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
+                throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
             ListaEspera le = new ListaEspera(utenteDB, new Timestamp(millis));
@@ -141,40 +127,6 @@ public class VaccinationDeskController {
             return dpuRepository.findByIdUtente(u);
         }catch(Exception e){
             throw new ResourceNotFoundException("Utente "+id+" não encontrado!");
-        }
-        
-    }
-
-    @GetMapping("/centrovacinacao/{id}")
-    public CentroVacinacao centroVacinacao(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findCentroVacinacaoById(id);
-    }
-
-    @GetMapping("/centrovacinacao/{id}/vacinas")
-    public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
-        Integer qtd = 0;
-        for (Integer i : centroVacinacaoRepository.findVacinas(id)){
-            qtd+=i;
-        }
-        return qtd;
-    }
-
-    @GetMapping("/centrovacinacao/{id}/agendamentos")
-    public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findAgendamentos(id);
-    }
-
-    @PutMapping("/centrovacinacao/{id}/capacidade")
-    public ResponseEntity<CentroVacinacao> updateCapacidade(@PathVariable(value = "id") Integer id, 
-        @Valid @RequestBody Integer capacidade) throws ResourceNotFoundException {
-        try {
-            CentroVacinacao centro = centroVacinacaoRepository.findCentroVacinacaoById(id);
-            centro.setCapacidadeMax(capacidade);
-            CentroVacinacao updatedCentro = centroVacinacaoRepository.save(centro);
-            return ResponseEntity.ok(updatedCentro);
-        } catch (Exception e) {
-            System.err.print("Centro Vacinacao "+id+" not found");
-            throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found");
         }
         
     }

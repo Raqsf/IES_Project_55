@@ -34,11 +34,7 @@ export default function FormVaccinationInfo() {
         api
         .post(`/agendamento`, user, headers)
         .then((response) => {
-            // setResposta(response.data);
-            console.log("HERE", response.data);
             if(response.data.length == 0)  {
-                // TODO: passar essa info para a pagina vaccination_info
-                // alert("Não existe agendamento");
                 router.push({ pathname: "/vaccination_info",
                 query: {
                     utente_nome: user.nome,
@@ -67,6 +63,7 @@ export default function FormVaccinationInfo() {
             }
         })
         .catch((err) => {
+<<<<<<< HEAD
             console.log(err.response)
             if(err.response.status === 409) {
                 toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
@@ -83,6 +80,10 @@ export default function FormVaccinationInfo() {
                 console.error("ops! ocorreu um erro" + err);
                 toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
             }
+=======
+            console.error("ops! ocorreu um erro" + err);
+            //toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+>>>>>>> develop
         });
         // router.push('/vaccination_info');
     }
