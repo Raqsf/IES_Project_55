@@ -47,7 +47,7 @@ public class AgendamentoController {
 
     // serve só para ver se está tudo a funcionar bem
     @GetMapping("/agendar")
-    public List<ListaEspera> agendar() throws Exception {
+    public List<Agendamento> agendar() throws Exception {
         try {
             return distribuicao.distribuirVacinasPorOrdemMarcacao();
         } catch (Exception e) {
@@ -72,12 +72,12 @@ public class AgendamentoController {
     }
 
     @PostMapping("/agendar_com_filtros")
-    public ResponseEntity<List<ListaEspera>> agendarComFiltros(@Valid @RequestBody String filtros) throws Exception {
+    public ResponseEntity<List<Agendamento>> agendarComFiltros(@Valid @RequestBody String filtros) throws Exception {
         // {idade: int, doenca: int}
         // {doenca: int}
         // {idade: int}
         try {
-            List<ListaEspera> le = distribuicao.distribuirVacinasPorFiltros(filtros);
+            List<Agendamento> le = distribuicao.distribuirVacinasPorFiltros(filtros);
             return ResponseEntity.ok(le);
         } catch (Exception e) {
             throw e;
