@@ -150,6 +150,14 @@ BEGIN
     WHERE DATE(c.dia) = dia;
 END
 
+CREATE PROCEDURE checkQRcode(IN numero_utente INT, IN centro_id INT, IN dia  DATE)
+BEGIN
+    select * from agendamento 
+    where n_utente = numero_utente  
+    and centro_vacinacao = centro_id
+    and DATE(dia_vacinacao) = dia;
+END
+
 -- drop table capacidade_por_dia;
 -- drop table lista_de_espera;
 -- drop table agendamento;
