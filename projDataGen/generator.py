@@ -61,12 +61,11 @@ class Generator:
             else:
                 random_n_utente = randint(1000,9999)
     
-    #!pode ser apagada esta funcao                                  
     def generate_vaccines_quantity(self):
         """Generates randomly vaccines quantity"""
         self.initial_date = self.initial_date + timedelta(days=1)
         #self.number_of_vaccines_for_today = randint(10, 50)
-        self.number_of_vaccines_for_today = 40
+        self.number_of_vaccines_for_today = 152
         date = self.date_to_change + timedelta(days=4)
         message = {"type" : "vaccines_quantity", "date": date.strftime("%d/%m/%Y"), "quantity": self.number_of_vaccines_for_today}
         self.send(mes=message)
@@ -82,7 +81,7 @@ class Generator:
             id_lote = random.choice(self.vaccines) + str(randint(1000, 9999)) #! criar uma lista para nao deixar haver id iguais?
             center =  id_center
             #arrived_date = self.initial_date + timedelta(days=randint(1,5))
-            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "arriving_date": self.arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
+            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 38, "arriving_date": self.arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
             self.send(mes=message)
             print('\033[93m' + message.__str__() +  '\033[0m')
             time.sleep(1.5)

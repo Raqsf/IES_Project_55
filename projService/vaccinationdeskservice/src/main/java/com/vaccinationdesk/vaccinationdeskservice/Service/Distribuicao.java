@@ -20,6 +20,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
 
@@ -53,9 +54,11 @@ public class Distribuicao {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    // private MQConsumer consumer;
-    // ! ver como ir buscar a capacidade para o dia e atualiza-lo a cada dia que passa
-    int capacidadeDia = 5;
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
+
+    //int capacidadeDia = capacidadeRepository.getCapacidadePorDia(capacidadeRepository.getDiaDB().toString()) - 47;
+    int capacidadeDia = 105;
 
     public Distribuicao() {
     }
@@ -98,6 +101,7 @@ public class Distribuicao {
                     dataVacina.setTime(cal.getTime().getTime());
 
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
+                    //System.out.println(agendamento.toString());
                     agendamentoRepository.save(agendamento);
 
                     //! codigo do qr code
