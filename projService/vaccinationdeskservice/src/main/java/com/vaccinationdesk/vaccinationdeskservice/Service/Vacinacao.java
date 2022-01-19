@@ -1,16 +1,20 @@
 package com.vaccinationdesk.vaccinationdeskservice.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
+import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
@@ -30,6 +34,9 @@ public class Vacinacao {
     @Autowired
     private CentroVacinacaoRepository centroVacinacaoRepository;
 
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
+
 
     Map<Integer, List<String>> dentroDoCentroMap = new HashMap<>();
 
@@ -45,13 +52,27 @@ public class Vacinacao {
     // faz uma pauda (qql coisa, agr fui tudo dormir crlh, esperem para amanha), e
     // quando esse x segundos passarem, volta a repetir todo o processo
 
+
+    // qual a ideia
+    /*
+    qual a arquitetura
+    estatistica de como o trabalho foi dividido
+    apresentar os resultdos finais
+    fazer uma demo em real time, mas podemos ter um backup em video
+    cenario interessante, ter um url para toda a gente da turma estar a mexer de
+    
+    */
     public void vacinacao() {
-        // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
-        // a uma tabela que faça so guardar os dias e passa-los)
-        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia("2022-01-25");
+
+        Capacidade dia = capacidadeRepository.getDiaDB();
+        Date date = dia.getDia();
+
+        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(date.toString());
+        capacidadeRepository.delete(dia);
+
+        //List<Agendamento> agendamentoParaODiaList = agendamentoRepository.findAll();
         List<Vacina> vacinaList = vacinaRepository.findAll();
         int i = 0;
-        System.out.println(agendamentoParaODiaList.size());
         for (Vacina vacina : vacinaList) {
             if (i < agendamentoParaODiaList.size()) {
 

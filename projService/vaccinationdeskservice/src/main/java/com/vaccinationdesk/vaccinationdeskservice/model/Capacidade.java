@@ -30,6 +30,10 @@ public class Capacidade implements Serializable{
     public Capacidade() {
     }
 
+    public Capacidade(Date dia) {
+        this.dia = dia;
+    }
+
     public Capacidade(Date dia, int quantidade) {
 
         this.dia = dia;

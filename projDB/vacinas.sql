@@ -97,8 +97,9 @@ CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
     `dia`                       DATE            NOT NULL,
     `quantidade`                INT             NOT NULL,
 
-    PRIMARY KEY(`id`),
+    PRIMARY KEY(`id`)
 );
+
 
 INSERT INTO `centro_vacinacao` (`nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 ('Centro de Vacinação do Porto', 'Porto', 15, 0),
@@ -137,4 +138,9 @@ CREATE PROCEDURE getAgendamentosPorDia(IN dia DATE)
 BEGIN
     select * from agendamento as a
     WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
+END
+
+CREATE PROCEDURE getDiaDB()
+BEGIN
+    select * from capacidade_por_dia limit 1;
 END
