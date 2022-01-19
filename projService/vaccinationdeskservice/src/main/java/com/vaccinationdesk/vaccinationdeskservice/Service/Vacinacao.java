@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.Response;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
@@ -19,6 +20,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepo
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +64,9 @@ public class Vacinacao {
     cenario interessante, ter um url para toda a gente da turma estar a mexer de
     
     */
-    public void vacinacao() {
+    public ResponseEntity<Object> vacinacao() {
+        // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
+        // a uma tabela que faça so guardar os dias e passa-los)
 
         Capacidade dia = capacidadeRepository.getDiaDB();
         Date date = dia.getDia();
@@ -104,6 +108,7 @@ public class Vacinacao {
                 break;
             }
         }
+        return ResponseEntity.ok(null);
     }
     
     @Async
