@@ -9,6 +9,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +33,8 @@ public class VacinacaoController {
     }
 
     @GetMapping("/vacinas_a_ser_tomadas")
-    public void getAllVacinasTomadas() {
-        vacinacao.vacinacao();
+    public ResponseEntity<Object> getAllVacinasTomadas() {
+        return vacinacao.vacinacao();
     }
 
     @GetMapping("/real_time")

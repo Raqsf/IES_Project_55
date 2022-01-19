@@ -16,6 +16,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
@@ -67,11 +68,12 @@ public class Distribuicao {
      * 
      * Esta funcao faz um destribuicao/agendamento das vacinas pela ordem de marcacao,
      * podendo esta ser considerado o agendamento por defeito. 
+     * @throws ConflictException
      * @throws MessagingException - excecao de email
      * @throws IOException
      * @throws WriterException
      */
-    public void distribuirVacinasPorOrdemMarcacao() throws WriterException, IOException {
+    public List<ListaEspera> distribuirVacinasPorOrdemMarcacao() throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<ListaEspera> listaEspera = listaesperaRepository.findAll(); 
         int quantidadeDeCentros = centrosVacinacao.size();
@@ -111,19 +113,19 @@ public class Distribuicao {
                     generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        throw new ConflictException("Não foi possível enviar email.");
                     }
                     break;
                 }
             }
         }
+        return listaEspera;
     }
     
 
     public void distribuirVacinasPorFiltros(String filtrosJSON) throws WriterException, IOException {
+
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<ListaEspera> listaEspera;
 
@@ -193,15 +195,14 @@ public class Distribuicao {
 
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        throw new ConflictException("Não foi possível enviar email.");
                     }
                     break;
                 }
             }
         }
+        return listaEspera;
     }
     
 
