@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.Response;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
@@ -15,6 +16,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepo
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,7 @@ public class Vacinacao {
     // faz uma pauda (qql coisa, agr fui tudo dormir crlh, esperem para amanha), e
     // quando esse x segundos passarem, volta a repetir todo o processo
 
-    public void vacinacao() {
+    public ResponseEntity<Object> vacinacao() {
         // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
         // a uma tabela que faça so guardar os dias e passa-los)
         List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia("2022-01-25");
@@ -80,6 +82,7 @@ public class Vacinacao {
                 break;
             }
         }
+        return ResponseEntity.ok(null);
     }
     
     @Async

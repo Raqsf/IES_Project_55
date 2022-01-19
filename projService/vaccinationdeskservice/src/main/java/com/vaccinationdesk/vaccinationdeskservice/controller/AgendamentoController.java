@@ -10,10 +10,14 @@ import javax.validation.Valid;
 
 import com.google.zxing.WriterException;
 import com.vaccinationdesk.vaccinationdeskservice.Service.Distribuicao;
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
+import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
+import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +39,21 @@ public class AgendamentoController {
     private ListaEsperaRepository listaesperaRepository;
     @Autowired
     private AgendamentoRepository agendamentoRepository;
+    @Autowired
+    private UtenteRepository utenteRepository;
 
     @Autowired
     private Distribuicao distribuicao;
 
     // serve só para ver se está tudo a funcionar bem
     @GetMapping("/agendar")
-    public void agendar() throws MessagingException, WriterException, IOException {
-        distribuicao.distribuirVacinasPorOrdemMarcacao();
+    public List<ListaEspera> agendar() throws Exception {
+        try {
+            return distribuicao.distribuirVacinasPorOrdemMarcacao();
+        } catch (Exception e) {
+            throw e;
+        }
+        
     }
 
     @GetMapping("/listaespera")
@@ -61,12 +72,40 @@ public class AgendamentoController {
     }
 
     @PostMapping("/agendar_com_filtros")
-    public ResponseEntity<ListaEspera> agendarComFiltros(@Valid @RequestBody String filtros) {
+    public ResponseEntity<List<ListaEspera>> agendarComFiltros(@Valid @RequestBody String filtros) throws Exception {
         // {idade: int, doenca: int}
         // {doenca: int}
         // {idade: int}
-        distribuicao.distribuirVacinasPorFiltros(filtros);
-        return null;
+        try {
+            List<ListaEspera> le = distribuicao.distribuirVacinasPorFiltros(filtros);
+            return ResponseEntity.ok(le);
+        } catch (Exception e) {
+            throw e;
+        }
+        
+    }
+
+    @GetMapping("/{id}")
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
+        if ( utente !=null)
+            try{
+                if (utenteRepository.findUtenteById(utente.getID()) != null){
+                    Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
+                    if (!utente.getNome().equals(utenteDB.getNome())){
+                        throw new ConflictException("Dados inválidos");
+                    }
+                    List<Utente> findUtenteEmLE = listaesperaRepository.findUtenteInListaEspera(utente);
+                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
+                        throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
+                    }
+                    return agendamentoRepository.findAllByUtente(utente.getID());
+                }else{
+                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+                }
+            }catch(Exception e){
+                throw e;
+            }
+        return agendamentoRepository.findAllByUtente(id);
     }
 
 
