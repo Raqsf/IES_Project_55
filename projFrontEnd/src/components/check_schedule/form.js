@@ -63,7 +63,6 @@ export default function FormVaccinationInfo() {
             }
         })
         .catch((err) => {
-<<<<<<< HEAD
             console.log(err.response)
             if(err.response.status === 409) {
                 toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
@@ -80,10 +79,6 @@ export default function FormVaccinationInfo() {
                 console.error("ops! ocorreu um erro" + err);
                 toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
             }
-=======
-            console.error("ops! ocorreu um erro" + err);
-            //toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
->>>>>>> develop
         });
         // router.push('/vaccination_info');
     }
