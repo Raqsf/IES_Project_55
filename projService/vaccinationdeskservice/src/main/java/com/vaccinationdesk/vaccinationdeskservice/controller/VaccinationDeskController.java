@@ -50,6 +50,8 @@ public class VaccinationDeskController {
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
