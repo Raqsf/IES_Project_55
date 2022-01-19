@@ -98,7 +98,8 @@ public class VaccinationDeskController {
                 !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
                 throw new ConflictException("Dados inválidos");
             }
-            if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+            List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+            if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
                 throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
@@ -115,7 +116,7 @@ public class VaccinationDeskController {
     }
 
     @GetMapping("/agendamento/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws ResourceNotFoundException{
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)
             try{
                 if (utenteRepository.findUtenteById(utente.getID()) != null){
@@ -123,10 +124,16 @@ public class VaccinationDeskController {
                     if (!utente.getNome().equals(utenteDB.getNome())){
                         throw new ConflictException("Dados inválidos");
                     }
+                    List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
+                        throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
+                    }
                     return agendamentoRepository.findAllByUtente(utente.getID());
+                }else{
+                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
                 }
             }catch(Exception e){
-                throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+                throw e;
             }
         return agendamentoRepository.findAllByUtente(id);
     }
@@ -175,6 +182,11 @@ public class VaccinationDeskController {
         }
         
     }
+    /*
+    avaliação entre o grupo
+    demo
+    powerpoint
+    */
 
     @GetMapping("/doencas")
     public List<Doenca> doencas(){
