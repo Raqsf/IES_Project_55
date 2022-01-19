@@ -23,6 +23,7 @@ class Generator:
         self.minutes = 0
         self.hours = 8
         self.initial_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        self.arriving_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         self.date_to_change = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         self.first_name_temp = None
 
@@ -46,7 +47,6 @@ class Generator:
                 self.people[random_n_utente] = copy.deepcopy(self.people[person])
                 self.people[random_n_utente]['n_utente'] = copy.deepcopy(random_n_utente)
                 self.people[random_n_utente]['nome'] = copy.deepcopy(self.people[random_n_utente]['nome'] + " " + surname)
-                print(self.people[random_n_utente]['nome'])
                 minutes_to_sum = 8
                 if (self.minutes + minutes_to_sum) > 60:
                     if (self.hours + 1) == 24:
@@ -61,13 +61,13 @@ class Generator:
             else:
                 random_n_utente = randint(1000,9999)
     
-    #!pode ser apagada esta funcao                                  
     def generate_vaccines_quantity(self):
         """Generates randomly vaccines quantity"""
         self.initial_date = self.initial_date + timedelta(days=1)
         #self.number_of_vaccines_for_today = randint(10, 50)
-        self.number_of_vaccines_for_today = 40
-        message = {"type" : "vaccines_quantity", "date": self.initial_date.strftime("%d/%m/%Y"), "quantity": self.number_of_vaccines_for_today}
+        self.number_of_vaccines_for_today = 152
+        date = self.date_to_change + timedelta(days=4)
+        message = {"type" : "vaccines_quantity", "date": date.strftime("%d/%m/%Y"), "quantity": self.number_of_vaccines_for_today}
         self.send(mes=message)
         print('\033[92m' + message.__str__() +  '\033[0m')
         
@@ -76,12 +76,12 @@ class Generator:
         # program is running don't interfere with the calculation
         center = 1
         expiration_date = self.initial_date + timedelta(weeks=5) #expiration_date of each lote is about 5 weeks
+        self.arriving_date = self.arriving_date + timedelta(days=3)
         for id_center in range(1, 5):
             id_lote = random.choice(self.vaccines) + str(randint(1000, 9999)) #! criar uma lista para nao deixar haver id iguais?
             center =  id_center
             #arrived_date = self.initial_date + timedelta(days=randint(1,5))
-            arriving_date = self.initial_date + timedelta(days=3)
-            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 10, "arriving_date": arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
+            message = {"type": "vaccines_per_centers", "lote_id": id_lote, "quantity": 38, "arriving_date": self.arriving_date.strftime("%d/%m/%Y"), "expiration_date": expiration_date.strftime("%d/%m/%Y "), "center_id": center}
             self.send(mes=message)
             print('\033[93m' + message.__str__() +  '\033[0m')
             time.sleep(1.5)
@@ -132,9 +132,10 @@ if __name__ == '__main__':
     g = Generator(people, surnames, vaccination_centers, vaccines)
     while True:
         for _ in range(10):
-            for _ in range(20):
+            for _ in range(105):
                 g.add_to_waiting_list()
                 #time.sleep(2)
+            g.generate_vaccines_quantity()
             g.destribute_vaccines_per_centers()
             #time.sleep(2)
             

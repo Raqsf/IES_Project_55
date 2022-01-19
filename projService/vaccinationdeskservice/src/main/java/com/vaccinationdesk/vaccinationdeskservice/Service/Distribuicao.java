@@ -21,12 +21,14 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaRepository;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -53,9 +55,11 @@ public class Distribuicao {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    // private MQConsumer consumer;
-    // ! ver como ir buscar a capacidade para o dia e atualiza-lo a cada dia que passa
-    int capacidadeDia = 5;
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
+
+    //int capacidadeDia = capacidadeRepository.getCapacidadePorDia(capacidadeRepository.getDiaDB().toString()) - 47;
+    int capacidadeDia = 105;
 
     public Distribuicao() {
     }
@@ -69,7 +73,7 @@ public class Distribuicao {
      * @throws IOException
      * @throws WriterException
      */
-    public List<ListaEspera> distribuirVacinasPorOrdemMarcacao() throws ConflictException {
+    public List<ListaEspera> distribuirVacinasPorOrdemMarcacao() throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
         int quantidadeDeCentros = centrosVacinacao.size();
@@ -99,12 +103,13 @@ public class Distribuicao {
                     dataVacina.setTime(cal.getTime().getTime());
 
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
+                    //System.out.println(agendamento.toString());
                     agendamentoRepository.save(agendamento);
 
                     //! codigo do qr code
-                    //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
-                    //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
-                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
+                            + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
+                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
@@ -253,13 +258,17 @@ public class Distribuicao {
 	        QRCodeWriter qrCodeWriter = new QRCodeWriter();
 	        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
             
-	        Path path = FileSystems.getDefault().getPath("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
-            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+
             
-            //!nem com esta martelada isto funciona :(
+            Path path = FileSystems.getDefault().getPath("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
+            
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            System.out.println("path: " + path);
+            
             try {
                 File f = new File("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
                 while (!f.exists()) {
+                   
                     Thread.sleep(1000);
                     System.out.println("adasdada");
                 }
@@ -283,17 +292,28 @@ public class Distribuicao {
                 + "\n\nPode também consultar esta informação no site no nosso site, em Menu Inicial > Verificar Estado do Agendamento."
                 + ".\n\n\n\nEsta é uma mensagem automática, por favor não responda. ");
         
-        /*
-        * POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
+        
+        // POR MOTIVOS DO QRCODE AINDA NAO ESTAR A COM A RAPIDEZ DESEJADA, NAO VAI MANDAR QR CODE POR ENQ
         File f = new File("./src/main/resources/images/qr" + pedido.getUtente().getID() + ".png");
+        ClassPathResource cp = new ClassPathResource(
+                        "images/qr" + pedido.getUtente().getID() + ".png");
         while (true) {
-            if (f.exists()) {
-                helper.addInline("qrcode.png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
+            //https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/ClassPathResource.html#createRelative-java.lang.String-
+            if (cp.exists() && cp.isReadable()) {
+                System.out.println("PATH -->" + cp.getPath() + " exists: " + cp.exists() + " readable: " + cp.isReadable());
+                helper.addInline("qr" + pedido.getUtente().getID() + ".png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
                 break;
+            } else {
+                try {
+                    Thread.sleep(1000);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            } 
+
             }
         }
-        f.delete();
-        */
+        //f.delete();
+        
         javaMailSender.send(msg);
     }
 }

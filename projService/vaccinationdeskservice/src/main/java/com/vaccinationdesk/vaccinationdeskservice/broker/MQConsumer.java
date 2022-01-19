@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
 import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
@@ -13,6 +14,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
@@ -48,6 +50,9 @@ public class MQConsumer {
 
     @Autowired
     private DoencaRepository doencaRepository;
+
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
 
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
@@ -118,15 +123,15 @@ public class MQConsumer {
      * @throws ParseException - excecao da data
      */
     private void addCapacityForDay(JSONObject json) throws ParseException {
-        /*
-         * String dataString = json.getString("date");
-         * int quantidade = json.getInt("quantity");
-         * SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-         * Date data = new Date(format.parse(dataString).getTime());
-         * 
-         * Capacidade capacidade = new Capacidade(data, quantidade);
-         * capacidadeRepository.save(capacidade);
-         */
+        //{'type': 'vaccines_quantity', 'date': '20/01/2022', 'quantity': 40}
+        String dataString = json.getString("date");
+        int quantidade = json.getInt("quantity");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = new Date(format.parse(dataString).getTime());
+        
+        Capacidade capacidade = new Capacidade(data, quantidade);
+        System.out.println(capacidade);
+        capacidadeRepository.save(capacidade);   
     }
 
     /**

@@ -84,6 +84,14 @@ CREATE TABLE IF NOT EXISTS `doencas_por_utente` (
     FOREIGN KEY(`doenca`) REFERENCES `doencas`(`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
+    `id`			            INT		  AUTO_INCREMENT          NOT NULL,
+    `dia`                       DATE            NOT NULL,
+    `quantidade`                INT             NOT NULL,
+
+    PRIMARY KEY(`id`)
+);
+
 INSERT INTO `doencas` (`doenca`) VALUES  
 ('Doença Cardíaca'),
 ('Doença Pulmonar'),
@@ -91,14 +99,6 @@ INSERT INTO `doencas` (`doenca`) VALUES
 ('Cancro'),
 ('Obesidade'),
 ('Doença AutoImune');
-
-CREATE TABLE IF NOT EXISTS `capacidade_por_dia` (
-    `id`			            INT		  AUTO_INCREMENT          NOT NULL,
-    `dia`                       DATE            NOT NULL,
-    `quantidade`                INT             NOT NULL,
-
-    PRIMARY KEY(`id`),
-);
 
 INSERT INTO `centro_vacinacao` (`nome`, `morada`, `capacidade_max`, `capacidade_atual`) VALUES 
 ('Centro de Vacinação do Porto', 'Porto', 15, 0),
@@ -138,3 +138,22 @@ BEGIN
     select * from agendamento as a
     WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
 END
+
+CREATE PROCEDURE getDiaDB()
+BEGIN
+    select * from capacidade_por_dia limit 1;
+END
+
+CREATE PROCEDURE getCapacidadePorDia(IN dia DATE)
+BEGIN
+    select c.quantidade from capacidade_por_dia as c
+    WHERE DATE(c.dia) = dia;
+END
+
+-- drop table capacidade_por_dia;
+-- drop table lista_de_espera;
+-- drop table agendamento;
+-- drop table doencas_por_utente;
+-- drop table vacina;
+-- drop table lote;
+-- drop table pessoa;

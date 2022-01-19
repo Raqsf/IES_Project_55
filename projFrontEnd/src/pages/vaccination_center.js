@@ -114,7 +114,7 @@ const VaccinationCenter = () => {
       console.log(capacity)
     
       api
-      .put(`/centrovacinacao/${id}/capacidade`, capacity, headers)
+      .put(`/centrovacinacao/${id}/capacidade`, new Object(capacity), headers)
       .then((response) => {
         // if (response.status >= 200 && response.status < 300)
         alert("Nova ordem definida")
