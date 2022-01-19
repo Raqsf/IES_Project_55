@@ -25,44 +25,64 @@ export default function FormVaccinationInfo() {
         };
 
         const user = {
-            id: utente,
+            id: parseInt(utente,10),
             nome: nome
         };
-        console.log(user)
-        console.log(`/agendamento/${user.id}`)
+
+
+        // axios não permite mandar dados com o GET
         api
-        .get(`/agendamento/${user.id}`, user, headers)
+        .post(`/agendamento`, user, headers)
         .then((response) => {
             // setResposta(response.data);
             console.log("HERE", response.data);
-            // console.log(response.data[0].id);
             if(response.data.length == 0)  {
                 // TODO: passar essa info para a pagina vaccination_info
                 // alert("Não existe agendamento");
-                toast.info("Não existe agendamento", {position: toast.POSITION.TOP_CENTER});
+                router.push({ pathname: "/vaccination_info",
+                query: {
+                    utente_nome: user.nome,
+                    utente_num: user.id,
+                    estado: "não agendado"
+                    }
+                // search: `?response=${response.data}`
+                // state: { detail: "hello"}
+                }, "/vaccination_info");
+                // toast.info("Não existe agendamento", {position: toast.POSITION.TOP_CENTER});
             } else {
                 console.log(response.data)
-                /* router.push({ pathname: "/vaccination_info", */
-                /*     query: { */
-                /*         utente_nome: response.data[0].utente.nome, */
-                /*         utente_num: response.data[0].utente.id, */
-                /*         // utente: {nome:response.data[0].utente.nome, id:response.data[0].utente.nome}, */
-                /*         centro: response.data[0].centro.nome, */
-                /*         morada: response.data[0].centro.morada, */
-                /*         data: response.data[0].diaVacinacao */
-                /*         } */
-                /*     // search: `?response=${response.data}` */
-                /*     // state: { detail: "hello"} */
-                /* }, "/vaccination_info"); */
+                router.push({ pathname: "/vaccination_info",
+                    query: {
+                        utente_nome: response.data.utente.nome,
+                        utente_num: response.data.utente.id,
+                        // utente: {nome:response.data[0].utente.nome, id:response.data[0].utente.nome},
+                        estado: "agendado",
+                        centro: response.data.centro.nome,
+                        morada: response.data.centro.morada,
+                        data: response.data.diaVacinacao
+                        }
+                    // search: `?response=${response.data}`
+                    // state: { detail: "hello"}
+                }, "/vaccination_info");
             }
         })
         .catch((err) => {
             console.log(err.response)
             if(err.response.status === 409) {
                 toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+                router.push({ pathname: "/vaccination_info",
+                query: {
+                    utente_nome: user.nome,
+                    utente_num: user.id,
+                    estado: "lista de espera"
+                    }
+                // search: `?response=${response.data}`
+                // state: { detail: "hello"}
+                }, "/vaccination_info");
+            } else {
+                console.error("ops! ocorreu um erro" + err);
+                toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
             }
-            console.error("ops! ocorreu um erro" + err);
-            toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
         });
         // router.push('/vaccination_info');
     }

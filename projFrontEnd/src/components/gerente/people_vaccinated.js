@@ -10,7 +10,7 @@ export const PeopleVaccinated = (props) => {
   if(id) {
     localStorage.setItem("id_people_vaccinated", id);
   }
-  console.log("PeopleVaccinated", id)
+  // console.log("PeopleVaccinated", id)
 
   const headers = {
     "Access-Control-Allow-Origin": "*",

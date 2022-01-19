@@ -89,7 +89,7 @@ public class VaccinationDeskController {
 
     @PostMapping("/utente")
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
-        
+
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
             
             Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
@@ -97,7 +97,7 @@ public class VaccinationDeskController {
                 !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
                 throw new ConflictException("Dados inválidos");
             }
-            if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+            if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty()){
                 throw new ConflictException("Utente com id "+utente.getID()+" já se encontra em lista de espera");
             }
             long millis = System.currentTimeMillis();
@@ -113,8 +113,8 @@ public class VaccinationDeskController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/agendamento/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
+    @PostMapping("/agendamento")
+    public Agendamento getAgendamentoByUtente(@Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)
             try{
                 if (utenteRepository.findUtenteById(utente.getID()) != null){
@@ -122,17 +122,16 @@ public class VaccinationDeskController {
                     if (!utente.getNome().equals(utenteDB.getNome())){
                         throw new ConflictException("Dados inválidos");
                     }
-                    if (listaEsperaRepository.findUtenteInListaEspera(utente)!=null){
+                    if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty() && agendamentoRepository.findAllByUtente(utente.getID()) == null){
                         throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
                     }
-                    return agendamentoRepository.findAllByUtente(utente.getID());
                 }else{
                     throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
                 }
             }catch(Exception e){
                 throw e;
             }
-        return agendamentoRepository.findAllByUtente(id);
+        return agendamentoRepository.findAllByUtente(utente.getID());
     }
 
     @GetMapping("/doencaPorUtente/{id}")
