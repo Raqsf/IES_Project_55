@@ -1,7 +1,6 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -10,6 +9,7 @@ import javax.validation.Valid;
 
 import com.google.zxing.WriterException;
 import com.vaccinationdesk.vaccinationdeskservice.Service.Distribuicao;
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
@@ -41,7 +41,7 @@ public class AgendamentoController {
 
     // serve só para ver se está tudo a funcionar bem
     @GetMapping("/agendar")
-    public void agendar() throws MessagingException, WriterException, IOException {
+    public void agendar() throws MessagingException, WriterException, IOException, ConflictException {
         distribuicao.distribuirVacinasPorOrdemMarcacao();
     }
 
@@ -61,7 +61,7 @@ public class AgendamentoController {
     }
 
     @PostMapping("/agendar_com_filtros")
-    public ResponseEntity<ListaEspera> agendarComFiltros(@Valid @RequestBody String filtros) {
+    public ResponseEntity<ListaEspera> agendarComFiltros(@Valid @RequestBody String filtros) throws ConflictException {
         // {idade: int, doenca: int}
         // {doenca: int}
         // {idade: int}
