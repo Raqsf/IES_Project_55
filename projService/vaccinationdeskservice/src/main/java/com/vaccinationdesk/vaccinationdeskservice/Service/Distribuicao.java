@@ -73,7 +73,7 @@ public class Distribuicao {
      */
     public void distribuirVacinasPorOrdemMarcacao() throws WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); //demora 5/6s a ler a base de dados
+        List<ListaEspera> listaEspera = listaesperaRepository.findAll(); 
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
 
@@ -84,6 +84,7 @@ public class Distribuicao {
             moradasCentrosAPI += centro.getMorada() + "|";
         }
         
+        //este for tem de correr todo ate ao fim para q sejam feitos os deletes na lista_de_espera e os saves no agendamento. 
         for (int i = 0; i < capacidadeDia; i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
@@ -103,10 +104,10 @@ public class Distribuicao {
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     //System.out.println(agendamento.toString());
                     agendamentoRepository.save(agendamento);
+                    
 
-                    //! codigo do qr code
-                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
-                            + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
+                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nN Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
+                            + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
                     generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
@@ -122,10 +123,10 @@ public class Distribuicao {
     }
     
 
-    public void distribuirVacinasPorFiltros(String filtrosJSON) {
+    public void distribuirVacinasPorFiltros(String filtrosJSON) throws WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<ListaEspera> listaEspera;
-        
+
         JSONObject jsonObject = new JSONObject(filtrosJSON);
 
         if (filtrosJSON.contains("idade") && filtrosJSON.contains("doenca")) {
@@ -147,21 +148,19 @@ public class Distribuicao {
             System.out.println(listaEspera2);
         }
 
-
-
         //ver como o argumento de entrada como fazer a separacao dos filtros
         //listaEspera = listaesperaRepository.getListaEsperaByDoenca(2);
-    
+
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
-        
+
         for (CentroVacinacao centro : centrosVacinacao) {
             if (centro.getMorada().equals("Porto")) {
                 moradasCentrosAPI += centro.getMorada() + ",Portugal";
             }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-        
+
         if (listaEspera.size() < capacidadeDia) {
             capacidadeDia = listaEspera.size();
         }
@@ -171,7 +170,8 @@ public class Distribuicao {
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             //Utilização da Google API para escolher o centro de vacinação mais proximo do utente
-            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal", moradasCentrosAPI);
+            String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal",
+                    moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
 
             for (CentroVacinacao centro : centrosVacinacao) {
@@ -182,14 +182,14 @@ public class Distribuicao {
                     cal.setTime(dataVacina);
                     cal.add(Calendar.DAY_OF_WEEK, 4);
                     dataVacina.setTime(cal.getTime().getTime());
-                    
+
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
-            
-                    //! codigo do qr code
-                    //String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nNº Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinação - "
-                    //        + centroEscolhido + "\nData da Vacina - " + dataVacina.toString();
-                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+
+                    
+                    String textToQRCode ="Nome - " + pedido.getUtente().getNome() + "\nN Utente - " + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
+                            + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
+                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
 
                     try {
                         sendEmail(pedido, dataVacina.toString(), centro);
@@ -203,6 +203,7 @@ public class Distribuicao {
             }
         }
     }
+    
 
     private static String getDistanceWithGoogleAPI(String from, String to) {
         // example of google api =
@@ -253,28 +254,11 @@ public class Distribuicao {
         return null;
     }
     
-    public static void generateQRCodeImage(String text, int i)
-	            throws WriterException, IOException {
+    public static void generateQRCodeImage(String text, int i) throws WriterException, IOException {
 	        QRCodeWriter qrCodeWriter = new QRCodeWriter();
 	        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
-            
-
-            
-            Path path = FileSystems.getDefault().getPath("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
-            
+            Path path = FileSystems.getDefault().getPath("./src/main/resources/images/qr" + String.valueOf(i) + ".png");            
             MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-            System.out.println("path: " + path);
-            
-            try {
-                File f = new File("./src/main/resources/images/qr" + String.valueOf(i) + ".png");
-                while (!f.exists()) {
-                   
-                    Thread.sleep(1000);
-                    System.out.println("adasdada");
-                }
-            }catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            } 
 	    }
         
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
@@ -312,8 +296,7 @@ public class Distribuicao {
 
             }
         }
-        //f.delete();
-        
+        f.delete();
         javaMailSender.send(msg);
     }
 }

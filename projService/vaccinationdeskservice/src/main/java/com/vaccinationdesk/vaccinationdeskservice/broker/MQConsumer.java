@@ -1,10 +1,13 @@
 package com.vaccinationdesk.vaccinationdeskservice.broker;
 
+import java.nio.charset.Charset;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
@@ -14,6 +17,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
+import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
@@ -27,6 +31,7 @@ import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Transactional
 public class MQConsumer {
     private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -54,6 +59,9 @@ public class MQConsumer {
     @Autowired
     private CapacidadeRepository capacidadeRepository;
 
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
      * separados dependendo do "type"
@@ -75,9 +83,41 @@ public class MQConsumer {
             case "vaccines_per_centers":
                 addVaccinesPerCenter(json);
                 break;
+            case "raspberry_reader":
+                verifyQRCodes(json);
+                break;
             default:
                 break;
         }
+    }
+
+    private void verifyQRCodes(JSONObject json) {
+        String info = json.getString("data");
+        String[] dataSplit = info.split("\n");
+        int  n_utente = 0;
+        int centro = 0;
+        String dia = "";
+        for (int i = 1; i < dataSplit.length; i++) {
+            String[] split = dataSplit[i].split(" - ");
+            if (i == 1) {
+                n_utente = Integer.parseInt(split[1]);
+            } else if (i == 2) {
+                centro = Integer.parseInt(split[1]);
+            } else if (i == 3) {
+                String[] diaSemHoras = split[1].split(" ");
+                dia = diaSemHoras[0];
+            }
+        }
+
+        //ir buscar o dia aqui à tabela capacidade_por_dia e comparar logo com a data do qrcode
+        //se for diferente é logo invalido para aquele dia
+        System.out.println("n_utente: " + n_utente + "centro: " + centro + "dia: " + dia);
+        if (agendamentoRepository.checkQRcode(n_utente, centro, dia) != null) {
+            System.out.println("QR Code valido");
+        } else {
+            System.out.println("QR code inválido");
+        }
+
     }
 
     /**
