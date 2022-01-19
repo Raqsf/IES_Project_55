@@ -25,8 +25,6 @@ public class Utente {
     private String morada;
     @Column(name="data_nascimento")
     private Date dataNascimento;
-    //@Column(name="doencas")
-    //private Doenca doencas;
 
     public Utente(){}
 
@@ -36,13 +34,17 @@ public class Utente {
         this.dataNascimento=dataNascimento;
     }
 
-    public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento/*, Doenca doencas*/){
+    public Utente(int numUtente, String nome){
+        this.id = numUtente;
+        this.nome = nome;
+    }
+
+    public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento){
         this.nome = nome;
         this.id = numUtente;
         this.email = email;
         this.morada=morada;
         this.dataNascimento = dataNascimento;
-        //this.doencas = doencas;
     }
 
     public String getNome(){
@@ -61,8 +63,4 @@ public class Utente {
     public String getMorada(){
         return morada;
     }
-    /*public Doenca getDoencas(){
-        return doencas;
-    }*/
-
 }

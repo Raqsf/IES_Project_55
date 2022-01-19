@@ -19,8 +19,8 @@ const VaccinationInfo = () => (
       }}
     >
       <Container maxWidth={false}>
-      <CheckToolbar />
-      <Grid>
+        <CheckToolbar />
+        <Grid>
           <Info />
         </Grid>
       </Container>

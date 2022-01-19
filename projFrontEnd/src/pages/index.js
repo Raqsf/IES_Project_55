@@ -24,6 +24,7 @@ const Dashboard = () => {
     const user = JSON.parse(localStorage.getItem("login"));
 
     if (user == null) {
+      // TODO: acho q devia ser false
       setUsername(true);
     }
     if (user) {

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Typography, Box, Switch, Toolbar, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableSortLabel, Paper } from '@mui/material';
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
+import api from "../../api";
 
 function createData(centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual) {
   return { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual };
@@ -39,14 +40,14 @@ function getComparator(order, orderBy) {
 }
 
 // Vacinas a chegar poderia ser o lote e qnd se clicava, via-se a info sobre ele
-const rows = [
-  createData('Centro de Vacinação de Aveiro', 159, '12/20/21', 24),
-  createData('Centro de Vacinação do Porto', 237, '12/22/21', 37),
-  createData('Centro de Vacinação de Lisboa', 262, '12/21/21', 24),
-  createData('Centro de Vacinação de Coimbra', 305, '12/20/21', 67),
-  createData('Centro de Vacinação de Setubal', 356, '12/21/21', 49),
-  createData('Centro de Vacinação de Faro', 236, '12/21/21', 59),
-];
+// const rows = [
+  // createData('Centro de Vacinação de Aveiro', 159, '12/20/21', 24),
+  // createData('Centro de Vacinação do Porto', 237, '12/22/21', 37),
+  // createData('Centro de Vacinação de Lisboa', 262, '12/21/21', 24),
+  // createData('Centro de Vacinação de Coimbra', 305, '12/20/21', 67),
+  // createData('Centro de Vacinação de Setubal', 356, '12/21/21', 49),
+  // createData('Centro de Vacinação de Faro', 236, '12/21/21', 59),
+// ];
 
 const headCells = [
   {
@@ -89,7 +90,6 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -135,23 +135,60 @@ const EnhancedTableToolbar = () => {
         >
           Vacinas
       </Typography>
-      
-
-      {/* <Tooltip title="Filter list">
-        <IconButton>
-          <FilterListIcon />
-        </IconButton>
-      </Tooltip> */}
     </Toolbar>
   );
 };
 
-const TableVaccines = () => { 
+const TableVaccines = (props) => { 
+  // const {centros} = props;
+  const [rows, setRows] = React.useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
+
+  React.useEffect(() => {
+      api.get(
+        `/lote`, headers
+      ).then((response) => {
+        console.log(response.data)
+        // TODO: junção centros com lotes
+        // { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual }
+        let res = []
+        for(let lote of response.data) {
+          res.push({"centro_vacinacao": lote.centroVacinacao.nome, "n_vacinas_a_chegar": lote.quantidade, "dia_chegada":lote.data_chegada, "n_vacinas_atual": lote.centroVacinacao.capacidadeAtual})
+        }
+        setRows(res);
+        // alert("HEY")
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+        alert("Erro");
+      });
+      const loop = setInterval(function() {
+        api.get(
+            `/lote`, headers
+          ).then((response) => {
+            let res = []
+            for(let lote of response.data) {
+              res.push({"centro_vacinacao": lote.centroVacinacao.nome, "n_vacinas_a_chegar": lote.quantidade, "dia_chegada":lote.data_chegada, "n_vacinas_atual": lote.centroVacinacao.capacidadeAtual})
+            }
+            setRows(res);
+          })
+          .catch((err) => {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Erro");
+          }
+        );
+        }, 1000);
+        return () => clearInterval(loop);
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -221,19 +258,18 @@ const TableVaccines = () => {
               rows.slice().sort(getComparator(order, orderBy)) */}
             {stableSort(rows, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
 
                 return (
                   <TableRow
                     hover
                     onClick={(event) => handleClick(event, row.centro_vacinacao)}
                     tabIndex={-1}
-                    key={row.centro_vacinacao}
+                    key={index}
                   >
                     <TableCell
                       component="th"
                       scope="row"
-                      padding="none"
                     >
                       {row.centro_vacinacao}
                     </TableCell>
