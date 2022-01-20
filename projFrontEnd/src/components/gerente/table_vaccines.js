@@ -158,14 +158,11 @@ const TableVaccines = (props) => {
         `/lote`, headers
       ).then((response) => {
         console.log(response.data)
-        // TODO: junção centros com lotes
-        // { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual }
         let res = []
         for(let lote of response.data) {
           res.push({"centro_vacinacao": lote.centroVacinacao.nome, "n_vacinas_a_chegar": lote.quantidade, "dia_chegada":lote.data_chegada, "n_vacinas_atual": lote.centroVacinacao.capacidadeAtual})
         }
         setRows(res);
-        // alert("HEY")
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);

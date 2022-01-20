@@ -14,12 +14,9 @@ export const VaccinationOrder = (props) => {
 
     const handleChange = (event) => {
         if (event.target.type == "checkbox") {
-          // console.log(event.target.value + " " + event.target.checked)
-          // console.log(doencas)
           let doe = "";
           for (const d in doencas) {
             if(parseInt(d,10) == event.target.value) {
-              // console.log(doencas[d].doenca)
               doe = doencas[d].doenca;
 
             }
@@ -32,18 +29,13 @@ export const VaccinationOrder = (props) => {
         if (event.target.type == "number") {
           setAge(event.target.value);
         }
-        // console.log(checkboxes);
-        // alert("Funciona");
     };
 
     const handleChangeAge = (event) => {
-      // console.log(ageCheck)
       setAgeCheck(!ageCheck);
     }
 
     const handleSubmit = (event) => {
-      // alert("Submit");
-      // console.log(event.target)
       const headers = {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
@@ -75,6 +67,7 @@ export const VaccinationOrder = (props) => {
       }
       console.log(order)
       
+      // TODO
       // api
       // .post(`TODO`, order, headers)
       // .then((response) => {
@@ -85,6 +78,7 @@ export const VaccinationOrder = (props) => {
       //   console.error("ops! ocorreu um erro" + err);
       //   alert("Erro");
       // });
+
     };
     return(
   <Card {...props}>
@@ -139,14 +133,7 @@ export const VaccinationOrder = (props) => {
             inputProps={{ 'aria-label': 'controlled' }} */}
         </FormGroup>
       </Box>
-      <Box
-        // component="form"
-        // sx={{
-        //     '& .MuiTextField-root': { m: 1, width: '25ch' },
-        // }}
-        // noValidate
-        // autoComplete="off"
-        >
+      <Box>
         <Typography
             color="textSecondary"
             gutterBottom

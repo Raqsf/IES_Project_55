@@ -16,13 +16,12 @@ import 'react-toastify/dist/ReactToastify.css';
 toast.configure()
 const VaccinationCenter = () => {
     const router = useRouter();
-    // const [param1, setParam] = useState();
     const [loading, setLoading] = useState(true);
     const [capacity, setCapacity] = useState();
     const {
         query: { id },
     } = router
-    // let param1 = id;
+    
     if(id) {
       localStorage.setItem("id", id);
     }
@@ -52,8 +51,6 @@ const VaccinationCenter = () => {
     
     React.useEffect(() => {
       setLoading(true);
-      // setParam(id);
-      // console.log(id, !id)
       // if(id) {
         // id = localStorage.getItem("id");
       // }
@@ -152,12 +149,6 @@ const VaccinationCenter = () => {
             <VaccinesAdministered id={id}/>
           </Grid>
         </Grid>
-        {/*<Divider 
-          sx={{
-            py:3
-          }}
-        />
-        <TableVaccines />      */}
       </Container>
       <Container maxWidth={false} sx={{ mt: 4 }}>
         <Box>

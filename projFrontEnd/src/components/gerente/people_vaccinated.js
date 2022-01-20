@@ -1,12 +1,16 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Grid, Typography, CircularProgress } from '@mui/material';
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import { useEffect, useState } from 'react';
 import api from "../../api";
 
 export const PeopleVaccinated = (props) => {
+  const [loadingPeople, setLoadingPeople] = useState(true);
+  const [loadingScheduled, setLoadingScheduled] = useState(true);
   const [vaccinated, setVaccinated] = useState();
   const [scheduled, setScheduled] = useState();
+  const d = new Date().toISOString().split('T')[0];
   const {id} = props;
+
   if(id) {
     localStorage.setItem("id_people_vaccinated", id);
   }
@@ -20,21 +24,21 @@ export const PeopleVaccinated = (props) => {
   // }
       
   useEffect(() => {
-    // setLoading(true);
+    setLoadingPeople(true);
 
     if (id) {
-
+      let payload = {data:d}
       api.get(
-          `/estatisticas/pessoasVacinadas/${id}`, headers
+          `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
-          console.log("Second", id)
-          console.log(response.data)
+          // console.log("Second", id)
+          // console.log(response.data)
           setVaccinated(response.data);
-          // setCentro(response.data);
-          // setLoading(false);
+          setLoadingPeople(false);
         })
         .catch((err) => {
           console.error("ops! ocorreu um erro" + err);
+          console.log(err.response)
           alert("Erro");
           // if(response.status === 500 && typeof id == undefined) {
           //   alert("Erro")
@@ -42,15 +46,16 @@ export const PeopleVaccinated = (props) => {
         })
       }
     const loop = setInterval(function() {
-      console.log("Loop", id)
+      // console.log("Loop", id)
       id = localStorage.getItem("id_people_vaccinated");
       // console.log("Loop", param1)
+      let payload = {data:d}
       api.get(
-          `/estatisticas/pessoasVacinadas/${id}`, headers
+          `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           setVaccinated(response.data);
-          // setCentro(response.data);
+          setLoadingPeople(false);
         })
         .catch((err) => {
           console.error("ops! ocorreu um erro" + err);
@@ -61,17 +66,16 @@ export const PeopleVaccinated = (props) => {
       return () => clearInterval(loop);
     }, []);
 
-  // /vacinasPrevistas
     useEffect(() => {
-      // setLoading(true);
+      setLoadingScheduled(true);
       if (id) {
         api.get(
             `/estatisticas/vacinasPrevistas`, {cv: id}, headers
           ).then((response) => {
-            console.log("Second", id)
-            console.log(response.data)
+            // console.log("Second", id)
+            // console.log(response.data)
             setScheduled(response.data);
-            // setLoading(false);
+            setLoadingScheduled(false);
           })
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
@@ -82,14 +86,15 @@ export const PeopleVaccinated = (props) => {
           })
         }
       const loop = setInterval(function() {
-        console.log("Loop", id)
+        // console.log("Loop", id)
         id = localStorage.getItem("id_people_vaccinated");
         // console.log("Loop", param1)
         api.get(
             `/estatisticas/vacinasPrevistas`, {cv: id}, headers
           ).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             setScheduled(response.data);
+            setLoadingScheduled(false);
           })
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
@@ -124,7 +129,12 @@ export const PeopleVaccinated = (props) => {
             color="textPrimary"
             variant="h4"
           >
-            {vaccinated}
+            {loadingPeople ? 
+              <Box sx={{ display: 'flex', mt: 1 }}>
+                <CircularProgress size="30px"/> 
+              </Box>
+            : 
+            vaccinated}
           </Typography>
         </Grid>
         <Grid item>
@@ -159,7 +169,9 @@ export const PeopleVaccinated = (props) => {
           color="textSecondary"
           variant="caption"
         >
-          {scheduled}
+          {loadingScheduled ? 
+            <CircularProgress size="10px" /> 
+          : scheduled}
         </Typography>
       </Box>
     </CardContent>
