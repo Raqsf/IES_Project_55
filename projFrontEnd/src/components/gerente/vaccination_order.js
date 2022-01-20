@@ -9,7 +9,6 @@ export const VaccinationOrder = (props) => {
     const [ageCheck, setAgeCheck] = useState(false);
     const [checkboxes, setCheckboxes] = useState(doencas);
     useEffect(() => {
-      // manually deep compare here before updating state
       setCheckboxes(doencas);
     },[doencas])
 

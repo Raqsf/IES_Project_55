@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import { Typography, Container, Box, Divider, Grid } from '@mui/material';
 import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
-//import { customers } from '../__mocks__/customers';
 import NestedList from '../components/gerente/vaccination_centers';
 import TableVaccines from '../components/gerente/table_vaccines';
 import {VaccinationOrder} from '../components/gerente/vaccination_order';
@@ -62,6 +61,7 @@ const Manage = () => {
     };
     getData();
   }, []);
+
   return (
   <>
     <Head>
@@ -89,7 +89,6 @@ const Manage = () => {
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
             <VaccinationOrder doencas={doencas}/>
-            {/* <Check /> */}
           </Grid>
         </Grid>
         <Divider 
@@ -98,9 +97,6 @@ const Manage = () => {
           }}
         />
         <TableVaccines /*  centros={centros}  */ />
-        {/* Selecionar centros de vacinção para definir capacidadde de vacinas (e pessoas)*/}
-        {/* Definir ordem da vacinação */}
-        {/* Tabela com centros de vacinação, vacinas a chegar no dia x e quantas vacinas têm*/}
       </Container>
     </Box>
   </>
