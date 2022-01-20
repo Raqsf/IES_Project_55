@@ -18,6 +18,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.json.JSONObject;
@@ -40,6 +41,9 @@ public class Vacinacao {
     @Autowired
     private CapacidadeRepository capacidadeRepository;
 
+    @Autowired
+    private UtenteRepository utenteRepository;
+
     Map<Integer, String> dentroDoCentroMap = new HashMap<>();
 
     /**
@@ -56,12 +60,14 @@ public class Vacinacao {
         // a uma tabela que faça so guardar os dias e passa-los)
         ObjectMapper mapper = new ObjectMapper();
 
+        if (capacidadeRepository.getDiaDB() == null) {
+            throw new ConflictException("Não existe capacidade para o dia em questão");
+        }
+        //Capacidade dia = capacidadeRepository.getDiaDB();
+        //Date date = dia.getDia();
 
-        Capacidade dia = capacidadeRepository.getDiaDB();
-        Date date = dia.getDia();
-
-        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(date.toString());
-        capacidadeRepository.delete(dia);
+        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia("2022-01-23");
+        //capacidadeRepository.delete(dia);
 
         //List<Agendamento> agendamentoParaODiaList = agendamentoRepository.findAll();
         List<Vacina> vacinaList = vacinaRepository.findAll();
@@ -100,9 +106,14 @@ public class Vacinacao {
                 } else {
                     dentroDoCentroMap.remove(i % 5);
                     if (i == n_vacinas) {
-                        dentroDoCentroMap.clear();
+                        for (Integer key : dentroDoCentroMap.keySet()) {
+                            dentroDoCentroMap.remove(key);
+                            wait(4000);
+                        }
                     }
+                    System.out.println(dentroDoCentroMap);
                 }
+
                 i++;
                 wait(4000);
             } else {
@@ -136,5 +147,39 @@ public class Vacinacao {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    public String getVacinasInfoDia(Integer id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        Capacidade dia = capacidadeRepository.getDiaDB();
+        Date date = dia.getDia();
+        List<Vacina> resultList = vacinaRepository.getVacinasInfoDiaVacina(id, date.toString());
+        for (Vacina vacina : resultList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("nome_vacina", vacina.getNome());
+            map.put("lote", vacina.getLote().getID());
+            map.put("data_validade", vacina.getDataValidade());
+            map.put("n_utente", vacina.getUtente().getNome());
+            result += mapper.writeValueAsString(map);
+        }
+        return result ;
+    }
+
+    public String getUtentesVacinadosPorDia(Integer id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        //Capacidade dia = capacidadeRepository.getDiaDB();
+        //Date date = dia.getDia();
+        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, "2022-01-23");
+        for (Utente utente : resultList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("nome", utente.getNome());
+            map.put("data_nascimento", utente.getDataNascimento());
+            map.put("email", utente.getEmail());
+            map.put("n_utente", utente.getID());
+            result += mapper.writeValueAsString(map);
+        }
+        return result ;
     }
 }

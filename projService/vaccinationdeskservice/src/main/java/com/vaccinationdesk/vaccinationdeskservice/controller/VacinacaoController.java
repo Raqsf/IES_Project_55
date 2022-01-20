@@ -44,5 +44,15 @@ public class VacinacaoController {
     public List<String> getVacincaoTempoReal(@PathVariable Integer id) {
         return vacinacao.getVacinacaoEmTempoReal(id);
     }
+
+    @GetMapping("/vacinas_administradas_hoje/{id}")
+    public String getVacinasInfoDiaVacina(@PathVariable Integer id) throws JsonProcessingException {
+        return vacinacao.getVacinasInfoDia(id);
+    }
+
+    @GetMapping("/utente_vacinados/{id}")
+    public String getUtentesVacinadosPorDia (@PathVariable Integer id) throws JsonProcessingException {
+        return vacinacao.getUtentesVacinadosPorDia(id);
+    }
     
 }

@@ -8,6 +8,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,7 @@ public interface VacinaRepository extends JpaRepository<Vacina, Integer> {
     @Query("SELECT v FROM Vacina v JOIN Lote l ON v.lote=l.id WHERE l.centroVacinacao=:id AND v.data_administracao=:date AND v.utente IS NOT NULL")
     List<Vacina> findAllVacinnatedByCentroVacinacaoByDate(@Param("id") CentroVacinacao cv, @Param("date") Date date);
     
-    //@Modifying
-    //@Query("UPDATE vacina SET administrada_a = :n_utente, data_administracao = :data WHERE n_vacina = :id")
-    //void updateVacina(@Param("nome") Integer n_utente, @Param("data") Date data, @Param("id") Integer id);
+    @Procedure(procedureName = "getVacinasInfoDiaVacina")
+    List<Vacina> getVacinasInfoDiaVacina(@Param("idCentro") Integer centro, @Param("data") String dia);
+
 }
