@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.vaccinationdesk.vaccinationdeskservice.exception.GlobalExceptionHandler;
+
 import lombok.Data;
 
 @Data
@@ -71,7 +73,11 @@ public class CentroVacinacao {
     }
 
     public void decreaseCapacidadeAtual() {
-        this.capacidadeAtual -= 1;
+        if (this.capacidadeAtual > 0) {
+            this.capacidadeAtual -= 1;
+        } else {
+            System.err.println(this.nome + " está sem vacinas");
+        }
     }
 
 }
