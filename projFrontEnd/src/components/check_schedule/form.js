@@ -66,15 +66,17 @@ export default function FormVaccinationInfo() {
             console.log(err.response)
             if(err.response.status === 409) {
                 toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
-                router.push({ pathname: "/vaccination_info",
-                query: {
-                    utente_nome: user.nome,
-                    utente_num: user.id,
-                    estado: "lista de espera"
-                    }
-                // search: `?response=${response.data}`
-                // state: { detail: "hello"}
-                }, "/vaccination_info");
+                if(err.response.data.message != "Dados inválidos") {
+                    router.push({ pathname: "/vaccination_info",
+                    query: {
+                        utente_nome: user.nome,
+                        utente_num: user.id,
+                        estado: "lista de espera"
+                        }
+                    // search: `?response=${response.data}`
+                    // state: { detail: "hello"}
+                    }, "/vaccination_info");
+                }
             } else {
                 console.error("ops! ocorreu um erro" + err);
                 toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
