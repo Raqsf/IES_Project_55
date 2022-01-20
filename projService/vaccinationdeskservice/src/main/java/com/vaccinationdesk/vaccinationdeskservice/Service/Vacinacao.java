@@ -3,12 +3,13 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
 import com.vaccinationdesk.vaccinationdeskservice.model.Capacidade;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
@@ -19,11 +20,11 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepositor
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 @Service
 public class Vacinacao {
 
@@ -39,7 +40,7 @@ public class Vacinacao {
     @Autowired
     private CapacidadeRepository capacidadeRepository;
 
-    Map<Integer, List<String>> dentroDoCentroMap = new HashMap<>();
+    Map<Integer, String> dentroDoCentroMap = new HashMap<>();
 
     /**
      * Funcao que faz a vacinacao para um determinado dia.
@@ -47,10 +48,14 @@ public class Vacinacao {
      * e por cada agendamento é feita a vacinacao.
      * 
      * @return 
+     * @throws JsonProcessingException
+     * @throws ConflictException
      */
-    public ResponseEntity<Object> vacinacao() {
+    public ResponseEntity<Object> vacinacao() throws JsonProcessingException, ConflictException {
         // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
         // a uma tabela que faça so guardar os dias e passa-los)
+        ObjectMapper mapper = new ObjectMapper();
+
 
         Capacidade dia = capacidadeRepository.getDiaDB();
         Date date = dia.getDia();
@@ -69,23 +74,35 @@ public class Vacinacao {
                 Timestamp data_toma_vacina = agendamento.getDiaVacinacao();
                 Utente utente_vacina_administrada = agendamento.getUtente();
                 CentroVacinacao centro = agendamento.getCentro();
+                if (centro.getCapacidadeAtual() <= 0) {
+                    throw new ConflictException(centro.getNome() + " encontra-se sem vacinas!");
+                }
                 vacina.setUtente(utente_vacina_administrada);
                 vacina.setDataAdministracao(data_toma_vacina);
                 centro.decreaseCapacidadeAtual();
-                
+
                 centroVacinacaoRepository.save(centro);
                 vacinaRepository.save(vacina);
                 List<String> infoList = new ArrayList<String>();
                 infoList.add(utente_vacina_administrada.getNome() + ", " + utente_vacina_administrada.getID() + ", "
-                + vacina.getNome() + ", " + vacina.getDataAdministracao());
-                dentroDoCentroMap.put(i, infoList);
+                        + agendamento.getCentro() + ", " + vacina.getNome() + ", " + vacina.getDataAdministracao());
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("nome", utente_vacina_administrada.getNome());
+                map.put("n_utente", utente_vacina_administrada.getID());
+                map.put("centro", agendamento.getCentro().getID());
+                map.put("vacina", vacina.getNome());
+                map.put("data_administracao", vacina.getDataAdministracao().toString());
                 
-                if (i > 4) {
-                    int j = i - 5;
-                    dentroDoCentroMap.remove(j);
+                String infoJSON = mapper.writeValueAsString(map);
+                
+                if (dentroDoCentroMap.keySet().size() < 5) {
+                    dentroDoCentroMap.put(i % 5, infoJSON);
+                } else {
+                    dentroDoCentroMap.remove(i % 5);
+                    if (i == n_vacinas) {
+                        dentroDoCentroMap.clear();
+                    }
                 }
-                //! fazer a parte das pessoas sairem no final do dia
-
                 i++;
                 wait(4000);
             } else {
@@ -101,11 +118,14 @@ public class Vacinacao {
      * @return
      */
     @Async
-    public List<List<String>> getVacinacaoEmTempoReal() {
-        //adsada
-        List<List<String>> vacinacaoTempoReal = new ArrayList<>();
+    public List<String> getVacinacaoEmTempoReal(Integer id_centro) {
+        List<String> vacinacaoTempoReal = new ArrayList<>();
         for (Integer key : dentroDoCentroMap.keySet()) {
-            vacinacaoTempoReal.add(dentroDoCentroMap.get(key));
+            JSONObject json = new JSONObject(dentroDoCentroMap.get(key));
+            int centro = json.getInt("centro");
+            if (centro == id_centro) {
+                vacinacaoTempoReal.add(dentroDoCentroMap.get(key));
+            }
         }
         return vacinacaoTempoReal;
     } 

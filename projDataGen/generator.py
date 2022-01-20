@@ -66,7 +66,7 @@ class Generator:
         self.initial_date = self.initial_date + timedelta(days=1)
         #self.number_of_vaccines_for_today = randint(10, 50)
         self.number_of_vaccines_for_today = 152
-        date = self.date_to_change + timedelta(days=4)
+        date = self.date_to_change 
         message = {"type" : "vaccines_quantity", "date": date.strftime("%d/%m/%Y"), "quantity": self.number_of_vaccines_for_today}
         self.send(mes=message)
         print('\033[92m' + message.__str__() +  '\033[0m')
@@ -132,11 +132,12 @@ if __name__ == '__main__':
     g = Generator(people, surnames, vaccination_centers, vaccines)
     while True:
         for _ in range(10):
-            for _ in range(105):
-                g.add_to_waiting_list()
-                #time.sleep(2)
+            #for _ in range(105):
+                #g.add_to_waiting_list()
+            #    pass
+            time.sleep(2)
             g.generate_vaccines_quantity()
-            g.destribute_vaccines_per_centers()
+            #g.destribute_vaccines_per_centers()
             #time.sleep(2)
             
             

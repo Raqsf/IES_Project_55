@@ -158,6 +158,14 @@ BEGIN
     and DATE(dia_vacinacao) = dia;
 END
 
+CREATE PROCEDURE getListaEsperaPeloDia(IN dia DATE)
+BEGIN
+    select * from lista_de_espera as le
+    where DATE(le.data_inscricao) = dia;
+END
+
+call getListaEsperaPeloDia("2022-01-20");
+
 -- drop table capacidade_por_dia;
 -- drop table lista_de_espera;
 -- drop table agendamento;
