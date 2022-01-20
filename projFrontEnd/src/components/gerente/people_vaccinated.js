@@ -108,7 +108,12 @@ export const PeopleVaccinated = (props) => {
 
   return (
   <Card
-    sx={{ height: '100%' }}
+    sx={{ 
+      height: '100%', 
+      ':hover': {
+      boxShadow: 20, 
+      cursor: "pointer"
+    } }}
     {...props}
   >
     <CardContent>

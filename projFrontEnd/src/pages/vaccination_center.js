@@ -8,6 +8,7 @@ import api from "../api";
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
 import { People } from "../components/gerente/people";
+import Link from 'next/link'; 
 // import { useParams } from "react-router-dom";
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -143,7 +144,9 @@ const VaccinationCenter = () => {
         {/* TODO: numero de pessoas vacinadas e numero vacinas em tempo real */}
         <Grid container spacing={2}>
           <Grid item lg={6} sm={6} xl={6} xs={12}>
-            <PeopleVaccinated id={id}/>
+            <Link href={{pathname: "/people_vaccinated", query: {id: id}}}>
+              <PeopleVaccinated id={id}/>
+            </Link>
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
             <VaccinesAdministered id={id}/>
