@@ -40,16 +40,15 @@ const PeopleVaccinated = () => {
     const {
         query: { id, nome },
     } = router
-    console.log(id, nome)
+    console.log(id)
 
     if(id) {
       localStorage.setItem("id_people_vaccinated_info", id);
     }
-
+    
     if(nome) {
-      localStorage.setItem("vaccination_center_name", nome);
+      localStorage.setItem("vaccination_center_name1", nome);
     }
-  
 
     const headers = {
       "Access-Control-Allow-Origin": "*",
@@ -57,91 +56,43 @@ const PeopleVaccinated = () => {
     };    
 
     useEffect(() => {
-      setLoadingData(true);
-      console.log( `/vacinacao/utente_vacinados/${id}`)
-      if(id) {
-        api.get(
-          `/vacinacao/utente_vacinados/${id}`, headers
-        ).then((response) => {
-          setUtentes(response.data);
-          console.log(response.data)
-          setLoadingData(false);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
-      }
-      const loop = setInterval(function() {
-        id = localStorage.getItem("id_people_vaccinated_info");
-        api.get(
-          `/vacinacao/utente_vacinados/${id}`, headers
-        ).then((response) => {
-          setUtentes(response.data);
-          console.log(response.data)
-          setLoadingData(false);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
-      }, 1000);
-      return () => clearInterval(loop);
+      // setLoadingData(true);
+      // console.log( `/vacinacao/utente_vacinados/${id}`)
+      // if(id) {
+        // api.get(
+          // `/vacinacao/utente_vacinados/${id}`, headers
+        // ).then((response) => {
+          // setUtentes(response.data);
+          // console.log(response.data)
+          // setLoadingData(false);
+        // })
+        // .catch((err) => {
+          // console.error("ops! ocorreu um erro" + err);
+          // alert("Erro");
+        // })
+      // }
+      // const loop = setInterval(function() {
+        // id = localStorage.getItem("id_people_vaccinated_info");
+        // api.get(
+          // `/vacinacao/utente_vacinados/${id}`, headers
+        // ).then((response) => {
+          // setUtentes(response.data);
+          // console.log(response.data)
+          // setLoadingData(false);
+        // })
+        // .catch((err) => {
+          // console.error("ops! ocorreu um erro" + err);
+          // alert("Erro");
+        // })
+      // }, 1000);
+      // return () => clearInterval(loop);
     }, []);
-    // 
-    // if(id) {
-    //   localStorage.setItem("id", id);
-    // }
-    //  
-    // const [centro, setCentro] = React.useState('');
-
-    // const headers = {
-    //   "Access-Control-Allow-Origin": "*",
-    //   "Content-Type": "application/json",
-    // };    
-    // 
-    // React.useEffect(() => {
-    //   setLoading(true);
-    //   if (id) {
-        // api.get(
-            // `/centrovacinacao/${id}`, headers
-        //   ).then((response) => {
-            // setCentro(response.data);
-            // setCapacity(response.data.capacidadeMax);
-            // setLoading(false);
-        //   })
-        //   .catch((err) => {
-            // console.error("ops! ocorreu um erro" + err);
-            // alert("Erro");
-            // if(response.status === 500 && typeof id == undefined) {
-            //   alert("Erro")
-            // }
-        //   })
-        // }
-    //   const loop = setInterval(function() {
-
-        // id = localStorage.getItem("id");
-
-        // api.get(
-            // `/centrovacinacao/${id}`, headers
-        //   ).then((response) => {
-            // setCentro(response.data);
-            // setCapacity(response.data.capacidadeMax);
-        //   })
-        //   .catch((err) => {
-            // console.error("ops! ocorreu um erro" + err);
-            // alert("Erro");
-        //   }
-        // );
-        // }, 1000);
-        // return () => clearInterval(loop);
-    //   }, []);
-
+    
     return (
   <>
     <Head>
       <title>
-        Pessoas Vacinadas | Vaccination Desk
+        Vacinas Administradas | Vaccination Desk
       </title>
     </Head>
     <Box
@@ -156,7 +107,7 @@ const PeopleVaccinated = () => {
           sx={{ m: 1 }}
           variant="h4"
         >
-          Pessoas Vacinadas
+          Vacinas Administradas
         </Typography>
         <Typography
           sx={{ m: 1 }}
@@ -171,21 +122,21 @@ const PeopleVaccinated = () => {
 		    			<Table>
 		    				<TableHead>
 		    					<TableRow>
-		    						<TableCell>Utente</TableCell>
-		    						<TableCell>Número</TableCell>
+		    						<TableCell>Vacina</TableCell>
+		    						<TableCell>Lote</TableCell>
 		    						<TableCell>
 		    							<TableSortLabel active direction="desc">
-		    								Data Nascimento
+		    								Data Validade
 		    							</TableSortLabel>
 		    						</TableCell>
-		    						<TableCell>Email</TableCell>
+		    						<TableCell>Utente</TableCell>
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
-		    					{utentes.map((utente) => (
+		    					{/* {utentes.map((utente) => ( */}
 		    						<TableRow
 		    							hover
-		    							key={utente.n_utente}
+		    							// key={utente.n_utente}
 		    						>
                       <TableCell>
                       	<Box alignItems="center" display="flex">
@@ -218,7 +169,7 @@ const PeopleVaccinated = () => {
 		    								{/* ).format("DD/MM/YYYY, HH:mm:ss")} */}E
 		    							</TableCell>
 		    						</TableRow>
-		    					))}
+		    					{/* ))} */}
 		    				</TableBody>
 		    			</Table>
 		    		</Box>

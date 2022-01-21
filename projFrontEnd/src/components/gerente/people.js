@@ -11,14 +11,17 @@ export const People = () => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
     };
-      // while(id == null) {
+
     const { query } = useRouter();
     let id = query.id
-    
-      // }
+
+    if(id) {
+      localStorage.setItem("id_people", id);
+    }
       
       useEffect(() => {
         setLoading(true);
+        if (id) {
           api.get(
               `/vacinacao/real_time/` + id , headers
             ).then((response) => {
@@ -31,12 +34,15 @@ export const People = () => {
               console.error("ops! ocorreu um erro" + err);
               alert("Erro");
             })
+        }
         const loop = setInterval(function() {
+            id = localStorage.getItem("id_people");
             api.get(`/vacinacao/real_time/` + id , headers
               ).then((response) => {
                 // setCentro(response.data);
                 // console.log(response.data)
                 setPeople(response.data)
+                setLoading(false);
               });
           }, 1000);
           return () => clearInterval(loop);
@@ -67,7 +73,6 @@ export const People = () => {
             Não existem pessoas no centro
         </Typography>
         : <LinearProgress />
-        
         }
     </>
     );

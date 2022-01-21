@@ -141,15 +141,16 @@ const VaccinationCenter = () => {
         >
           {centro.morada}
         </Typography>
-        {/* TODO: numero de pessoas vacinadas e numero vacinas em tempo real */}
         <Grid container spacing={2}>
           <Grid item lg={6} sm={6} xl={6} xs={12}>
-            <Link href={{pathname: "/people_vaccinated", query: {id: id}}}>
+            <Link href={{pathname: "/people_vaccinated", query: {id: id, nome: centro.nome}}} passHref>
               <PeopleVaccinated id={id}/>
             </Link>
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
-            <VaccinesAdministered id={id}/>
+            <Link href={{pathname: "/vaccines_administrated", query: {id: id, nome: centro.nome}}} passHref>
+              <VaccinesAdministered id={id}/>
+            </Link>
           </Grid>
         </Grid>
       </Container>
