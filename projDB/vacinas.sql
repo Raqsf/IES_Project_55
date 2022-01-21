@@ -158,6 +158,31 @@ BEGIN
     and DATE(dia_vacinacao) = dia;
 END
 
+CREATE PROCEDURE getListaEsperaPeloDia(IN dia DATE)
+BEGIN
+    select * from lista_de_espera as le
+    where DATE(le.data_inscricao) = dia;
+END
+
+CREATE PROCEDURE getUtenteInfoDiaVacina(IN centro INT, IN dia DATE)
+BEGIN
+    select * from pessoa as p
+    join vacina as v on v.administrada_a = p.n_utente
+    join lote as l on l.id = v.lote
+    where DATE(v.data_administracao) = dia and l.atribuida_ao_centro = centro;
+END
+
+drop procedure getUtenteInfoDiaVacina
+
+CREATE PROCEDURE getVacinasInfoDiaVacina(IN centro INT, IN dia DATE)
+BEGIN
+    select * from vacina as v
+    join lote as l on l.id = v.lote
+    where DATE(v.data_administracao) = dia and l.atribuida_ao_centro = centro;
+END
+
+
+
 -- drop table capacidade_por_dia;
 -- drop table lista_de_espera;
 -- drop table agendamento;

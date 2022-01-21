@@ -25,26 +25,34 @@ export default function FormVaccinationInfo() {
         };
 
         const user = {
-            id: utente,
-            nome: nome,
+            id: parseInt(utente,10),
+            nome: nome
         };
-        
+
+
+        // axios não permite mandar dados com o GET
         api
-        .get(`/agendamento/${user.id}`, headers)
+        .post(`/agendamento`, user, headers)
         .then((response) => {
-            // setResposta(response.data);
-            console.log(response.data);
-            console.log(response.data.id);
             if(response.data.length == 0)  {
-                // TODO: passar essa info para a pagina vaccination_info
-                // alert("Não existe agendamento");
-                toast.info("Não existe agendamento", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+                router.push({ pathname: "/vaccination_info",
+                query: {
+                    utente_nome: user.nome,
+                    utente_num: user.id,
+                    estado: "não agendado"
+                    }
+                // search: `?response=${response.data}`
+                // state: { detail: "hello"}
+                }, "/vaccination_info");
+                // toast.info("Não existe agendamento", {position: toast.POSITION.TOP_CENTER});
             } else {
+                console.log(response.data)
                 router.push({ pathname: "/vaccination_info",
                     query: {
                         utente_nome: response.data.utente.nome,
                         utente_num: response.data.utente.id,
                         // utente: {nome:response.data[0].utente.nome, id:response.data[0].utente.nome},
+                        estado: "agendado",
                         centro: response.data.centro.nome,
                         morada: response.data.centro.morada,
                         data: response.data.diaVacinacao
@@ -55,8 +63,22 @@ export default function FormVaccinationInfo() {
             }
         })
         .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            //toast.err("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+            console.log(err.response)
+            if(err.response.status === 409) {
+                toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+                router.push({ pathname: "/vaccination_info",
+                query: {
+                    utente_nome: user.nome,
+                    utente_num: user.id,
+                    estado: "lista de espera"
+                    }
+                // search: `?response=${response.data}`
+                // state: { detail: "hello"}
+                }, "/vaccination_info");
+            } else {
+                console.error("ops! ocorreu um erro" + err);
+                toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+            }
         });
         // router.push('/vaccination_info');
     }

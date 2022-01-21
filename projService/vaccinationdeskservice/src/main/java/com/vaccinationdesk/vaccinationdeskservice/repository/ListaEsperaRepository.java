@@ -27,6 +27,8 @@ public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Intege
     @Procedure(procedureName = "getListaEsperaByDoenca")
     List<ListaEspera> getListaEsperaByDoenca(Integer doenca);
 
+    @Procedure(procedureName = "getListaEsperaPeloDia")
+    List<ListaEspera> getListaEsperaPeloDia(@Param("dia") String dia);
 
     @Query("SELECT l.utente FROM ListaEspera as l WHERE l.utente = :utente")
     List<Utente> findUtenteInListaEspera(@Param("utente") Utente utente);

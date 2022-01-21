@@ -50,9 +50,13 @@ export default function DadosUtente(props) {
         });
       })
       .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-        // alert("Erro");
-        toast.error("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+        if(err.response.status === 409) {
+          toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+        } else {
+          console.error("ops! ocorreu um erro" + err);
+          // alert("Erro");
+          toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+        }
       });
     // router.push('/success');
 

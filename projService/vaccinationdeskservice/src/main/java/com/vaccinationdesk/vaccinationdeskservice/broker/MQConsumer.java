@@ -170,7 +170,6 @@ public class MQConsumer {
         Date data = new Date(format.parse(dataString).getTime());
         
         Capacidade capacidade = new Capacidade(data, quantidade);
-        System.out.println(capacidade);
         capacidadeRepository.save(capacidade);   
     }
 

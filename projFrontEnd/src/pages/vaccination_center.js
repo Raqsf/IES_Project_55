@@ -10,7 +10,10 @@ import { VaccinesAdministered } from "../components/gerente/vaccines_administere
 import { People } from "../components/gerente/people";
 // import { useParams } from "react-router-dom";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 const VaccinationCenter = () => {
     const router = useRouter();
     // const [param1, setParam] = useState();
@@ -38,24 +41,8 @@ const VaccinationCenter = () => {
     //   if(router && router.query.length !== 0) {
     //     console.log(router.query)
     //   }
-    // }, [router]);
-
-    // console.log(param1)
-    
-    // console.log(id);
-    
-    // const history = createHistory();
-    // console.log(window.location.hrefs)
-    // history.push()
-    // NOTA: acho q dá com o router
-    // window.addEventListener('onbeforeunload', alert("HI"));
-    
-    // React.useEffect(() => {
-    //   window.addEventListener("beforeunload", router.reload({pathname: "/vaccination_center", query: id}));
-    //   return () => {
-    //     window.removeEventListener("beforeunload", null);
-    //   };
-    // }, []);
+    // }, [router])
+     
     const [centro, setCentro] = React.useState('');
 
     const headers = {
@@ -90,7 +77,7 @@ const VaccinationCenter = () => {
           })
         }
       const loop = setInterval(function() {
-        console.log("Loop", id)
+        // console.log("Loop", id)
         id = localStorage.getItem("id");
         // console.log("Loop", param1)
         api.get(
@@ -117,7 +104,7 @@ const VaccinationCenter = () => {
       .put(`/centrovacinacao/${id}/capacidade`, new Object(capacity), headers)
       .then((response) => {
         // if (response.status >= 200 && response.status < 300)
-        alert("Nova ordem definida")
+        toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER});
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
