@@ -3,7 +3,14 @@ package com.vaccinationdesk.vaccinationdeskservice.controller;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
@@ -35,6 +42,82 @@ public class EstatisticasController {
             return vacinaRepository.findAllVacinnatedByDate(data).size();
         }
         return vacinaRepository.findAllVacinnated().size();
+    }
+
+    @GetMapping("/pessoasVacinadasPorPeriodo/{periodo}")
+    public Map<String, Integer> pessoasVacinadasSemana(@PathVariable Integer periodo/*, @RequestParam(value="cv", required = false) Integer cv*/) throws ConflictException{
+        
+        LinkedHashMap<String, Integer> res = new LinkedHashMap<>();
+
+        String[] days_of_the_week = new String[7];
+        days_of_the_week[0] = "Dom";
+        days_of_the_week[1] = "Seg";
+        days_of_the_week[2] = "Ter";
+        days_of_the_week[3] = "Qua";
+        days_of_the_week[4] = "Qui";
+        days_of_the_week[5] = "Sex";
+        days_of_the_week[6] = "Sáb";
+
+        String[] months_of_year = new String[12];
+        months_of_year[0] = "Jan";
+        months_of_year[1] = "Fev";
+        months_of_year[2] = "Mar";
+        months_of_year[3] = "Abr";
+        months_of_year[4] = "Mai";
+        months_of_year[5] = "Jun";
+        months_of_year[6] = "Jul";
+        months_of_year[7] = "Ago";
+        months_of_year[8] = "Set";
+        months_of_year[9] = "Out";
+        months_of_year[10] = "Nov";
+        months_of_year[11] = "Dez";
+        
+        long millis = System.currentTimeMillis();
+        Date hoje = new Date(millis);
+        Calendar c = Calendar.getInstance();
+        c.setTime(hoje);
+        switch(periodo){
+            //Hoje      (comparação entre hoje e ontem) ask them?! >.<
+            case 0:
+                res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                c.add(Calendar.DATE, -1);
+                hoje = new Date(c.getTimeInMillis());
+                res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                return res;
+            //Última Semana
+            case 1:
+                for (int i=0; i<7; i++){
+                    res.put(days_of_the_week[c.get(c.DAY_OF_WEEK)-1], pessoasVacinadas(hoje));
+                    c.add(Calendar.DATE, -1);
+                    hoje = new Date(c.getTimeInMillis());
+                }
+                return res;
+            //Último mês
+            case 2:
+                for (int i=0; i<31; i++){
+                    res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                    c.add(Calendar.DATE, -1);
+                    hoje = new Date(c.getTimeInMillis());
+                }
+                return res;
+            //Último ano
+            case 3:
+                for (int i=1; i<=12; i++){
+                    int month = c.get(c.MONTH);
+                    YearMonth yearMonthObject = YearMonth.of(c.get(c.YEAR), month+1);
+                    int daysInMonth = yearMonthObject.lengthOfMonth();
+                    int totalVacs = 0;
+                    
+                    for (int j=0; j<daysInMonth; j++){
+                        totalVacs+= pessoasVacinadas(hoje);
+                        c.add(Calendar.DATE, -1);
+                        hoje = new Date(c.getTimeInMillis());
+                    }
+                    res.put(months_of_year[month], totalVacs);
+                }
+                return res;                    
+        }
+        throw new ConflictException("Apenas pode ser apresentado períodos do dia/semana/mes/ano");
     }
 
     @GetMapping("/pessoasVacinadas/{id}")
