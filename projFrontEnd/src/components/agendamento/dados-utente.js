@@ -58,14 +58,6 @@ export default function DadosUtente(props) {
           toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
         }
       });
-    // router.push('/success');
-
-    // axios.get(`http://localhost:8080/api/v1/centrovacinacao`, headers)
-    //   .then(res => {
-    //     const persons = res.data;
-    //     this.setState({ persons });
-    //     console.log(persons);
-    //   })
   }
 
   return (
