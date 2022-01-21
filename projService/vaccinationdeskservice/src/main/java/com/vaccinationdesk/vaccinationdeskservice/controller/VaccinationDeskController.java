@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = { "http://localhost:3001", "http://localhost:3001" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
 public class VaccinationDeskController {
     
     @Autowired
@@ -50,9 +50,6 @@ public class VaccinationDeskController {
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 

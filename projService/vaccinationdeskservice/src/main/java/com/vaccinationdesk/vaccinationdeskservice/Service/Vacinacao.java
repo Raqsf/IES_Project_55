@@ -171,7 +171,7 @@ public class Vacinacao {
         String result = "";
         //Capacidade dia = capacidadeRepository.getDiaDB();
         //Date date = dia.getDia();
-        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, "2022-01-23");
+        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, "2022-01-19");
         for (Utente utente : resultList) {
             Map<String, Object> map = new HashMap<>();
             map.put("nome", utente.getNome());

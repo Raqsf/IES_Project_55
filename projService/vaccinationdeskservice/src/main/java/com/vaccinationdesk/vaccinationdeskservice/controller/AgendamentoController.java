@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequestMapping("/api/v1/agendamento")
-@CrossOrigin(origins = { "/http://localhost:3001", "http://localhost:3001" })
+@CrossOrigin(origins = { "/http://localhost:3000", "http://localhost:3000" })
 public class AgendamentoController {
 
     @Autowired
