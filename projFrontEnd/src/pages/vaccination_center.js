@@ -8,7 +8,7 @@ import api from "../api";
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
 import { People } from "../components/gerente/people";
-import Link from 'next/link'; 
+import NextLink from 'next/link'; 
 // import { useParams } from "react-router-dom";
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -143,14 +143,14 @@ const VaccinationCenter = () => {
         </Typography>
         <Grid container spacing={2}>
           <Grid item lg={6} sm={6} xl={6} xs={12}>
-            <Link href={{pathname: "/people_vaccinated", query: {id: id, nome: centro.nome}}} passHref>
+            <NextLink href={{pathname: "/people_vaccinated", query: {id: id, nome: centro.nome}}} passHref>
               <PeopleVaccinated id={id}/>
-            </Link>
+            </NextLink>
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
-            <Link href={{pathname: "/vaccines_administrated", query: {id: id, nome: centro.nome}}} passHref>
+            <NextLink href={{pathname: "/vaccines_administrated", query: {id: id, nome: centro.nome}}} passHref>
               <VaccinesAdministered id={id}/>
-            </Link>
+            </NextLink>
           </Grid>
         </Grid>
       </Container>

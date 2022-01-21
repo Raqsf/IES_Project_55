@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import { Typography, Container, Box, Divider, Grid, TextField, Button, Avatar,
+import { Typography, Container, Box, Avatar,
 	Card,
 	Table,
 	TableBody,
@@ -20,12 +20,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure()
-const PeopleVaccinated = () => {
+const VaccinesAdministered = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [loadingData, setLoadingData] = useState(true);
-    const [centro, setCentro] = useState();
-    const [utentes, setUtentes] = useState([]);
+    const [vacinas, setVacinas] = useState([]);
     const [page, setPage] = useState(0);
 	  const [size, setSize] = useState(10);
 	  const [count, setCount] = useState(0);
@@ -57,12 +56,16 @@ const PeopleVaccinated = () => {
 
     useEffect(() => {
       // setLoadingData(true);
-      // console.log( `/vacinacao/utente_vacinados/${id}`)
+      // console.log( `/vacinacao/vacinas_administradas_hoje/${id}`)
       // if(id) {
         // api.get(
-          // `/vacinacao/utente_vacinados/${id}`, headers
+          // `/vacinacao/vacinas_administradas_hoje/${id}`, headers
         // ).then((response) => {
-          // setUtentes(response.data);
+           // if(response.data.length > 0) {
+               // setVacinas(response.data);
+            // } else {
+                // setVacinas([]);
+            // }
           // console.log(response.data)
           // setLoadingData(false);
         // })
@@ -74,9 +77,13 @@ const PeopleVaccinated = () => {
       // const loop = setInterval(function() {
         // id = localStorage.getItem("id_people_vaccinated_info");
         // api.get(
-          // `/vacinacao/utente_vacinados/${id}`, headers
+          // `/vacinacao/vacinas_administradas_hoje/${id}`, headers
         // ).then((response) => {
-          // setUtentes(response.data);
+           // if(response.data.length > 0) {
+              // setVacinas(response.data);
+           // } else {
+               // setVacinas([]);
+           // }
           // console.log(response.data)
           // setLoadingData(false);
         // })
@@ -133,10 +140,10 @@ const PeopleVaccinated = () => {
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
-		    					{/* {utentes.map((utente) => ( */}
+		    					{/* {vacinas.length > 0 ? vacinas.map((vacina) => ( */}
 		    						<TableRow
 		    							hover
-		    							// key={utente.n_utente}
+		    							// key={vacina.n_utente}
 		    						>
                       <TableCell>
                       	<Box alignItems="center" display="flex">
@@ -144,7 +151,7 @@ const PeopleVaccinated = () => {
                       			{/* {getInitials( */}
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
-                      			{/* )} */}R
+                      			{/* )} */}
                       		</Avatar>
                       		<Typography
                       			color="textPrimary"
@@ -153,23 +160,26 @@ const PeopleVaccinated = () => {
                       			{/* { */}
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
-                      			{/* } */}S
+                      			{/* } */}
+                            {/* {vacina.nome_vacina} */}
                       		</Typography>
                       	</Box>
                       </TableCell>
 		    							<TableCell>
 		    								{/* {transaction.total.toFixed(2)}€ */}Q
+                        {/* {vacina.lote} */}
 		    							</TableCell>
+                      <TableCell>
+                      	{/* {moment( */}
+                      		{/* vacina.data_validade */}
+                      	{/* ).format("DD/MM/YYYY, HH:mm:ss")} */}E
+                      </TableCell>
 		    							<TableCell>
 		    								{/* {transaction.products.length} */}W
-		    							</TableCell>
-		    							<TableCell>
-		    								{/* {moment( */}
-		    									{/* transaction.transaction.date */}
-		    								{/* ).format("DD/MM/YYYY, HH:mm:ss")} */}E
+                        {/* {vacina.n_utente} */}
 		    							</TableCell>
 		    						</TableRow>
-		    					{/* ))} */}
+		    					{/* )) : null} */}
 		    				</TableBody>
 		    			</Table>
 		    		</Box>
@@ -190,10 +200,10 @@ const PeopleVaccinated = () => {
 );
     }
 
-PeopleVaccinated.getLayout = (page) => (
+VaccinesAdministered.getLayout = (page) => (
   <DashboardLayoutGerente>
     {page}
   </DashboardLayoutGerente>
 );
 
-export default PeopleVaccinated;
+export default VaccinesAdministered;

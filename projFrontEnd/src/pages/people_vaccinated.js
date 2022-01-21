@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import { Typography, Container, Box, Divider, Grid, TextField, Button, Avatar,
+import { Typography, Container, Box, Avatar,
 	Card,
 	Table,
 	TableBody,
@@ -24,7 +24,7 @@ const PeopleVaccinated = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [loadingData, setLoadingData] = useState(true);
-    const [centro, setCentro] = useState();
+    // const [centro, setCentro] = useState();
     const [utentes, setUtentes] = useState([]);
     const [page, setPage] = useState(0);
 	  const [size, setSize] = useState(10);
@@ -63,7 +63,10 @@ const PeopleVaccinated = () => {
         api.get(
           `/vacinacao/utente_vacinados/${id}`, headers
         ).then((response) => {
-          setUtentes(response.data);
+          if(response.data.length > 0) {
+            setUtentes(response.data);
+          }
+          setUtentes([]);
           console.log(response.data)
           setLoadingData(false);
         })
@@ -77,7 +80,10 @@ const PeopleVaccinated = () => {
         api.get(
           `/vacinacao/utente_vacinados/${id}`, headers
         ).then((response) => {
-          setUtentes(response.data);
+          if(response.data.length > 0) {
+            setUtentes(response.data);
+          }
+          setUtentes([]);
           console.log(response.data)
           setLoadingData(false);
         })
@@ -95,10 +101,6 @@ const PeopleVaccinated = () => {
     //  
     // const [centro, setCentro] = React.useState('');
 
-    // const headers = {
-    //   "Access-Control-Allow-Origin": "*",
-    //   "Content-Type": "application/json",
-    // };    
     // 
     // React.useEffect(() => {
     //   setLoading(true);
@@ -182,7 +184,7 @@ const PeopleVaccinated = () => {
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
-		    					{utentes.map((utente) => (
+		    					{utentes.length > 0 ? utentes.map((utente) => (
 		    						<TableRow
 		    							hover
 		    							key={utente.n_utente}
@@ -193,7 +195,7 @@ const PeopleVaccinated = () => {
                       			{/* {getInitials( */}
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
-                      			{/* )} */}R
+                      			{/* )} */}
                       		</Avatar>
                       		<Typography
                       			color="textPrimary"
@@ -202,23 +204,26 @@ const PeopleVaccinated = () => {
                       			{/* { */}
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
-                      			{/* } */}S
+                      			{/* } */}
+                            {utente.nome}
                       		</Typography>
                       	</Box>
                       </TableCell>
+                      <TableCell>
+                      	{/* {transaction.total.toFixed(2)}€ */}
+                        {utente.n_utente}
+                      </TableCell>
+                      <TableCell>
+                      	{moment(
+                      		utente.data_nascimento
+                      	).format("DD/MM/YYYY")}
+                      </TableCell>
 		    							<TableCell>
-		    								{/* {transaction.total.toFixed(2)}€ */}Q
-		    							</TableCell>
-		    							<TableCell>
-		    								{/* {transaction.products.length} */}W
-		    							</TableCell>
-		    							<TableCell>
-		    								{/* {moment( */}
-		    									{/* transaction.transaction.date */}
-		    								{/* ).format("DD/MM/YYYY, HH:mm:ss")} */}E
+		    								{/* {transaction.total.toFixed(2)}€ */}
+                        {utente.email}
 		    							</TableCell>
 		    						</TableRow>
-		    					))}
+		    					)) : null} 
 		    				</TableBody>
 		    			</Table>
 		    		</Box>
