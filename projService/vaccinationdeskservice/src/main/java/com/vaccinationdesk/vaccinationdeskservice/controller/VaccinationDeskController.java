@@ -37,27 +37,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3001", "http://localhost:3001" })
 public class VaccinationDeskController {
-    @Autowired
-    private CentroVacinacaoRepository centroVacinacaoRepository;
+    
     @Autowired
     private UtenteRepository utenteRepository;
     @Autowired
     private LoteRepository loteRepository;
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
     @Autowired
     private DoencaRepository doencaRepository;
     @Autowired
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
-    @GetMapping("/centrovacinacao")
-    public List<CentroVacinacao> centroVacinacao() {
-        return centroVacinacaoRepository.findAll();
-    }
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
@@ -68,13 +65,6 @@ public class VaccinationDeskController {
     public Utente getUtenteByIDUtente(@RequestBody Integer id) {
         return utenteRepository.findUtenteById(id);
     }
-
-    /*
-     * @GetMapping("/utente/{n_utente}")
-     * public Utente getUtenteByNumUtente(@PathVariable int n_utente) {
-     * return utenteRepository.findUtenteByNumUtente(n_utente);
-     * }
-     */
 
     @GetMapping("/lote/{id}")
     public Lote getUtenteByNome(@PathVariable Integer lote) {
@@ -89,9 +79,8 @@ public class VaccinationDeskController {
 
     @PostMapping("/utente")
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
-        
+
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
-            //System.out.println(utenteRepository.findUtenteById(utente.getID()) );
             
             Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
             if (!utente.getNome().equals(utenteDB.getNome()) || 
@@ -115,8 +104,8 @@ public class VaccinationDeskController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/agendamento/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
+    @PostMapping("/agendamento")
+    public Agendamento getAgendamentoByUtente(@Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)
             try{
                 if (utenteRepository.findUtenteById(utente.getID()) != null){
@@ -124,18 +113,16 @@ public class VaccinationDeskController {
                     if (!utente.getNome().equals(utenteDB.getNome())){
                         throw new ConflictException("Dados inválidos");
                     }
-                    List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
-                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
+                    if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty() && agendamentoRepository.findAllByUtente(utente.getID()) == null){
                         throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
                     }
-                    return agendamentoRepository.findAllByUtente(utente.getID());
                 }else{
                     throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
                 }
             }catch(Exception e){
                 throw e;
             }
-        return agendamentoRepository.findAllByUtente(id);
+        return agendamentoRepository.findAllByUtente(utente.getID());
     }
 
     @GetMapping("/doencaPorUtente/{id}")
@@ -148,45 +135,6 @@ public class VaccinationDeskController {
         }
         
     }
-
-    @GetMapping("/centrovacinacao/{id}")
-    public CentroVacinacao centroVacinacao(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findCentroVacinacaoById(id);
-    }
-
-    @GetMapping("/centrovacinacao/{id}/vacinas")
-    public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
-        Integer qtd = 0;
-        for (Integer i : centroVacinacaoRepository.findVacinas(id)){
-            qtd+=i;
-        }
-        return qtd;
-    }
-
-    @GetMapping("/centrovacinacao/{id}/agendamentos")
-    public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
-        return centroVacinacaoRepository.findAgendamentos(id);
-    }
-
-    @PutMapping("/centrovacinacao/{id}/capacidade")
-    public ResponseEntity<CentroVacinacao> updateCapacidade(@PathVariable(value = "id") Integer id, 
-        @Valid @RequestBody Integer capacidade) throws ResourceNotFoundException {
-        try {
-            CentroVacinacao centro = centroVacinacaoRepository.findCentroVacinacaoById(id);
-            centro.setCapacidadeMax(capacidade);
-            CentroVacinacao updatedCentro = centroVacinacaoRepository.save(centro);
-            return ResponseEntity.ok(updatedCentro);
-        } catch (Exception e) {
-            System.err.print("Centro Vacinacao "+id+" not found");
-            throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found");
-        }
-        
-    }
-    /*
-    avaliação entre o grupo
-    demo
-    powerpoint
-    */
 
     @GetMapping("/doencas")
     public List<Doenca> doencas(){

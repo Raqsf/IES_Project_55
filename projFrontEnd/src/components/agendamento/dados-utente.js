@@ -50,18 +50,14 @@ export default function DadosUtente(props) {
         });
       })
       .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-        // alert("Erro");
-        toast.error("Erro", {position: toast.POSITION.TOP_CENTER, autoClose: false});
+        if(err.response.status === 409) {
+          toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+        } else {
+          console.error("ops! ocorreu um erro" + err);
+          // alert("Erro");
+          toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+        }
       });
-    // router.push('/success');
-
-    // axios.get(`http://localhost:8080/api/v1/centrovacinacao`, headers)
-    //   .then(res => {
-    //     const persons = res.data;
-    //     this.setState({ persons });
-    //     console.log(persons);
-    //   })
   }
 
   return (

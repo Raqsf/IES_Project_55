@@ -25,4 +25,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
 
     @Procedure(procedureName = "getAgendamentosPorDia")
     List<Agendamento> getAgendamentosPorDia(@Param("dia") String dia);
+
+    @Procedure(procedureName = "checkQRcode")
+    Agendamento checkQRcode(@Param("numero_utente") Integer n_utente, @Param("centro_id") Integer centro_id, @Param("dia") String dia);
 }
