@@ -11,9 +11,9 @@ from random import randint
 class Generator:
     def __init__(self, people, surnames, vaccination_centers=None, vaccines=None):
         credentials = pika.PlainCredentials('myuser', 'mypassword')
-        #self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
-        #self.channel = self.connection.channel()
-        #self.channel.queue_declare(queue='vaccination_queue', durable=True)
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
+        self.channel = self.connection.channel()
+        self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.number_of_vaccines_for_today = 261
         self.people = people
         self.surnames = surnames
@@ -33,7 +33,7 @@ class Generator:
         """Send the message to the broker"""
         try:
             message = json.dumps(mes)
-            #self.channel.basic_publish(exchange='', routing_key=topic, body=message)
+            self.channel.basic_publish(exchange='', routing_key=topic, body=message)
         except:
             print('\033[91m' + "ERROR: Could not send message to broker" + '\033[0m')
 
@@ -146,14 +146,14 @@ if __name__ == '__main__':
             time.sleep(2)
             for _ in range(224):
                 g.add_to_waiting_list()
-                time.sleep(0.01)
+                time.sleep(0.3)
         while True:
             g.destribute_vaccines_per_centers()
             g.generate_vaccines_quantity()
             time.sleep(2)
             for _ in range(224):
                 g.add_to_waiting_list()
-                time.sleep(2)
+                time.sleep(0.3)
             time.sleep(2)
     except KeyboardInterrupt:
         print('\nKeyboard Interruption')

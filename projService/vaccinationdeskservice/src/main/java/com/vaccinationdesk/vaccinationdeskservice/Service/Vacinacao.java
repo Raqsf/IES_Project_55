@@ -64,9 +64,8 @@ public class Vacinacao {
             throw new ConflictException("Não existe capacidade para o dia em questão");
         }
         Capacidade dia = capacidadeRepository.getDiaDB();
-        Date date = dia.getDia();
-
-        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(date.toString());
+        System.out.println("dia: tem de ser 25 ->" + dia.getDia().toString());
+        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia("2022-01-25"); //TODO: confirmar que ao correr isto no dia 22, a linha de cima dá 25
 
         //List<Agendamento> agendamentoParaODiaList = agendamentoRepository.findAll();
         List<Vacina> vacinaList = vacinaRepository.findAll();
