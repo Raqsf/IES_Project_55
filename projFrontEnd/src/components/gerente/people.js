@@ -56,7 +56,7 @@ export const People = () => {
             }
             >
                 {people.map((person) => (
-                    <ListItemText primary={person} />
+                    <ListItemText primary={person} key={person}/>
                 ))}
         </List> 
         : !loading && people.length === 0 ? 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { ListSubheader, List, ListItemButton, ListItemText, LinearProgress, Box } from '@mui/material';
 import NextLink from 'next/link';
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
@@ -7,35 +7,8 @@ import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 
 
 const NestedList = (props) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const {centros} = props;
-  // const [centros, setCentros] = React.useState([]);
-
-  // // const handleClick = () => {
-  // //   alert("HELLO");
-  // //   setOpen(!open);
-  // // };
-  // // function getVaccinationCenters() {
-    
-  //   const headers = {
-  //     "Access-Control-Allow-Origin": "*",
-  //     "Content-Type": "application/json",
-  //   };
-
-  //   React.useEffect(() => {
-  //     const getData = async () => {
-  //       const data = await api.get(
-  //         `/centrovacinacao`, headers
-  //       ).then((response) => {
-  //         setCentros(response.data);
-  //       })
-  //       .catch((err) => {
-  //         console.error("ops! ocorreu um erro" + err);
-  //         alert("Erro");
-  //       });
-  //     };
-  //     getData();
-  //   }, []);
     
   return (
     <>
@@ -59,7 +32,7 @@ const NestedList = (props) => {
           key={centro.id}
           passHref
         >
-          <ListItemButton /* onClick={handleClick} */ >
+          <ListItemButton>
             <ListItemText primary={centro.nome} />
             <ArrowForwardIos />
           </ListItemButton>

@@ -22,41 +22,41 @@ export const VaccinesAdministered = (props) => {
   useEffect(() => {
     // setLoading(true);
 
-    if (id) {
+    // if (id) {
 
-      api.get(
-          `/centrovacinacao/${id}/vacinas`, headers
-        ).then((response) => {
-          // console.log("Second", id)
-          console.log(response.data)
-          setTotalVaccines(response.data);
-          // setLoading(false);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-          // if(response.status === 500 && typeof id == undefined) {
-          //   alert("Erro")
-          // }
-        })
-      }
-    const loop = setInterval(function() {
-      // console.log("Loop", id)
-      id = localStorage.getItem("id_vaccines_administrated");
-      // console.log("Loop", param1)
-      api.get(
-          `/centrovacinacao/${id}/vacinas`, headers
-        ).then((response) => {
-          console.log(response.data)
-          setTotalVaccines(response.data);
-        })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        }
-      );
-      }, 1000);
-      return () => clearInterval(loop);
+      /* api.get( */
+      /*     `/centrovacinacao/${id}/vacinas`, headers */
+      /*   ).then((response) => { */
+      /*     // console.log("Second", id) */
+      /*     console.log(response.data) */
+      /*     setTotalVaccines(response.data); */
+      /*     // setLoading(false); */
+      /*   }) */
+      /*   .catch((err) => { */
+      /*     console.error("ops! ocorreu um erro" + err); */
+      /*     alert("Erro"); */
+      /*     // if(response.status === 500 && typeof id == undefined) { */
+      /*     //   alert("Erro") */
+      /*     // } */
+      /*   }) */
+      /* } */
+      /* const loop = setInterval(function() { */
+      /* // console.log("Loop", id) */
+      /* id = localStorage.getItem("id_vaccines_administrated"); */
+      /* // console.log("Loop", param1) */
+      /* api.get( */
+      /*     `/centrovacinacao/${id}/vacinas`, headers */
+      /*   ).then((response) => { */
+      /*     console.log(response.data) */
+      /*     setTotalVaccines(response.data); */
+      /*   }) */
+      /*   .catch((err) => { */
+      /*     console.error("ops! ocorreu um erro" + err); */
+      /*     alert("Erro"); */
+      /*   } */
+      /* ); */
+      /* }, 1000); */
+      /* return () => clearInterval(loop); */
     }, []);
 
   return (

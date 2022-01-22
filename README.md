@@ -1,7 +1,9 @@
 # Vaccination Desk
 
-<hr>
-Sistema de agendamento de vacinação, distribuição de vacinas e verificação de administração de vacinas.
+<p align="center">
+  <img  src="/images/logo.png" height=200 width=200>
+</p>
+<p align="center"> Sistema de agendamento de vacinação, distribuição de vacinas e verificação de administração de vacinas. </p>
 <hr>
 
 ## Sobre o Projeto
@@ -61,7 +63,7 @@ Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrg
 | NMEC | NOME| Papel |
 |----:|-----|-----|
 | 98323 | [Raquel da Silva Ferreira](https://github.com/Raqsf) | Team Manager, Developer |
-| 98546 | [Patrícia Matias Dias](https://github.com/Patricia-Dias)) | Product Owner, Developer |
+| 98546 | [Patrícia Matias Dias](https://github.com/Patricia-Dias) | Product Owner, Developer |
 | 91359 | [Juan Victor Lessa Gonçalves](https://github.com/juanlessa) | DevOps Master, Developer |
 | 98491 | [Pedro Alexandre Coelho Sobral](https://github.com/TheScorpoi) | Architect, Developer |
 

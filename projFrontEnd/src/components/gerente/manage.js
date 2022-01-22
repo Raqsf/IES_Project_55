@@ -52,7 +52,9 @@ export const ManageVaccines = (props) => (
             gutterBottom
             variant="body2"
         >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Gira todo o processo de vacinação, marque agendamentos por ordem de inscrição, ou por critérios de prioridade como idade, ou certas patologias.
+          Em cada centro de vacinação é possivel saber que pessoas é que se estão a vacinar em tempo real, bem como ver todas as que já se vacinaram até ao momento.
+          É possivel ainda, saber as quantidades de vacinas que cada centro tem, e as quantidades que estão previstas receber nos proximos dias.
         </Typography>
         {/* <ArrowDownwardIcon color="error" />
         <Typography
