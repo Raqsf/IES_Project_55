@@ -117,7 +117,6 @@ public class MQConsumer {
         } else {
             System.out.println("QR code inválido");
         }
-
     }
 
     /**
@@ -136,7 +135,6 @@ public class MQConsumer {
         String local = json.getJSONObject("utente").getString("local");
         String doencaGeracaoDados = json.getJSONObject("utente").getString("doença");
 
-        // ! nao está a guardar na BD as horas, nem os minutos, nem os segundos
         String data_inscricao = json.getJSONObject("utente").getString("data_inscricao");
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date data_nascimento = new Date(format.parse(data_nasc).getTime());
@@ -150,7 +148,7 @@ public class MQConsumer {
             Doenca doenca = doencaRepository.findDoencaById(idDoenca);
             doencaPorUtenteRepository.save(new DoencaPorUtente(utente, doenca));
         }
-
+        
         ListaEspera lista_de_espera = new ListaEspera(utente, data_inscricaoSQL);
         listaEsperaRepository.save(lista_de_espera);
     }

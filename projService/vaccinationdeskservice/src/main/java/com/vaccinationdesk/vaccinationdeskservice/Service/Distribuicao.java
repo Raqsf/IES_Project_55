@@ -122,7 +122,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DAY_OF_WEEK, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo
@@ -225,7 +225,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DAY_OF_WEEK, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo
