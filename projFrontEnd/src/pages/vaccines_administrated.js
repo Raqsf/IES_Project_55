@@ -18,11 +18,21 @@ import { useState } from 'react';
 
 const VaccinesAdministered = () => {
     const router = useRouter();
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     // const [loadingData, setLoadingData] = useState(true);
     const [rows, setRows] = useState([]);    
     const [page, setPage] = useState(0);
 	  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    useEffect(() => { 
+      console.log("Aqui")
+      setLoading(true);
+      if(!JSON.parse(localStorage.getItem("login"))) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
+    })
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -102,6 +112,7 @@ const VaccinesAdministered = () => {
         Vacinas Administradas | Vaccination Desk
       </title>
     </Head>
+    {!loading ? 
     <Box
       component="main"
       sx={{
@@ -196,14 +207,19 @@ const VaccinesAdministered = () => {
 		    </Card>
       </Container>
     </Box>
+    : null}
   </>
 );
     }
 
-VaccinesAdministered.getLayout = (page) => (
-  <DashboardLayoutGerente>
-    {page}
-  </DashboardLayoutGerente>
-);
+if (typeof window !== 'undefined') {
+  if(JSON.parse(localStorage.getItem("login"))) {
+    VaccinesAdministered.getLayout = (page) => (
+      <DashboardLayoutGerente>
+        {page}
+      </DashboardLayoutGerente>
+    );
+  }
+}
 
 export default VaccinesAdministered;

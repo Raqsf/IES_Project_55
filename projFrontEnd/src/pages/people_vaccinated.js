@@ -10,11 +10,22 @@ import { useState } from 'react';
 
 const PeopleVaccinated = () => {
     const router = useRouter();
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     // const [loadingData, setLoadingData] = useState(true);
     const [rows, setRows] = useState([]);    
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    
+    useEffect(() => { 
+      console.log("Aqui")
+      setLoading(true);
+      if(!JSON.parse(localStorage.getItem("login"))) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
+    })
+    
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -135,6 +146,7 @@ const PeopleVaccinated = () => {
         Pessoas Vacinadas | Vaccination Desk
       </title>
     </Head>
+    {!loading ? 
     <Box
       component="main"
       sx={{
@@ -229,14 +241,19 @@ const PeopleVaccinated = () => {
 		    </Card>
       </Container>
     </Box>
+    : null}
   </>
 );
     }
 
-PeopleVaccinated.getLayout = (page) => (
-  <DashboardLayoutGerente>
-    {page}
-  </DashboardLayoutGerente>
-);
+if (typeof window !== 'undefined') {
+  if(JSON.parse(localStorage.getItem("login"))) {
+    PeopleVaccinated.getLayout = (page) => (
+      <DashboardLayoutGerente>
+        {page}
+      </DashboardLayoutGerente>
+    );
+  }
+}
 
 export default PeopleVaccinated;

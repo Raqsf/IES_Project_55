@@ -17,11 +17,22 @@ import 'react-toastify/dist/ReactToastify.css';
 toast.configure()
 const VaccinationCenter = () => {
     const router = useRouter();
+    const [loadingPage, setLoadingPage] = useState(true);
     const [loading, setLoading] = useState(true);
     const [capacity, setCapacity] = useState();
     const {
         query: { id },
     } = router
+
+    useEffect(() => { 
+      console.log("Aqui")
+      setLoadingPage(true);
+      if(!JSON.parse(localStorage.getItem("login"))) {
+        router.push("/");
+      } else {
+        setLoadingPage(false);
+      }
+    })
     
     if(id) {
       localStorage.setItem("id", id);
@@ -121,6 +132,7 @@ const VaccinationCenter = () => {
         Centro de Vacinação | Vaccination Desk
       </title>
     </Head>
+    {!loadingPage ? 
     <Box
       component="main"
       sx={{
@@ -211,14 +223,20 @@ const VaccinationCenter = () => {
         </Box>
       </Container>
     </Box>
+    : null}
   </>
 );
-    }
+}
 
-VaccinationCenter.getLayout = (page) => (
-  <DashboardLayoutGerente>
-    {page}
-  </DashboardLayoutGerente>
-);
+
+if (typeof window !== 'undefined') {
+  if(JSON.parse(localStorage.getItem("login"))) {
+    VaccinationCenter.getLayout = (page) => (
+      <DashboardLayoutGerente>
+        {page}
+      </DashboardLayoutGerente>
+    );
+  }
+}
 
 export default VaccinationCenter;

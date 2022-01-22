@@ -1,6 +1,7 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
 import Head from 'next/head';
-import { Typography, Container, Box, Divider, Grid } from '@mui/material';
+import { Typography, Container, Box, Divider, Grid, CircularProgress } from '@mui/material';
 import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 import NestedList from '../components/gerente/vaccination_centers';
 import TableVaccines from '../components/gerente/table_vaccines';
@@ -8,8 +9,20 @@ import {VaccinationOrder} from '../components/gerente/vaccination_order';
 import api from "../api";
 
 const Manage = () => {
-  const [centros, setCentros] = React.useState([]);
-  const [doencas, setDoencas] = React.useState([]);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [centros, setCentros] = useState([]);
+  const [doencas, setDoencas] = useState([]);
+
+  useEffect(() => { 
+    console.log("Aqui")
+    setLoading(true);
+    if(!JSON.parse(localStorage.getItem("login"))) {
+      router.push("/");
+    } else {
+      setLoading(false);
+    }
+  })
 
   // const handleClick = () => {
   //   alert("HELLO");
@@ -22,7 +35,7 @@ const Manage = () => {
     "Content-Type": "application/json",
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
       const data = await api.get(
         `/centrovacinacao`, headers
@@ -38,7 +51,7 @@ const Manage = () => {
     getData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
       const data = await api.get(
         `/doencas`, headers
@@ -82,6 +95,7 @@ const Manage = () => {
         Gerir | Vaccination Desk
       </title>
     </Head>
+    {!loading ? 
     <Box
       component="main"
       sx={{
@@ -112,14 +126,20 @@ const Manage = () => {
         <TableVaccines /*  centros={centros}  */ />
       </Container>
     </Box>
+    : null}
   </>
 );
 }
 
-Manage.getLayout = (page) => (
-  <DashboardLayoutGerente>
-    {page}
-  </DashboardLayoutGerente>
-);
+if (typeof window !== 'undefined') {
+  if(JSON.parse(localStorage.getItem("login"))) {
+    Manage.getLayout = (page) => (
+      <DashboardLayoutGerente>
+        {page}
+      </DashboardLayoutGerente>
+    );
+  } 
+} 
+
 
 export default Manage;
