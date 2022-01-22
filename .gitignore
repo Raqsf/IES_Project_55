@@ -8,3 +8,5 @@ env.bak/
 venv.bak/
 docker/
 target/
+
+/projService/vaccinationdeskservice/src/main/resources/images

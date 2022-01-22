@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,8 +93,13 @@ public class Distribuicao {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
         
-        String dia = capacidadeRepository.getDiaDB().getDia().toString();
-        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(dia);
+        Date dia = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario = Calendar.getInstance();
+        calendario.setTime(dia);
+        calendario.add(Calendar.DATE, -3);
+        dia.setTime(calendario.getTime().getTime());
+
+        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(dia.toString());
 
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
@@ -108,7 +114,7 @@ public class Distribuicao {
 
         for (int i = 0; i < listaEspera.size(); i++) {
             ListaEspera pedido = listaEspera.get(i);
-            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             // Utilização da Google API para escolher o centro de vacinação mais proximo do utente
             String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal",
@@ -122,7 +128,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DATE, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo
@@ -134,7 +140,7 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
                     /*try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
@@ -225,7 +231,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DAY_OF_WEEK, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo

@@ -48,6 +48,8 @@ class Reader:
         cv2.destroyAllWindows()
                 
 if __name__ == '__main__':
-    r = Reader()
-    #while True:
-    r.read()
+    try: 
+        r = Reader()
+        r.read()
+    except KeyboardInterrupt:
+        print('\nKeyboard Interruption')
