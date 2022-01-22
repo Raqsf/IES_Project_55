@@ -3,6 +3,7 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,9 +65,14 @@ public class Vacinacao {
             throw new ConflictException("Não existe capacidade para o dia em questão");
         }
         Capacidade dia = capacidadeRepository.getDiaDB();
-        System.out.println("dia: tem de ser 25 ->" + dia.getDia().toString());
-        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia("2022-01-25"); //TODO: confirmar que ao correr isto no dia 22, a linha de cima dá 25
+        Date dia_ = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario = Calendar.getInstance();
+        calendario.setTime(dia_);
+        calendario.add(Calendar.DATE, 3);
+        dia_.setTime(calendario.getTime().getTime());
 
+        System.out.println("dia: tem de ser 25 ->" + dia_.toString());
+        List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(dia_.toString());
         //List<Agendamento> agendamentoParaODiaList = agendamentoRepository.findAll();
         List<Vacina> vacinaList = vacinaRepository.findAll();
         int i = 0;
