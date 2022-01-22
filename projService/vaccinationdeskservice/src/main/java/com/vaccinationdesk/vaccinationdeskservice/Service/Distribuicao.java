@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,14 +91,20 @@ public class Distribuicao {
     public List<Agendamento> distribuirVacinasPorOrdemMarcacao()
             throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
-        List<ListaEspera> listaEspera = listaesperaRepository.findAll();
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
+        
+        Date dia = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario = Calendar.getInstance();
+        calendario.setTime(dia);
+        calendario.add(Calendar.DATE, -3);
+        dia.setTime(calendario.getTime().getTime());
+
+        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(dia.toString());
 
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
 
-        // Gerar String com morada de todos os centros no formato certo para a Google
-        // API
+        // Gerar String com morada de todos os centros no formato certo para a Google API
         for (CentroVacinacao centro : centrosVacinacao) {
             if (centro.getMorada().equals("Porto")) {
                 moradasCentrosAPI += centro.getMorada() + ",Portugal";
@@ -105,14 +112,11 @@ public class Distribuicao {
             moradasCentrosAPI += centro.getMorada() + "|";
         }
 
-        // este for tem de correr todo ate ao fim para q sejam feitos os deletes na
-        // lista_de_espera e os saves no agendamento.
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < listaEspera.size(); i++) {
             ListaEspera pedido = listaEspera.get(i);
-            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
-            // Utilização da Google API para escolher o centro de vacinação mais proximo do
-            // utente
+            // Utilização da Google API para escolher o centro de vacinação mais proximo do utente
             String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal",
                     moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
@@ -124,7 +128,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DATE, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo
@@ -136,12 +140,12 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    try {
+                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    /*try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
-                        throw new ConflictException("Não foi possível enviar email.");
-                    }
+                        throw new ConflictException("Não foi possível enviar email." + e);
+                    }*/
                     break;
                 }
             }
@@ -196,10 +200,6 @@ public class Distribuicao {
             listaEspera = listaesperaRepository.findAll();
         }
 
-        for (ListaEspera listaEspera2 : listaEspera) {
-            System.out.println(listaEspera2);
-        }
-
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
 
@@ -214,7 +214,7 @@ public class Distribuicao {
             capacidadeDia = listaEspera.size();
         }
 
-        for (int i = 0; i < capacidadeDia; i++) {
+        for (int i = 0; i < listaEspera.size(); i++) {
             ListaEspera pedido = listaEspera.get(i);
             listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
@@ -231,7 +231,7 @@ public class Distribuicao {
                     Timestamp dataVacina = pedido.getDataInscricao();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(dataVacina);
-                    cal.add(Calendar.DAY_OF_WEEK, 4);
+                    cal.add(Calendar.DAY_OF_WEEK, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
                     // criar agendamento e guarda-lo
@@ -287,7 +287,8 @@ public class Distribuicao {
      * Esta funcao calcula o centro de vacinacao mais proximo do utente, de acordo
      * com os resultados obtidos do pedido à API da Google
      * 
-     * @param responseString    - resposta da funcao getDistanceWithGoogleAPI() (JSON)
+     * @param responseString    - resposta da funcao getDistanceWithGoogleAPI()
+     *                          (JSON)
      * @param quantidadeCentros - quantidade de centros que há na BD
      * @return - o centro de vacinacao mais proximo do utente
      */
@@ -343,11 +344,11 @@ public class Distribuicao {
      * sobre a data e o centro de vacincacao que foi atribuido ao pedido
      * feito pelos mesmos
      * 
-     * @param pedido - objeto do tipo ListaEspera, que tem 
+     * @param pedido     - objeto do tipo ListaEspera, que tem
      * @param dataVacina - data em que o utente irá tomar a vacina
-     * @param centro - centro de vacinacao em que o utente irá tomar a vacina
-     * @throws MessagingException - 
-     * @throws IOException - 
+     * @param centro     - centro de vacinacao em que o utente irá tomar a vacina
+     * @throws MessagingException -
+     * @throws IOException        -
      */
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
@@ -355,7 +356,8 @@ public class Distribuicao {
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
         // helper.setTo(pedido.getUtente().getEmail());
         helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
-        String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - " + pedido.getUtente().getID();
+        String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
+                + pedido.getUtente().getID();
         helper.setSubject(subject);
         helper.setText("Exmo.(a) Senhor(a)\n\n" + pedido.getUtente().getNome().toUpperCase() + "\nNº Utente: "
                 + pedido.getUtente().getID() + "\n\nA sua vacina encontra-se agendada para o dia " + dataVacina + " no "
@@ -369,9 +371,8 @@ public class Distribuicao {
         while (true) {
             // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/ClassPathResource.html#createRelative-java.lang.String-
             if (cp.exists() && cp.isReadable()) {
-                System.out.println(
-                        "PATH -->" + cp.getPath() + " exists: " + cp.exists() + " readable: " + cp.isReadable());
-                helper.addInline("qr" + pedido.getUtente().getID() + ".png", new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
+                helper.addInline("qr" + pedido.getUtente().getID() + ".png",
+                        new ClassPathResource("images/qr" + pedido.getUtente().getID() + ".png"));
                 break;
             } else {
                 try {
@@ -383,5 +384,6 @@ public class Distribuicao {
         }
         f.delete();
         javaMailSender.send(msg);
+        System.out.println("Email enviado");
     }
 }

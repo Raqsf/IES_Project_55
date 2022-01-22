@@ -59,7 +59,7 @@ export const Check = (props) => (
         </Typography>
       </Box>
       <Box sx={{
-          pt: 2,
+          pt: 7,
           display: 'flex',
           alignItems: 'center'
         }}

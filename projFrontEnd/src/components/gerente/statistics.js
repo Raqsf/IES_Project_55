@@ -13,10 +13,10 @@ export const Statistics = (props) => (
       >
 
         <Grid item
-            lg={10}
-            sm={10}
-            xl={10}
-            xs={10}
+          lg={10}
+          sm={10}
+          xl={10}
+          xs={10}
         >
           <Typography
             color="textPrimary"
@@ -26,10 +26,10 @@ export const Statistics = (props) => (
           </Typography>
         </Grid>
         <Grid item
-            lg={2}
-            sm={2}
-            xl={2}
-            xs={2}
+          lg={2}
+          sm={2}
+          xl={2}
+          xs={2}
         >
           <Avatar
             sx={{
@@ -50,18 +50,19 @@ export const Statistics = (props) => (
         }}
       >
         <Typography
-            color="textSecondary"
-            gutterBottom
-            variant="body2"
+          color="textSecondary"
+          gutterBottom
+          variant="body2"
         >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Consulte todas as informações com base em estatísticas sobre todo o processo de vacinação.
+          
         </Typography>
       </Box>
       <Box sx={{
-          pt: 2,
-          display: 'flex',
-          alignItems: 'center'
-        }}
+        pt: 13,
+        display: 'flex',
+        alignItems: 'center'
+      }}
       >
         <NextLink href="/statistics" passHref>
           <Button
