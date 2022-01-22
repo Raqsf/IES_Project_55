@@ -1,13 +1,14 @@
+//https://www.dgs.pt/saude-publica1/vacinacao.aspx
+
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import NextLink from 'next/link';
 
-export const Schedule = (props) => (
+export const Vaccination = (props) => (
   <Card {...props}>
     <CardContent>
       <Grid
         container
-        spacing={3}
         sx={{ justifyContent: 'space-between' }}
       >
         <Grid item
@@ -20,14 +21,10 @@ export const Schedule = (props) => (
             color="textPrimary"
             variant="h5"
           >
-            Agende a sua Vacina
+            Vacinação
           </Typography>
         </Grid>
         <Grid item
-            lg={2}
-            sm={2}
-            xl={2}
-            xs={2}
             >
           <Avatar
             sx={{
@@ -50,28 +47,25 @@ export const Schedule = (props) => (
         <Typography
             color="textSecondary"
             gutterBottom
+            variant="subtitle1"
+        >
+            Porque a vacinação é importante?
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+            pt: 2,
+            display: 'flex',
+            alignItems: 'center'
+          }}
+      >
+      <Typography
+            color="textSecondary"
+            gutterBottom
             variant="body2"
         >
-            Depois de efetuar o pedido de agendamento é realizada uma validação para confirmar se reúne os critérios de elegibilidade em vigor, para a toma da vacina. 
-            Irá receber um código QR por email juntamente com a indicação da hora e local onde se realizará a vacinação. 
-            Terá de apresentar o código QR quando for levar a dose.
+            É importante porque ...
         </Typography>
-        {/* <ArrowDownwardIcon color="error" />
-        <Typography
-          color="error"
-          sx={{
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography> */}
       </Box>
       <Box sx={{
           pt: 2,
@@ -79,15 +73,14 @@ export const Schedule = (props) => (
           alignItems: 'center'
         }}
       >
-        <NextLink href="/agendamento" passHref>
-          <Button
+        <Button
             color="secondary"
             variant="contained"
             sx={{ mr: 1 }}
+            href="https://www.dgs.pt/saude-publica1/vacinacao.aspx"
           >
-            Agendar
-          </Button>
-        </NextLink>
+            Mais informação
+        </Button>
       </Box>
     </CardContent>
   </Card>

@@ -14,8 +14,8 @@ import { Statistics } from "../components/gerente/statistics";
 // import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Vaccination } from '../components/dashboard/vaccination';
 
 const Dashboard = () => {
   const [username, setUsername] = useState();
@@ -61,7 +61,7 @@ const Dashboard = () => {
             : (<Container maxWidth={false}>
               <h1>Vacinação</h1>
               
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
                 <Grid item lg={6} sm={6} xl={6} xs={12}>
                   <Schedule />
                 </Grid>
@@ -93,6 +93,7 @@ const Dashboard = () => {
                   <LatestOrders />
                 </Grid> */}
               </Grid>
+              <Vaccination />
             </Container>
           )
           }

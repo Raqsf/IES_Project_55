@@ -1,5 +1,6 @@
 import Head from "next/head";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import { Box, Container } from "@mui/material";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { Sales } from "../components/dashboard/sales";
@@ -11,7 +12,6 @@ const Statistics = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { 
-    console.log("Aqui")
     setLoading(true);
     if(!JSON.parse(localStorage.getItem("login"))) {
       router.push("/");

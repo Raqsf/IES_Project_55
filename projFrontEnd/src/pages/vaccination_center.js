@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Typography, Container, Box, Divider, Grid, TextField, Button } from '@mui/material';
 import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
@@ -10,7 +10,6 @@ import { VaccinesAdministered } from "../components/gerente/vaccines_administere
 import { People } from "../components/gerente/people";
 import NextLink from 'next/link'; 
 // import { useParams } from "react-router-dom";
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,12 +19,12 @@ const VaccinationCenter = () => {
     const [loadingPage, setLoadingPage] = useState(true);
     const [loading, setLoading] = useState(true);
     const [capacity, setCapacity] = useState();
+    const [centro, setCentro] = useState('');
     const {
         query: { id },
     } = router
 
     useEffect(() => { 
-      console.log("Aqui")
       setLoadingPage(true);
       if(!JSON.parse(localStorage.getItem("login"))) {
         router.push("/");
@@ -53,15 +52,13 @@ const VaccinationCenter = () => {
     //     console.log(router.query)
     //   }
     // }, [router])
-     
-    const [centro, setCentro] = React.useState('');
 
     const headers = {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     };    
     
-    React.useEffect(() => {
+    useEffect(() => {
       setLoading(true);
       // if(id) {
         // id = localStorage.getItem("id");
