@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import VaccinesChart from "./chart.js";
 import {
     Box,
@@ -32,7 +32,7 @@ import {
         >
           Estatísticas
         </Typography>
-        <Box sx={{ m: 1 }}>
+        <Box sx={{ m: -1 }}>
             <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="demo-simple-select-helper-label">Período</InputLabel>
             <Select

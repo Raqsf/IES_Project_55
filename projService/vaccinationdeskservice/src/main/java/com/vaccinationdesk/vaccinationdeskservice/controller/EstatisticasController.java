@@ -45,7 +45,7 @@ public class EstatisticasController {
     }
 
     @GetMapping("/pessoasVacinadasPorPeriodo/{periodo}")
-    public Map<String, Integer> pessoasVacinadasSemana(@PathVariable Integer periodo/*, @RequestParam(value="cv", required = false) Integer cv*/) throws ConflictException{
+    public Map<String, Integer> pessoasVacinadasPeriodo(@PathVariable Integer periodo/*, @RequestParam(value="cv", required = false) Integer cv*/) throws ConflictException{
         
         LinkedHashMap<String, Integer> res = new LinkedHashMap<>();
 
@@ -115,9 +115,48 @@ public class EstatisticasController {
                     }
                     res.put(months_of_year[month], totalVacs);
                 }
-                return res;                    
+                return res;
+
         }
         throw new ConflictException("Apenas pode ser apresentado períodos do dia/semana/mes/ano");
+    }
+
+    @GetMapping("/taxaVacinacaoPorPeriodo/{periodo}")
+    public Integer taxa2semanas(@PathVariable Integer periodo) throws ConflictException{
+        long millis = System.currentTimeMillis();
+        Date hoje = new Date(millis);
+        Calendar c = Calendar.getInstance();
+        switch(periodo){
+            case 0:
+                Integer ultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
+                c.add(Calendar.DATE, -1);
+                Integer penultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
+
+                if (penultima==0 && ultima==0)
+                    return 0;
+                else if (penultima==0)
+                    return 100;
+                return (int) Math.round((((double) ultima/ (double) penultima)-1)*100);
+            case 1:
+                ultima=0;
+                for (int i=0; i<7; i++){
+                    ultima+= pessoasVacinadas(hoje);
+                    c.add(Calendar.DATE, -1);
+                    hoje = new Date(c.getTimeInMillis());
+                }
+                penultima = 0;
+                for (int i=0; i<7; i++){
+                    penultima+= pessoasVacinadas(hoje);
+                    c.add(Calendar.DATE, -1);
+                    hoje = new Date(c.getTimeInMillis());
+                }
+                if (penultima==0 && ultima==0)
+                    return 0;
+                else if (penultima==0)
+                    return 100;
+                return (int) Math.round((((double) ultima/ (double) penultima)-1)*100);   
+        }
+        throw new ConflictException("Apenas apresentamos taxas de vacinação por hoje e ultima semana.");
     }
 
     @GetMapping("/pessoasVacinadas/{id}")
