@@ -1,28 +1,43 @@
 import { Box, Card, CardContent, Typography, Button, FormGroup, FormControlLabel, Checkbox, TextField, LinearProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
 import api from "../../api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
+toast.configure()
 export const VaccinationOrder = (props) => { 
     const {doencas} = props;
     const [age, setAge] = useState(65);
     const [ageCheck, setAgeCheck] = useState(false);
     const [checkboxes, setCheckboxes] = useState(doencas);
+
+    useEffect(() => {
+      if(localStorage.getItem("idade") !== null) {
+        setAge(JSON.parse(localStorage.getItem("idade")));
+        setAgeCheck(true);
+      }
+    }, [])
+    
     useEffect(() => {
       setCheckboxes(doencas);
     },[doencas])
 
+    // console.log(doencas)
+
     const handleChange = (event) => {
         if (event.target.type == "checkbox") {
           let doe = "";
+          // console.log(doencas)
+          // console.log(checkboxes)
           for (const d in doencas) {
             if(parseInt(d,10) == event.target.value) {
               doe = doencas[d].doenca;
-
+              break;
             }
           }
           let newDoencas = [...checkboxes];
           newDoencas[event.target.value] = {id: event.target.value, doenca: doe, checked: event.target.checked}
+          // console.log(newDoencas)
           setCheckboxes(newDoencas);
         }
 
@@ -36,49 +51,32 @@ export const VaccinationOrder = (props) => {
     }
 
     const handleSubmit = (event) => {
-      const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      };
-
       let res = []
+      let ls = [];
       for (const c of checkboxes) {
+        ls.push(c);
         if(c.checked) {
           res.push(c.id)
           // TODO: alterar para mais doenças
-          break;
         }
       }
+
+      localStorage.setItem("ordem", JSON.stringify(ls));
 
       let order = {};
-      if(ageCheck && res.length > 0){
-        order = {
-          doenca: res[0],
-          idade: age
-        }
-      } else if(!ageCheck && res.length > 0) {
-        order = {
-          doenca: res[0]
-        }
-      } else if(ageCheck && res.length === 0) {
-        order = {
-          idade: age
-        }
+      if(res.length > 0) {
+        order["doenca"] = res[0];
+      }
+      if(ageCheck) {
+        order["idade"] = age;
+        localStorage.setItem("idade", JSON.stringify(age));
+      } else {
+        localStorage.removeItem("idade");
       }
       console.log(order)
-      
-      // TODO
-      // api
-      // .post(`TODO`, order, headers)
-      // .then((response) => {
-      //   // if (response.status >= 200 && response.status < 300)
-      //   alert("Nova ordem definida")
-      // })
-      // .catch((err) => {
-      //   console.error("ops! ocorreu um erro" + err);
-      //   alert("Erro");
-      // });
 
+      toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER})
+      
     };
     return(
   <Card {...props}>
@@ -120,8 +118,8 @@ export const VaccinationOrder = (props) => {
         <FormGroup 
           sx={{ width: '100%', mb: 2 }}
         >
-            {doencas.length > 0 ? doencas.map((doenca) => (
-              <FormControlLabel control={<Checkbox onChange={handleChange} value={doenca.id} />} key={doenca.id} label={doenca.doenca} />
+            {checkboxes.length > 0 ? checkboxes.map((doenca) => (
+              <FormControlLabel control={<Checkbox onChange={handleChange} checked={doenca.checked} value={doenca.id} />} key={doenca.id} label={doenca.doenca} />
             )) :  
             <Box sx={{ width: '100%' }}>
               <LinearProgress />
@@ -141,7 +139,7 @@ export const VaccinationOrder = (props) => {
         >
             Idade
         </Typography>
-        <FormControlLabel value="age_checked" control={<Checkbox onChange={handleChangeAge}/>} label="Ordenar pela idade" />
+        <FormControlLabel value="age_checked" control={<Checkbox onChange={handleChangeAge} checked={ageCheck} />} label="Ordenar pela idade" />
         <div>
             <TextField
             id="outlined-number"

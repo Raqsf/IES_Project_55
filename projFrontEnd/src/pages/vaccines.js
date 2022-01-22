@@ -44,12 +44,25 @@ const Manage = () => {
         `/doencas`, headers
       ).then((response) => {
         let dict = [];
-        for (const [key, value] of Object.entries(response.data)) {
-          dict.push({
-            id: key,
-            doenca: value.doenca,
-            checked: false
-          })
+
+        if (localStorage.getItem('ordem') === null) {
+          for (const [key, value] of Object.entries(response.data)) {
+            dict.push({
+              id: key,
+              doenca: value.doenca,
+              checked: false
+            })
+          }
+        } else {
+          const ordem = JSON.parse(localStorage.getItem('ordem'));
+          console.log(ordem);
+          for (const [key, value] of Object.entries(response.data)) {
+            dict.push({
+              id: key,
+              doenca: value.doenca,
+              checked: ordem[key].checked
+            })
+          }
         }
         // console.log(dict)
         setDoencas(dict);
