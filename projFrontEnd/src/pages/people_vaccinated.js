@@ -1,41 +1,28 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import { Typography, Container, Box, Avatar,
-	Card,
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TablePagination,
-	TableRow,
-	TableSortLabel } from '@mui/material';
+import { Typography, Container, Box, Avatar, Card, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TableSortLabel } from '@mui/material';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 //import { customers } from '../__mocks__/customers';
 import { useRouter } from "next/router";
 import api from "../api";
-// import { useParams } from "react-router-dom";
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-toast.configure()
 const PeopleVaccinated = () => {
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [loadingData, setLoadingData] = useState(true);
-    // const [centro, setCentro] = useState();
-    const [utentes, setUtentes] = useState([]);
+    // const [loading, setLoading] = useState(true);
+    // const [loadingData, setLoadingData] = useState(true);
+    const [rows, setRows] = useState([]);    
     const [page, setPage] = useState(0);
-	  const [size, setSize] = useState(10);
-	  const [count, setCount] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
-	  const handleLimitChange = (event) => {
-	  	setSize(event.target.value);
-	  };
-	  const handlePageChange = (event, newPage) => {
-	  	setPage(newPage);
-	  };
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
 
     const {
         query: { id, nome },
@@ -57,18 +44,19 @@ const PeopleVaccinated = () => {
     };    
 
     useEffect(() => {
-      setLoadingData(true);
+      // setLoadingData(true);
       console.log( `/vacinacao/utente_vacinados/${id}`)
       if(id) {
         api.get(
           `/vacinacao/utente_vacinados/${id}`, headers
         ).then((response) => {
           if(response.data.length > 0) {
-            setUtentes(response.data);
+            setRows(response.data);
+          } else {
+            setRows([]);
           }
-          setUtentes([]);
           console.log(response.data)
-          setLoadingData(false);
+          // setLoadingData(false);
         })
         .catch((err) => {
           console.error("ops! ocorreu um erro" + err);
@@ -81,11 +69,12 @@ const PeopleVaccinated = () => {
           `/vacinacao/utente_vacinados/${id}`, headers
         ).then((response) => {
           if(response.data.length > 0) {
-            setUtentes(response.data);
+            setRows(response.data);
+          } else {
+            setRows([]);
           }
-          setUtentes([]);
           console.log(response.data)
-          setLoadingData(false);
+          // setLoadingData(false);
         })
         .catch((err) => {
           console.error("ops! ocorreu um erro" + err);
@@ -184,7 +173,7 @@ const PeopleVaccinated = () => {
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
-		    					{utentes.length > 0 ? utentes.map((utente) => (
+		    					{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((utente) => (
 		    						<TableRow
 		    							hover
 		    							key={utente.n_utente}
@@ -223,19 +212,19 @@ const PeopleVaccinated = () => {
                         {utente.email}
 		    							</TableCell>
 		    						</TableRow>
-		    					)) : null} 
+		    					))} 
 		    				</TableBody>
 		    			</Table>
 		    		</Box>
 		    	</PerfectScrollbar>
 		    	<TablePagination
-		    		component="div"
-		    		count={count}
-		    		onChangePage={handlePageChange}
-		    		onChangeRowsPerPage={handleLimitChange}
-		    		page={page}
-		    		rowsPerPage={size}
-		    		rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
 		    	/>
 		    </Card>
       </Container>

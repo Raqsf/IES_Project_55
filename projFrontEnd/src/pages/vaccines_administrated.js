@@ -14,27 +14,23 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 //import { customers } from '../__mocks__/customers';
 import { useRouter } from "next/router";
 import api from "../api";
-// import { useParams } from "react-router-dom";
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-toast.configure()
 const VaccinesAdministered = () => {
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [loadingData, setLoadingData] = useState(true);
-    const [vacinas, setVacinas] = useState([]);
+    // const [loading, setLoading] = useState(true);
+    // const [loadingData, setLoadingData] = useState(true);
+    const [rows, setRows] = useState([]);    
     const [page, setPage] = useState(0);
-	  const [size, setSize] = useState(10);
-	  const [count, setCount] = useState(0);
+	  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-	  const handleLimitChange = (event) => {
-	  	setSize(event.target.value);
-	  };
-	  const handlePageChange = (event, newPage) => {
-	  	setPage(newPage);
-	  };
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
 
     const {
         query: { id, nome },
@@ -56,43 +52,47 @@ const VaccinesAdministered = () => {
 
     useEffect(() => {
       // setLoadingData(true);
-      // console.log( `/vacinacao/vacinas_administradas_hoje/${id}`)
-      // if(id) {
-        // api.get(
-          // `/vacinacao/vacinas_administradas_hoje/${id}`, headers
-        // ).then((response) => {
-           // if(response.data.length > 0) {
-               // setVacinas(response.data);
-            // } else {
-                // setVacinas([]);
-            // }
-          // console.log(response.data)
+      console.log( `/vacinacao/vacinas_administradas_hoje/${id}`)
+      if(id) {
+        api.get(
+          `/vacinacao/vacinas_administradas_hoje/${id}`, headers
+        ).then((response) => {
+          if(response.data.length > 0) {
+            setRows(response.data);
+            // setCount(respose.data.length);
+          } else {
+            setRows([]);
+            // setCount(0);
+          }
+          console.log(response.data)
           // setLoadingData(false);
-        // })
-        // .catch((err) => {
-          // console.error("ops! ocorreu um erro" + err);
-          // alert("Erro");
-        // })
-      // }
-      // const loop = setInterval(function() {
-        // id = localStorage.getItem("id_people_vaccinated_info");
-        // api.get(
-          // `/vacinacao/vacinas_administradas_hoje/${id}`, headers
-        // ).then((response) => {
-           // if(response.data.length > 0) {
-              // setVacinas(response.data);
-           // } else {
-               // setVacinas([]);
-           // }
-          // console.log(response.data)
+        })
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })
+      }
+      const loop = setInterval(function() {
+        id = localStorage.getItem("id_people_vaccinated_info");
+        api.get(
+          `/vacinacao/vacinas_administradas_hoje/${id}`, headers
+        ).then((response) => {
+          if(response.data.length > 0) {
+            setRows(response.data);
+            // setCount(respose.data.length);
+          } else {
+            setRows([]);
+            // setCount(0);
+          }
+          console.log(response.data)
           // setLoadingData(false);
-        // })
-        // .catch((err) => {
-          // console.error("ops! ocorreu um erro" + err);
-          // alert("Erro");
-        // })
-      // }, 1000);
-      // return () => clearInterval(loop);
+        })
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })
+      }, 1000);
+      return () => clearInterval(loop);
     }, []);
     
     return (
@@ -140,10 +140,10 @@ const VaccinesAdministered = () => {
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
-		    					{/* {vacinas.length > 0 ? vacinas.map((vacina) => ( */}
+		    					{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((vacina) => (
 		    						<TableRow
 		    							hover
-		    							// key={vacina.n_utente}
+		    							key={vacina.n_utente}
 		    						>
                       <TableCell>
                       	<Box alignItems="center" display="flex">
@@ -161,38 +161,38 @@ const VaccinesAdministered = () => {
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
                       			{/* } */}
-                            {/* {vacina.nome_vacina} */}
+                            {vacina.nome_vacina}
                       		</Typography>
                       	</Box>
                       </TableCell>
 		    							<TableCell>
-		    								{/* {transaction.total.toFixed(2)}€ */}Q
-                        {/* {vacina.lote} */}
+		    								{/* {transaction.total.toFixed(2)}€ */}
+                        {vacina.lote}
 		    							</TableCell>
                       <TableCell>
-                      	{/* {moment( */}
-                      		{/* vacina.data_validade */}
-                      	{/* ).format("DD/MM/YYYY, HH:mm:ss")} */}E
+                      	{moment(
+                      		vacina.data_validade
+                      	).format("DD/MM/YYYY, HH:mm:ss")}
                       </TableCell>
 		    							<TableCell>
-		    								{/* {transaction.products.length} */}W
-                        {/* {vacina.n_utente} */}
+		    								{/* {transaction.products.length} */}
+                        {vacina.n_utente}
 		    							</TableCell>
 		    						</TableRow>
-		    					{/* )) : null} */}
+		    					))}
 		    				</TableBody>
 		    			</Table>
 		    		</Box>
 		    	</PerfectScrollbar>
 		    	<TablePagination
-		    		component="div"
-		    		count={count}
-		    		onChangePage={handlePageChange}
-		    		onChangeRowsPerPage={handleLimitChange}
-		    		page={page}
-		    		rowsPerPage={size}
-		    		rowsPerPageOptions={[5, 10, 25]}
-		    	/>
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
 		    </Card>
       </Container>
     </Box>

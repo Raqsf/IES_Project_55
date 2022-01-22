@@ -168,18 +168,22 @@ public class Vacinacao {
 
     public String getUtentesVacinadosPorDia(Integer id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String result = "";
-        //Capacidade dia = capacidadeRepository.getDiaDB();
-        //Date date = dia.getDia();
-        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, "2022-01-19");
+        Map<Integer, String> mapinha = new HashMap<>();
+        Capacidade dia = capacidadeRepository.getDiaDB();
+        Date date = dia.getDia();
+        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, date.toString());
+        int i = 0;
         for (Utente utente : resultList) {
             Map<String, Object> map = new HashMap<>();
             map.put("nome", utente.getNome());
             map.put("data_nascimento", utente.getDataNascimento());
             map.put("email", utente.getEmail());
             map.put("n_utente", utente.getID());
-            result += mapper.writeValueAsString(map);
+            String json = mapper.writeValueAsString(map);
+            mapinha.put(i, json);
+            i++;
         }
+        String result = mapper.writeValueAsString(mapinha);
         return result ;
     }
 }
