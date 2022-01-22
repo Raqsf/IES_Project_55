@@ -50,6 +50,8 @@ public class VaccinationDeskController {
     private ListaEsperaRepository listaEsperaRepository;
     @Autowired
     private DoencaPorUtenteRepository dpuRepository;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
