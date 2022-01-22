@@ -1,11 +1,12 @@
 package com.vaccinationdesk.vaccinationdeskservice.broker;
 
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import javax.transaction.Transactional;
 
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Transactional
 public class MQConsumer {
     private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private MQProducer producer = new MQProducer();
 
     @Autowired
     private UtenteRepository utenteRepository;
@@ -52,25 +54,27 @@ public class MQConsumer {
 
     @Autowired
     private DoencaPorUtenteRepository doencaPorUtenteRepository;
-
+    
     @Autowired
     private DoencaRepository doencaRepository;
-
+    
     @Autowired
     private CapacidadeRepository capacidadeRepository;
-
+    
     @Autowired
     private AgendamentoRepository agendamentoRepository;
-
+    
     /**
      * Funcao que consume os dados do broker, sendo depois os mesmos
      * separados dependendo do "type"
      * 
      * @param input - Dados provenientes do broker
      * @throws ParseException - excecao da data
+     * @throws TimeoutException
+     * @throws IOException
      */
     @RabbitListener(queues = MQConfig.QUEUE)
-    public void listen(String input) throws ParseException {
+    public void listen(String input) throws ParseException, IOException, TimeoutException {
         JSONObject json = new JSONObject(input);
         String messageType = json.getString("type");
         switch (messageType) {
@@ -91,7 +95,7 @@ public class MQConsumer {
         }
     }
 
-    private void verifyQRCodes(JSONObject json) {
+    private void verifyQRCodes(JSONObject json) throws IOException, TimeoutException {
         String info = json.getString("data");
         String[] dataSplit = info.split("\n");
         int  n_utente = 0;
@@ -109,13 +113,12 @@ public class MQConsumer {
             }
         }
 
-        //ir buscar o dia aqui à tabela capacidade_por_dia e comparar logo com a data do qrcode
-        //se for diferente é logo invalido para aquele dia
-        System.out.println("n_utente: " + n_utente + "centro: " + centro + "dia: " + dia);
         if (agendamentoRepository.checkQRcode(n_utente, centro, dia) != null) {
-            System.out.println("QR Code valido");
+            String msg = "QR Code Valido para o Utente com o numero " + n_utente;
+            producer.createMessage(msg);
         } else {
-            System.out.println("QR code inválido");
+            String msg = "QR Code Invalido para o Utente com o numero " + n_utente;
+            producer.createMessage(msg);
         }
     }
 

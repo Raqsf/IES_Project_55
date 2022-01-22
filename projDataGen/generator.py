@@ -140,20 +140,22 @@ if __name__ == '__main__':
     vaccines = ['PF', 'MO', 'AZ', 'JJ']
     
     g = Generator(people, surnames, vaccination_centers, vaccines)
-    
-    for _ in range(3):
-        g.generate_vaccines_quantity()
-        time.sleep(2)
-        for _ in range(224):
-            g.add_to_waiting_list()
-            time.sleep(0.01)
-    while True:
-        g.destribute_vaccines_per_centers()
-        g.generate_vaccines_quantity()
-        time.sleep(2)
-        for _ in range(224):
-            g.add_to_waiting_list()
+    try:
+        for _ in range(3):
+            g.generate_vaccines_quantity()
             time.sleep(2)
-        time.sleep(2)
+            for _ in range(224):
+                g.add_to_waiting_list()
+                time.sleep(0.01)
+        while True:
+            g.destribute_vaccines_per_centers()
+            g.generate_vaccines_quantity()
+            time.sleep(2)
+            for _ in range(224):
+                g.add_to_waiting_list()
+                time.sleep(2)
+            time.sleep(2)
+    except KeyboardInterrupt:
+        print('\nKeyboard Interruption')
             
             

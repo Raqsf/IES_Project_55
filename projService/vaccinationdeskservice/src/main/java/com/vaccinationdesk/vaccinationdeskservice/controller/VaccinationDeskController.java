@@ -53,9 +53,6 @@ public class VaccinationDeskController {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
     /*@GetMapping("/utente")
     public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
         return utenteRepository.findUtenteByNome(nome);
