@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import okhttp3.OkHttpClient;
@@ -88,6 +89,7 @@ public class Distribuicao {
      * @throws IOException        - excecao QRcode
      * @throws WriterException    - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorOrdemMarcacao()
             throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
@@ -178,6 +180,7 @@ public class Distribuicao {
      * @throws IOException       - excecao QRcode
      * @throws WriterException   - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorFiltros(String filtrosJSON)
             throws WriterException, IOException, ConflictException {
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
@@ -266,6 +269,7 @@ public class Distribuicao {
      * @return - em JSON, distancia entre os centros de vacinacao e o utente, ou
      *         null se algo correr mal no pedido à API
      */
+    @Async
     private static String getDistanceWithGoogleAPI(String from, String to) {
         // example of google api =
         // https://maps.googleapis.com/maps/api/distancematrix/json?origins=Viseu|Porto&destinations=Lisboa|Coimbra&key=AIzaSyDnusra6igG8TAkOY1CFFsuiyaMNEWyFLY
@@ -292,6 +296,7 @@ public class Distribuicao {
      * @param quantidadeCentros - quantidade de centros que há na BD
      * @return - o centro de vacinacao mais proximo do utente
      */
+    @Async
     private static String calculateShorterPath(String responseString, int quantidadeCentros) {
         try {
             int indexLocation = 0;
@@ -332,6 +337,7 @@ public class Distribuicao {
      * @throws WriterException - excecao de escrita do QRcode
      * @throws IOException     - excecao do QRcode
      */
+    @Async
     public static void generateQRCodeImage(String text, int i) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
@@ -350,6 +356,7 @@ public class Distribuicao {
      * @throws MessagingException -
      * @throws IOException        -
      */
+    @Async
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
         MimeMessage msg = javaMailSender.createMimeMessage();
