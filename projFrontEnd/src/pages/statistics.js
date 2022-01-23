@@ -5,9 +5,7 @@ import { Box, Container } from "@mui/material";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { StatisticsToolbar } from "../components/statistics/statistics-toolbar";
 import CentroVacinacaoChart from "src/components/statistics/centro-vacinacao-chart";
-// import CentroVacinacaoChart from "src/components/statistics/CVs";
 
-// TODO: Última semana, último mês, último ano
 const Statistics = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);

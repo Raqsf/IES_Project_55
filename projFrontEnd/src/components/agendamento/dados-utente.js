@@ -79,7 +79,11 @@ export default function DadosUtente(props) {
         <form
           component="form"
           onSubmit={handleSubmit}
+          style={{
+            backgroundColor: '#f3f4f6', borderRadius: "25px"
+          }}
         >
+          <div className="row" style={{ margin: "20px" }}>
           <FormControl variant="outlined">
             <TextField
               fullWidth
@@ -112,7 +116,6 @@ export default function DadosUtente(props) {
                 />
               </Stack>
             </LocalizationProvider>
-            {/* <NextLink href="/success" passHref> */}
             <Button
               variant="contained"
               size="lg"
@@ -122,8 +125,8 @@ export default function DadosUtente(props) {
             >
               Validação
             </Button>
-            {/* </NextLink> */}
           </FormControl>
+          </div>
         </form>
       </Box>
     </Container>

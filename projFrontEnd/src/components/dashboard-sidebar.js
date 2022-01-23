@@ -2,20 +2,10 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, Divider, Drawer, useMediaQuery, Typography } from '@mui/material';
-// import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Box, Divider, Drawer, useMediaQuery, Grid } from '@mui/material';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
-// import { Cog as CogIcon } from '../icons/cog';
-// import { Lock as LockIcon } from '../icons/lock';
-// import { Selector as SelectorIcon } from '../icons/selector';
-// import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
-// import { User as UserIcon } from '../icons/user';
-// import { UserAdd as UserAddIcon } from '../icons/user-add';
-// import { Users as UsersIcon } from '../icons/users';
 import { Vaccine as VaccineIcon } from '../icons/vaccine';
 import { Calendar as CalendarIcon } from '../icons/calendar';
-// import { XCircle as XCircleIcon } from '../icons/x-circle';
-import { Logo } from './logo';
 import { NavItem } from './nav-item';
 
 const items = [
@@ -33,32 +23,7 @@ const items = [
     href: '/check_schedule',
     icon: (<CalendarIcon fontSize="small" />),
     title: 'Consultar agendamento'
-  },
-  // {
-  //   href: '/account',
-  //   icon: (<UserIcon fontSize="small" />),
-  //   title: 'Account'
-  // },
-  // {
-  //   href: '/settings',
-  //   icon: (<CogIcon fontSize="small" />),
-  //   title: 'Settings'
-  // },
-  // {
-  //   href: '/login',
-  //   icon: (<LockIcon fontSize="small" />),
-  //   title: 'Login'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: (<UserAddIcon fontSize="small" />),
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: (<XCircleIcon fontSize="small" />),
-  //   title: 'Error'
-  // }
+  }
 ];
 
 export const DashboardSidebar = (props) => {
@@ -93,49 +58,31 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
+          <Box>
             <NextLink
               href="/"
               passHref
             >
               <a>
-                <Logo
-                  sx={{
-                    height: 42,
-                    width: 42
-                  }}
+              <Grid spacing={0} align="center" justify="center">
+                <Box
+                    component="img"
+                    sx={{
+                      height: 140,
+                      width: 140
+                    }}
+                    alt="Your logo."
+                    src="/static/logo.png"
                 />
+              </Grid>
               </a>
             </NextLink>
-          </Box>
-          <Box sx={{ px: 2 }}>
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                px: 3,
-                py: '11px',
-                borderRadius: 1
-              }}
-            >
-              <div>
-                <Typography
-                  color="inherit"
-                  variant="subtitle1"
-                >
-                  Vaccination Desk
-                </Typography>
-              </div>
-            </Box> 
           </Box>
         </div>
         <Divider
           sx={{
             borderColor: '#2D3748',
-            my: 3
+            mb: 3
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
