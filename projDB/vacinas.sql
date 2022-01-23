@@ -1,6 +1,8 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET TIME_ZONE = "+00:00";
  
+
+
 CREATE DATABASE IF NOT EXISTS `vaccinationdb` DEFAULT CHARACTER SET latin1;
 USE `vaccinationdb`;
 
@@ -138,6 +140,7 @@ BEGIN
     WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
 END
 
+
 CREATE PROCEDURE getDiaDB()
 BEGIN
     select * from capacidade_por_dia limit 1;
@@ -156,6 +159,8 @@ BEGIN
     and centro_vacinacao = centro_id
     and DATE(dia_vacinacao) = dia;
 END
+
+
 
 CREATE PROCEDURE getListaEsperaPeloDia(IN dia DATE)
 BEGIN
@@ -178,6 +183,13 @@ BEGIN
     where DATE(v.data_administracao) = dia and l.atribuida_ao_centro = centro;
 END
 
+CREATE PROCEDURE findAllVacinnatedByDate(IN dia DATE)
+BEGIN
+    SELECT * FROM vacina WHERE DATE(data_administracao) = dia AND administrada_a IS NOT NULL;
+END
+
+
+-- use `vaccinationdb`;
 -- drop table capacidade_por_dia;
 -- drop table lista_de_espera;
 -- drop table agendamento;
@@ -185,3 +197,4 @@ END
 -- drop table vacina;
 -- drop table lote;
 -- drop table pessoa;
+

@@ -15,7 +15,6 @@ const Manage = () => {
   const [doencas, setDoencas] = useState([]);
 
   useEffect(() => { 
-    console.log("Aqui")
     setLoading(true);
     if(!JSON.parse(localStorage.getItem("login"))) {
       router.push("/");
@@ -138,7 +137,9 @@ if (typeof window !== 'undefined') {
         {page}
       </DashboardLayoutGerente>
     );
-  } 
+  } else {
+    window.location.href = "/";
+  }
 } 
 
 

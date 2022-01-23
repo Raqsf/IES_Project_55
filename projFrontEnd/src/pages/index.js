@@ -17,6 +17,8 @@ import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { useEffect, useState } from 'react';
 import { Vaccination } from '../components/dashboard/vaccination';
 import { Questions } from '../components/dashboard/questions';
+import { HigherVaccinationRateCV } from "src/components/gerente/highest-vaccination-rate-cv";
+import { TotalVaccinesAdministrated } from "src/components/gerente/total-vaccines-administrated"
 
 const Dashboard = () => {
   const [username, setUsername] = useState();
@@ -51,13 +53,23 @@ const Dashboard = () => {
             ? (<Container maxWidth={false}>
                 <h1>Gerente</h1>
                 <Grid container spacing={2}>
-                <Grid item lg={6} sm={6} xl={6} xs={12}>
-                  <Statistics />
+                  <Grid item lg={6} sm={6} xl={6} xs={12}>
+                    <Statistics />
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} xs={12}>
+                    <ManageVaccines />
+                  </Grid>
                 </Grid>
-                <Grid item xl={6} lg={6} sm={6} xs={12}>
-                  <ManageVaccines />
+                <Grid marginTop ={"5%"}>
+                  <Grid container spacing={2}>
+                    <Grid item lg={6} sm={6} xl={6} xs={12}>
+                      <HigherVaccinationRateCV/>
+                    </Grid>
+                    <Grid item lg={6} sm={6} xl={6} xs={12}>
+                      <TotalVaccinesAdministrated/>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
               </Container>) 
             : (<Container maxWidth={false}>
               <h1>Vacinação</h1>

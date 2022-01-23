@@ -8,7 +8,6 @@ import com.vaccinationdesk.vaccinationdeskservice.model.DoencaId;
 import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

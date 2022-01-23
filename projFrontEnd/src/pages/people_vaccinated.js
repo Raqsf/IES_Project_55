@@ -253,6 +253,8 @@ if (typeof window !== 'undefined') {
         {page}
       </DashboardLayoutGerente>
     );
+  } else {
+    window.location.href = "/";
   }
 }
 
