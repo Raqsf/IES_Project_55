@@ -91,8 +91,12 @@ export default function FormVaccinationInfo() {
         //action="/vaccination_info"
         onSubmit={(e) => {
             handleSubmit(e);
-          }} >
-          <div className="row" style={{ marginTop: "20px" }}>
+          }} 
+          style={{
+            backgroundColor: '#f3f4f6', borderRadius: "25px"
+          }}
+        >
+          <div className="row" style={{ margin: "20px" }}>
               <FormControl variant="outlined">
                   <TextField
                       style={{ marginTop: "10px" }}
