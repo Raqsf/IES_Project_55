@@ -15,27 +15,6 @@ const VaccinesChart = ({periodo}) => {
 
     useEffect(() => {
         setLoading(true)
-        api.get(`/estatisticas/pessoasVacinadasPorPeriodo/${periodo}`)
-          .then(res => {
-            // console.log("Chegada da api\n"+res.data)
-            var keys = Object.keys(res.data)
-            var values = Object.values(res.data)
-            setChartData({
-                  labels: keys,
-                datasets: [{
-                  label: 'Pessoas vacinadas',
-                  borderColor: '#0000B9',
-                  borderWidth: 1,
-                  data: values,
-                  backgroundColor: [
-                    "#9F9FFF"
-                  ] 
-                }]
-              });
-              console.log("chart.data ")
-              console.log(chartData)
-              setLoading(false)
-          })
           const loop = setInterval(function() {
             api.get(`/estatisticas/pessoasVacinadasPorPeriodo/${periodo}`)
           .then(res => {
@@ -54,14 +33,15 @@ const VaccinesChart = ({periodo}) => {
                     "#9F9FFF"
                   ]
                 }]
-            });
+            })
+            setLoading(false);
           });
         }, 1000);
         return () => clearInterval(loop);       
       }, [periodo,total]);
   return (
     <Box>{ !loading && chartData!=null ? <>
-      <Box style={{ margin:"0 auto"}} width="50%" >
+      <Box style={{ margin:"0 auto"}} width="50%">
         <BarChart chartData={chartData} />
       </Box>
       { periodo<2 ?<>
@@ -79,7 +59,7 @@ const VaccinesChart = ({periodo}) => {
                 gutterBottom
                 variant="overline"
               >
-                TOTAL
+                TOTAL VACINADAS
               </Typography>
               <Typography
                 color="textPrimary"
@@ -144,7 +124,7 @@ const VaccinesChart = ({periodo}) => {
       </CardActionArea>
     </Box> }
       </>
-    : <LinearProgress/>}
+    : <Box style={{ margin:"0 auto"}} width="50%"><LinearProgress/></Box>}
     </Box>
     
   )

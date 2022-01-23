@@ -4,11 +4,13 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+
+import javax.transaction.Transactional;
 
 import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
@@ -27,7 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/estatisticas")
-@CrossOrigin(origins = { "http://localhost:3001", "http://localhost:3001" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@Transactional
 public class EstatisticasController {
     @Autowired
     private VacinaRepository vacinaRepository;
@@ -76,6 +79,8 @@ public class EstatisticasController {
         Date hoje = new Date(millis);
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
+        c.add(Calendar.DATE, 3);
+        hoje = new Date(c.getTimeInMillis());
         switch(periodo){
             //Hoje      (comparação entre hoje e ontem) ask them?! >.<
             case 0:
@@ -126,6 +131,8 @@ public class EstatisticasController {
         long millis = System.currentTimeMillis();
         Date hoje = new Date(millis);
         Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 3);
+        hoje = new Date(c.getTimeInMillis());
         switch(periodo){
             case 0:
                 Integer ultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
@@ -202,5 +209,21 @@ public class EstatisticasController {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @GetMapping("/pessoasVacinadasPorTodosCentros")
+    public Map<String, Integer> pessoasVacinadasPorTodosCentros() throws ResourceNotFoundException, ConflictException{
+        Integer total = pessoasVacinadas(null);
+        if (total==0){
+            throw new ConflictException("No data to show!");
+        }
+        List<CentroVacinacao> centros = centroVacinacaoRepository.findAll();
+        System.out.println(centros);
+        Map<String, Integer> res = new HashMap<>();
+        for (CentroVacinacao c : centros){
+            double taxaVacinacao = Math.round( ((double) pessoasVacinadasPorCV( c.getID(), null) / (double) total)*100);
+            res.put(c.getNome(), (int) taxaVacinacao);
+        } 
+        return res;
     }
 }

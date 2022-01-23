@@ -45,7 +45,7 @@ export const VaccinationRates = ({ periodo }) => {
                 color="textPrimary"
                 variant="h4"
               >
-                {rate}
+                {rate} %
               </Typography>
             </Grid>
             <Grid item>
