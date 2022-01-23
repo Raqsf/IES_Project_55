@@ -9,7 +9,7 @@ export const PeopleVaccinated = (props) => {
   const [vaccinated, setVaccinated] = useState();
   const [scheduled, setScheduled] = useState();
   const d = new Date().toISOString().split('T')[0];
-  const {id} = props;
+  let {id} = props;
 
   if(id) {
     localStorage.setItem("id_people_vaccinated", id);

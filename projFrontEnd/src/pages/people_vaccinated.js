@@ -35,7 +35,7 @@ const PeopleVaccinated = () => {
       setPage(0);
     };
 
-    const {
+    let {
         query: { id, nome },
     } = router
     console.log(id, nome)

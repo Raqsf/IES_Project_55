@@ -84,10 +84,10 @@ const VaccinationCenter = () => {
         }
       const loop = setInterval(function() {
         // console.log("Loop", id)
-        id = localStorage.getItem("id");
+        // id = localStorage.getItem("id");
         // console.log("Loop", param1)
         api.get(
-            `/centrovacinacao/${id}`, headers
+            `/centrovacinacao/${localStorage.getItem("id")}`, headers
           ).then((response) => {
             setCentro(response.data);
             setCapacity(response.data.capacidadeMax);

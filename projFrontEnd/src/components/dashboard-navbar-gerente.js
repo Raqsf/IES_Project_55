@@ -16,7 +16,6 @@ export const DashboardNavbarGerente = (props) => {
   const { onSidebarOpen, ...other } = props;
 
   function logout() {
-    // alert("LOGOUT");
     localStorage.setItem("login", false);
   }
 

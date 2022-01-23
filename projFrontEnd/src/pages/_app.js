@@ -13,6 +13,7 @@ const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
+  console.log(Component.name == "Login")
 
   return (
     <CacheProvider value={emotionCache}>
@@ -30,6 +31,8 @@ const App = (props) => {
           <CssBaseline />
             {Component.getLayout ? 
               getLayout(<Component {...pageProps} />) :  
+              Component.name == "Login" ? 
+              <Component {...pageProps} /> : 
               <LinearProgress />
             }
         </ThemeProvider>
