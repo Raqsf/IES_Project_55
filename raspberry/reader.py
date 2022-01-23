@@ -6,7 +6,7 @@ from pyzbar import pyzbar
 class Reader:
     def __init__(self) -> None:
         credentials = pika.PlainCredentials('myuser', 'mypassword')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.197', port='5672', credentials=credentials))  
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.last_code = None
