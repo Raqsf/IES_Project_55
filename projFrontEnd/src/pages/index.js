@@ -16,6 +16,7 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { useEffect, useState } from 'react';
 import { Vaccination } from '../components/dashboard/vaccination';
+import { Questions } from '../components/dashboard/questions';
 
 const Dashboard = () => {
   const [username, setUsername] = useState();
@@ -68,32 +69,13 @@ const Dashboard = () => {
                 <Grid item xl={6} lg={6} sm={6} xs={12}>
                   <Check />
                 </Grid>
-                {/* <Grid
-                  item
-                  xl={3}
-                  lg={3}
-                  sm={6}
-                  xs={12}
-                >
-                  <TasksProgress />
+                <Grid item xl={5} lg={5} sm={5} xs={12}>
+                  <Vaccination />
                 </Grid>
-                <Grid item xl={3} lg={3} sm={6} xs={12}>
-                  <TotalProfit sx={{ height: "100%" }} />
+                <Grid item xl={7} lg={7} sm={7} xs={12}>
+                  <Questions />
                 </Grid>
-                <Grid item lg={8} md={12} xl={9} xs={12}>
-                  <Sales />
-                </Grid>
-                <Grid item lg={4} md={6} xl={3} xs={12}>
-                  <TrafficByDevice sx={{ height: "100%" }} />
-                </Grid>
-                <Grid item lg={4} md={6} xl={3} xs={12}>
-                  <LatestProducts sx={{ height: "100%" }} />
-                </Grid>
-                <Grid item lg={8} md={12} xl={9} xs={12}>
-                  <LatestOrders />
-                </Grid> */}
               </Grid>
-              <Vaccination />
             </Container>
           )
           }
