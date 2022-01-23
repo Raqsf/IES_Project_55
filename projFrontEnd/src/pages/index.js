@@ -16,6 +16,8 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { HigherVaccinationRateCV } from "src/components/gerente/highest-vaccination-rate-cv";
+import { TotalVaccinesAdministrated } from "src/components/gerente/total-vaccines-administrated"
 
 const Dashboard = () => {
   const [username, setUsername] = useState();
@@ -55,6 +57,16 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xl={6} lg={6} sm={6} xs={12}>
                   <ManageVaccines />
+                </Grid>
+              </Grid>
+              <Grid marginTop ={"5%"}>
+                <Grid container spacing={2}>
+                  <Grid item lg={6} sm={6} xl={6} xs={12}>
+                    <HigherVaccinationRateCV/>
+                  </Grid>
+                  <Grid item lg={6} sm={6} xl={6} xs={12}>
+                    <TotalVaccinesAdministrated/>
+                  </Grid>
                 </Grid>
               </Grid>
               </Container>) 

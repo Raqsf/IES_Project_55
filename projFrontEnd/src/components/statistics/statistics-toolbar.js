@@ -9,10 +9,10 @@ import {
   } from '@mui/material';
   
   export const StatisticsToolbar = (props) => {
-    const [age, setAge] = React.useState(0);
+    const [periodo, setPeriodo] = React.useState(0);
 
     const handleChange = (event) => {
-      setAge(event.target.value);
+      setPeriodo(event.target.value);
     };
   
     return (
@@ -38,7 +38,7 @@ import {
             <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={age}
+                value={periodo}
                 label="Período"
                 onChange={handleChange}
             >
@@ -50,7 +50,7 @@ import {
             </FormControl>
         </Box>
       </Box>
-      <VaccinesChart periodo={age}/>
+      <VaccinesChart periodo={periodo}/>
     </Box>
   );
 }

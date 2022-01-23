@@ -218,7 +218,6 @@ public class EstatisticasController {
             throw new ConflictException("No data to show!");
         }
         List<CentroVacinacao> centros = centroVacinacaoRepository.findAll();
-        System.out.println(centros);
         Map<String, Integer> res = new HashMap<>();
         for (CentroVacinacao c : centros){
             double taxaVacinacao = Math.round( ((double) pessoasVacinadasPorCV( c.getID(), null) / (double) total)*100);

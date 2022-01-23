@@ -8,15 +8,9 @@ export const VaccinationRates = ({ periodo }) => {
     const [rate, setRate]=useState(0)
 
     useEffect(() => {
-        api.get(`/estatisticas/taxaVacinacaoPorPeriodo/${periodo}`)
-          .then(res => {
-            console.log("Chegada da api\n"+res.data)
-            setRate(res.data)
-          })
         const loop = setInterval(function() {
             api.get(`/estatisticas/taxaVacinacaoPorPeriodo/${periodo}`)
                 .then(res => {
-                console.log("Chegada da api\n"+res.data)
                 setRate(res.data)
             })
             }, 1000);

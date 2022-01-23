@@ -10,6 +10,7 @@ import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,7 +32,10 @@ public class CentroVacinacaoController {
     public List<CentroVacinacao> centroVacinacao() {
         return centroVacinacaoRepository.findAll();
     }
-    
+    @GetMapping("/pornome/{nome}")
+    public CentroVacinacao findCentroVacinacaoByName(@PathVariable String nome){
+        return centroVacinacaoRepository.findByNome(nome);
+    }
     @GetMapping("/{id}")
     public CentroVacinacao centroVacinacao(@PathVariable Integer id) {
         return centroVacinacaoRepository.findCentroVacinacaoById(id);
@@ -40,7 +45,6 @@ public class CentroVacinacaoController {
     public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
         Integer qtd = 0;
          for (Integer i : centroVacinacaoRepository.findVacinas(id)){
-             System.out.println(i);
              qtd+=i;
          }
          return qtd;
