@@ -66,10 +66,10 @@ public class Vacinacao {
         }
         Capacidade dia = capacidadeRepository.getDiaDB();
         Date dia_ = capacidadeRepository.getDiaDB().getDia();
-        Calendar calendario = Calendar.getInstance();
-        calendario.setTime(dia_);
-        calendario.add(Calendar.DATE, 3);
-        dia_.setTime(calendario.getTime().getTime());
+        // Calendar calendario = Calendar.getInstance();
+        // calendario.setTime(dia_);
+        // calendario.add(Calendar.DATE, 3);
+        // dia_.setTime(calendario.getTime().getTime());
 
         System.out.println("dia: tem de ser 25 ->" + dia_.toString());
         List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(dia_.toString());
@@ -112,12 +112,12 @@ public class Vacinacao {
                     if (i == n_vacinas) {
                         for (Integer key : dentroDoCentroMap.keySet()) {
                             dentroDoCentroMap.remove(key);
-                            wait(4000);
+                            wait(50);
                         }
                     }
                 }
                 i++;
-                wait(4000);
+                wait(50);
             } else {
                 break;
             }

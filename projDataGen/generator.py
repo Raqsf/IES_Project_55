@@ -146,14 +146,14 @@ if __name__ == '__main__':
             time.sleep(2)
             for _ in range(224):
                 g.add_to_waiting_list()
-                time.sleep(0.3)
+                time.sleep(0.1)
         while True:
             g.destribute_vaccines_per_centers()
             g.generate_vaccines_quantity()
             time.sleep(2)
             for _ in range(224):
                 g.add_to_waiting_list()
-                time.sleep(0.3)
+                time.sleep(0.1)
             time.sleep(2)
     except KeyboardInterrupt:
         print('\nKeyboard Interruption')
