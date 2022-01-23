@@ -1,8 +1,6 @@
-import { BarChart } from "./bar-chart.js";
 import React from 'react';
 import { useState, useEffect } from "react";
 import api from "../../api";
-import { set } from "nprogress";
 import { Box, LinearProgress, Typography } from '@mui/material';
 import { Pie } from "react-chartjs-2";
 

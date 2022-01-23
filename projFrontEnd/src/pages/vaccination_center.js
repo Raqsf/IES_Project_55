@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Typography, Container, Box, Divider, Grid, TextField, Button } from '@mui/material';
 import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
@@ -8,21 +8,31 @@ import api from "../api";
 import { PeopleVaccinated } from "../components/gerente/people_vaccinated";
 import { VaccinesAdministered } from "../components/gerente/vaccines_administered";
 import { People } from "../components/gerente/people";
+import NextLink from 'next/link'; 
 // import { useParams } from "react-router-dom";
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure()
 const VaccinationCenter = () => {
     const router = useRouter();
-    // const [param1, setParam] = useState();
+    const [loadingPage, setLoadingPage] = useState(true);
     const [loading, setLoading] = useState(true);
     const [capacity, setCapacity] = useState();
+    const [centro, setCentro] = useState('');
     const {
         query: { id },
     } = router
-    // let param1 = id;
+
+    useEffect(() => { 
+      setLoadingPage(true);
+      if(!JSON.parse(localStorage.getItem("login"))) {
+        router.push("/");
+      } else {
+        setLoadingPage(false);
+      }
+    })
+    
     if(id) {
       localStorage.setItem("id", id);
     }
@@ -42,18 +52,14 @@ const VaccinationCenter = () => {
     //     console.log(router.query)
     //   }
     // }, [router])
-     
-    const [centro, setCentro] = React.useState('');
 
     const headers = {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     };    
     
-    React.useEffect(() => {
+    useEffect(() => {
       setLoading(true);
-      // setParam(id);
-      // console.log(id, !id)
       // if(id) {
         // id = localStorage.getItem("id");
       // }
@@ -78,10 +84,10 @@ const VaccinationCenter = () => {
         }
       const loop = setInterval(function() {
         // console.log("Loop", id)
-        id = localStorage.getItem("id");
+        // id = localStorage.getItem("id");
         // console.log("Loop", param1)
         api.get(
-            `/centrovacinacao/${id}`, headers
+            `/centrovacinacao/${localStorage.getItem("id")}`, headers
           ).then((response) => {
             setCentro(response.data);
             setCapacity(response.data.capacidadeMax);
@@ -123,6 +129,7 @@ const VaccinationCenter = () => {
         Centro de Vacinação | Vaccination Desk
       </title>
     </Head>
+    {!loadingPage ? 
     <Box
       component="main"
       sx={{
@@ -143,21 +150,18 @@ const VaccinationCenter = () => {
         >
           {centro.morada}
         </Typography>
-        {/* TODO: numero de pessoas vacinadas e numero vacinas em tempo real */}
         <Grid container spacing={2}>
           <Grid item lg={6} sm={6} xl={6} xs={12}>
-            <PeopleVaccinated id={id}/>
+            <NextLink href={{pathname: "/people_vaccinated", query: {id: id, nome: centro.nome}}} passHref>
+              <PeopleVaccinated id={id}/>
+            </NextLink>
           </Grid>
           <Grid item xl={6} lg={6} sm={6} xs={12}>
-            <VaccinesAdministered id={id}/>
+            <NextLink href={{pathname: "/vaccines_administrated", query: {id: id, nome: centro.nome}}} passHref>
+              <VaccinesAdministered id={id}/>
+            </NextLink>
           </Grid>
         </Grid>
-        {/*<Divider 
-          sx={{
-            py:3
-          }}
-        />
-        <TableVaccines />      */}
       </Container>
       <Container maxWidth={false} sx={{ mt: 4 }}>
         <Box>
@@ -216,14 +220,22 @@ const VaccinationCenter = () => {
         </Box>
       </Container>
     </Box>
+    : null}
   </>
 );
-    }
+}
 
-VaccinationCenter.getLayout = (page) => (
-  <DashboardLayoutGerente>
-    {page}
-  </DashboardLayoutGerente>
-);
+
+if (typeof window !== 'undefined') {
+  if(JSON.parse(localStorage.getItem("login"))) {
+    VaccinationCenter.getLayout = (page) => (
+      <DashboardLayoutGerente>
+        {page}
+      </DashboardLayoutGerente>
+    );
+  } else {
+    window.location.href = "/";
+  }
+}
 
 export default VaccinationCenter;
