@@ -30,6 +30,10 @@ export const HigherVaccinationRateCV = () => {
                 .then(res => {
                   setCentroId(res.data.id)
                 })
+                .catch((err) => {
+                  console.error("ops! ocorreu um erro" + err);
+                  alert("Erro");
+                })
             }
         )    
         }, 1000);
@@ -122,7 +126,6 @@ export const HigherVaccinationRateCV = () => {
             color="secondary"
             variant="contained"
             sx={{ mr: 1 }}
-            // href="/agendamento"
           >
             Ver Centro
           </Button>
