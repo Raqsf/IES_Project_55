@@ -56,22 +56,6 @@ export const ManageVaccines = (props) => (
           Em cada centro de vacinação é possivel saber que pessoas é que se estão a vacinar em tempo real, bem como ver todas as que já se vacinaram até ao momento.
           É possivel ainda, saber as quantidades de vacinas que cada centro tem, e as quantidades que estão previstas receber nos proximos dias.
         </Typography>
-        {/* <ArrowDownwardIcon color="error" />
-        <Typography
-          color="error"
-          sx={{
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography> */}
       </Box>
       <Box sx={{
           pt: 2,
@@ -84,7 +68,6 @@ export const ManageVaccines = (props) => (
             color="secondary"
             variant="contained"
             sx={{ mr: 1 }}
-            // href="/agendamento"
           >
             Gerir
           </Button>

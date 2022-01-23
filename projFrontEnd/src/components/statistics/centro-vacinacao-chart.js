@@ -40,6 +40,10 @@ const CentroVacinacaoChart = () => {
                 })
             }
         )
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })
         
         setLoading(false)
         const loop = setInterval(function() {
@@ -71,7 +75,11 @@ const CentroVacinacaoChart = () => {
                     }]
                 })
             }
-        )    
+        )
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })    
         }, 1000);
         return () => clearInterval(loop);       
       }, []);
