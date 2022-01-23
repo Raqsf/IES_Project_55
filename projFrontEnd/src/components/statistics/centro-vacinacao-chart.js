@@ -1,8 +1,6 @@
-import { BarChart } from "./bar-chart.js";
 import React from 'react';
 import { useState, useEffect } from "react";
 import api from "../../api";
-import { set } from "nprogress";
 import { Box, LinearProgress, Typography } from '@mui/material';
 import { Pie } from "react-chartjs-2";
 
@@ -40,6 +38,10 @@ const CentroVacinacaoChart = () => {
                 })
             }
         )
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })
         
         setLoading(false)
         const loop = setInterval(function() {
@@ -71,7 +73,11 @@ const CentroVacinacaoChart = () => {
                     }]
                 })
             }
-        )    
+        )
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+          alert("Erro");
+        })    
         }, 1000);
         return () => clearInterval(loop);       
       }, []);

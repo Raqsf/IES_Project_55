@@ -39,28 +39,6 @@ const Statistics = () => {
         <Container maxWidth={false}>
           <StatisticsToolbar />
           <CentroVacinacaoChart />
-          {/* <CentroVacinacaoChart /> */}
-          {/* <table className="styled-table">
-            <thead>
-              <tr>
-                <th>doses aplicadas</th>
-                <th>população imunizada</th>
-                <th>doses restantes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1000</td>
-                <td>1000</td>
-                <td>6000</td>
-              </tr>
-            </tbody>
-          </table>
-          <Sales />
-          <img
-            src="https://ichef.bbci.co.uk/news/1024/cpsprodpb/16674/production/_117346719_1mar_vax-nc.png"
-            alt="grafico de vacinação "
-          /> */}
         </Container>
       </Box>
       : null}

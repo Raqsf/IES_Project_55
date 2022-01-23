@@ -35,6 +35,10 @@ const VaccinesChart = ({periodo}) => {
                 }]
             })
             setLoading(false);
+          })
+          .catch((err) => {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Erro");
           });
         }, 1000);
         return () => clearInterval(loop);       

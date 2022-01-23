@@ -13,6 +13,10 @@ export const VaccinationRates = ({ periodo }) => {
                 .then(res => {
                 setRate(res.data)
             })
+            .catch((err) => {
+              console.error("ops! ocorreu um erro" + err);
+              alert("Erro");
+            })
             }, 1000);
         return () => clearInterval(loop);       
       }, [periodo]);
