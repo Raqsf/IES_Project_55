@@ -56,22 +56,6 @@ export const Schedule = (props) => (
             Irá receber um código QR por email juntamente com a indicação da hora e local onde se realizará a vacinação. 
             Terá de apresentar o código QR quando for levar a dose.
         </Typography>
-        {/* <ArrowDownwardIcon color="error" />
-        <Typography
-          color="error"
-          sx={{
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography> */}
       </Box>
       <Box sx={{
           pt: 2,

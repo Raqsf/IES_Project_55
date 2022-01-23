@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import api from '../../api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ErrorAlert } from '../erro/erro';
 
 toast.configure()
 export default function FormVaccinationInfo() {
@@ -78,8 +79,14 @@ export default function FormVaccinationInfo() {
                     }, "/vaccination_info");
                 }
             } else {
-                console.error("ops! ocorreu um erro" + err);
-                toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+                if (error.response) {
+                    <ErrorAlert message={error.response}/>
+                  } else if (error.request) {
+                    console.log(error.request);
+                  } else {
+                    console.log('Error', error.message);
+                  }
+                  console.log(error.config);
             }
         });
         // router.push('/vaccination_info');
