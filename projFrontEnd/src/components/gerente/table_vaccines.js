@@ -1,5 +1,4 @@
 import React from 'react';
-import Head from 'next/head';
 import { Typography, Box, Switch, Toolbar, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableSortLabel, Paper } from '@mui/material';
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
@@ -164,9 +163,15 @@ const TableVaccines = (props) => {
         }
         setRows(res);
       })
-      .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+      .catch(function (error) {
+        if (error.response) {
+          <ErrorAlert message={error.response}/>
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
       });
       const loop = setInterval(function() {
         api.get(
@@ -178,11 +183,16 @@ const TableVaccines = (props) => {
             }
             setRows(res);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-          }
-        );
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }, 1000);
         return () => clearInterval(loop);
   }, []);

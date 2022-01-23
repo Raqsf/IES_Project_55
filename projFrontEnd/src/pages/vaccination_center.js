@@ -12,6 +12,7 @@ import NextLink from 'next/link';
 // import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ErrorAlert } from '../components/erro/erro'
 
 toast.configure()
 const VaccinationCenter = () => {
@@ -74,13 +75,16 @@ const VaccinationCenter = () => {
             setCapacity(response.data.capacidadeMax);
             setLoading(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-            // if(response.status === 500 && typeof id == undefined) {
-            //   alert("Erro")
-            // }
-          })
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }
       const loop = setInterval(function() {
         // console.log("Loop", id)
@@ -92,11 +96,16 @@ const VaccinationCenter = () => {
             setCentro(response.data);
             setCapacity(response.data.capacidadeMax);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-          }
-        );
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }, 1000);
         return () => clearInterval(loop);
       }, []);
@@ -112,9 +121,16 @@ const VaccinationCenter = () => {
         // if (response.status >= 200 && response.status < 300)
         toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER});
       })
-      .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-      })
+      .catch(function (error) {
+        if (error.response) {
+          <ErrorAlert message={error.response}/>
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+      });
     }
     
     const handleChange = (event) => {

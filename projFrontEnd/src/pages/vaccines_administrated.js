@@ -15,6 +15,7 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 import { useRouter } from "next/router";
 import api from "../api";
 import { useState } from 'react';
+import { ErrorAlert } from '../components/erro/erro';
 
 const VaccinesAdministered = () => {
     const router = useRouter();
@@ -42,7 +43,7 @@ const VaccinesAdministered = () => {
       setPage(0);
     };
 
-    const {
+    let {
         query: { id, nome },
     } = router
     console.log(id)
@@ -77,10 +78,16 @@ const VaccinesAdministered = () => {
           console.log(response.data)
           // setLoadingData(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
+        .catch(function (error) {
+          if (error.response) {
+            <ErrorAlert message={error.response}/>
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }
       const loop = setInterval(function() {
         id = localStorage.getItem("id_people_vaccinated_info");
@@ -97,10 +104,16 @@ const VaccinesAdministered = () => {
           console.log(response.data)
           // setLoadingData(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
+        .catch(function (error) {
+          if (error.response) {
+            <ErrorAlert message={error.response}/>
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }, 1000);
       return () => clearInterval(loop);
     }, []);

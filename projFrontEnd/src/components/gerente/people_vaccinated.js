@@ -2,6 +2,7 @@ import { Avatar, Box, Card, CardContent, Grid, Typography, CircularProgress } fr
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import { useEffect, useState } from 'react';
 import api from "../../api";
+import ErrorAlert from '../erro/erro';
 
 export const PeopleVaccinated = (props) => {
   const [loadingPeople, setLoadingPeople] = useState(true);
@@ -36,14 +37,16 @@ export const PeopleVaccinated = (props) => {
           setVaccinated(response.data);
           setLoadingPeople(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          console.log(err.response)
-          alert("Erro");
-          // if(response.status === 500 && typeof id == undefined) {
-          //   alert("Erro")
-          // }
-        })
+        .catch(function (error) {
+          if (error.response) {
+            <ErrorAlert message={error.response}/>
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }
     const loop = setInterval(function() {
       // console.log("Loop", id)
@@ -57,11 +60,16 @@ export const PeopleVaccinated = (props) => {
           setVaccinated(response.data);
           setLoadingPeople(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        }
-      );
+        .catch(function (error) {
+          if (error.response) {
+            <ErrorAlert message={error.response}/>
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }, 1000);
       return () => clearInterval(loop);
     }, []);
@@ -77,13 +85,16 @@ export const PeopleVaccinated = (props) => {
             setScheduled(response.data);
             setLoadingScheduled(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-            // if(response.status === 500 && typeof id == undefined) {
-            //   alert("Erro")
-            // }
-          })
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }
       const loop = setInterval(function() {
         // console.log("Loop", id)
@@ -96,11 +107,16 @@ export const PeopleVaccinated = (props) => {
             setScheduled(response.data);
             setLoadingScheduled(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-          }
-        );
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }, 1000);
         return () => clearInterval(loop);
       }, []);
