@@ -82,8 +82,8 @@ public class EstatisticasController {
         Date hoje = new Date(millis);
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
-        c.add(Calendar.DATE, 3);
-        hoje = new Date(c.getTimeInMillis());
+        // c.add(Calendar.DATE, 3);
+        // hoje = new Date(c.getTimeInMillis());
         switch(periodo){
             //Hoje      (comparação entre hoje e ontem) ask them?! >.<
             case 0:
@@ -135,8 +135,8 @@ public class EstatisticasController {
         long millis = System.currentTimeMillis();
         Date hoje = new Date(millis);
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 3);
-        hoje = new Date(c.getTimeInMillis());
+        // c.add(Calendar.DATE, 3);
+        // hoje = new Date(c.getTimeInMillis());
         switch(periodo){
             case 0:
                 Integer ultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
@@ -175,6 +175,8 @@ public class EstatisticasController {
     public Integer pessoasVacinadasPorCV(@PathVariable Integer id, @RequestParam(value="data", required = false) Date data) throws ResourceNotFoundException{
         try{
             CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(id);
+            if (cv==null)
+                throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
             if ( data !=null)
                 return vacinaRepository.findAllVacinnatedByCentroVacinacaoByDate(cv, data).size();
             return vacinaRepository.findAllVacinnatedByCentroVacinacao(cv).size();
@@ -188,6 +190,8 @@ public class EstatisticasController {
     @GetMapping("/vacinasDisponiveis/{id}")
     public Integer vacinasDisponiveisPorCV(@PathVariable Integer id) throws ResourceNotFoundException{
         try{
+            if (centroVacinacaoRepository.findCentroVacinacaoById(id)==null)
+                throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
             return centroVacinacaoRepository.getVacinasDisponiveis(id);
         }
         catch(Exception e){
@@ -200,8 +204,12 @@ public class EstatisticasController {
     public Integer agendamentosHoje(@RequestParam(value="cv", required = false) Integer cv) throws Exception{
         long millis = System.currentTimeMillis();
         Date d = new Date(millis);
+        // Calendar c = Calendar.getInstance();
+        // c.setTime(d);
+        // c.add(Calendar.DATE, 3);
+        // d = new Date(c.getTimeInMillis());
         String date1 = d + " 00:00:00";
-        String date2 = d +" 23:59:59";
+        String date2 = d + " 23:59:59";
         SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Timestamp ts1 = new Timestamp(DATE_TIME_FORMAT.parse(date1).getTime());

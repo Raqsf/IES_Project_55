@@ -51,18 +51,6 @@ public class VaccinationDeskController {
     private AgendamentoRepository agendamentoRepository;
 
     @Async
-    @GetMapping("/utente/{id}")
-    public Utente getUtenteByIDUtente(@RequestBody Integer id) {
-        return utenteRepository.findUtenteById(id);
-    }
-
-    @Async
-    @GetMapping("/lote/{id}")
-    public Lote getUtenteByNome(@PathVariable Integer lote) {
-        return loteRepository.findLoteById(lote);
-    }
-
-    @Async
     @GetMapping("/lote")
     public List<Lote> getUtenteByNome() {
         Date d = new Date(System.currentTimeMillis());
