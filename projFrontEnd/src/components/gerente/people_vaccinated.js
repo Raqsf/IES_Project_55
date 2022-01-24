@@ -2,8 +2,10 @@ import { Avatar, Box, Card, CardContent, Grid, Typography, CircularProgress } fr
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import { useEffect, useState } from 'react';
 import api from "../../api";
-import ErrorAlert from '../erro/erro';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export const PeopleVaccinated = (props) => {
   const [loadingPeople, setLoadingPeople] = useState(true);
   const [loadingScheduled, setLoadingScheduled] = useState(true);
@@ -38,7 +40,7 @@ export const PeopleVaccinated = (props) => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -61,7 +63,7 @@ export const PeopleVaccinated = (props) => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -86,7 +88,7 @@ export const PeopleVaccinated = (props) => {
           })
           .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {
@@ -108,7 +110,7 @@ export const PeopleVaccinated = (props) => {
           })
           .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {

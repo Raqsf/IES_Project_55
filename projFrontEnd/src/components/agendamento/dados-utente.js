@@ -9,7 +9,6 @@ import api from "../../api";
 //import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ErrorAlert } from '../erro/erro';
 
 toast.configure()
 export default function DadosUtente(props) {
@@ -54,14 +53,14 @@ export default function DadosUtente(props) {
         if(err.response.status === 409) {
           toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
         } else {
-          if (error.response) {
-            <ErrorAlert message={error.response}/>
-          } else if (error.request) {
-            console.log(error.request);
+          if (err.response) {
+            toast.error(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (err.request) {
+            console.log(err.request);
           } else {
-            console.log('Error', error.message);
+            console.log('err', err.message);
           }
-          console.log(error.config);
+          console.log(err.config);
         }
       });
   }

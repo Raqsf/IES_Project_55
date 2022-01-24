@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import api from "../../api";
 import { Box, LinearProgress, Typography } from '@mui/material';
 import { Pie } from "react-chartjs-2";
-import { ErrorAlert } from "../erro/erro"
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-
+toast.configure()
 const CentroVacinacaoChart = () => {
 
     const [loading, setLoading] = useState(true)
@@ -45,7 +45,7 @@ const CentroVacinacaoChart = () => {
         )
         .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {
@@ -87,7 +87,7 @@ const CentroVacinacaoChart = () => {
         )
         .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {

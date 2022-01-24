@@ -12,7 +12,6 @@ import NextLink from 'next/link';
 // import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ErrorAlert } from '../components/erro/erro'
 
 toast.configure()
 const VaccinationCenter = () => {
@@ -77,7 +76,7 @@ const VaccinationCenter = () => {
           })
           .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER})
             } else if (error.request) {
               console.log(error.request);
             } else {
@@ -98,7 +97,7 @@ const VaccinationCenter = () => {
           })
           .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {
@@ -123,7 +122,7 @@ const VaccinationCenter = () => {
       })
       .catch(function (error) {
         if (error.response) {
-          <ErrorAlert message={error.response}/>
+          toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
         } else if (error.request) {
           console.log(error.request);
         } else {
