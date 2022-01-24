@@ -11,7 +11,7 @@ from random import randint
 class Generator:
     def __init__(self, people, surnames, vaccination_centers=None, vaccines=None):
         credentials = pika.PlainCredentials('myuser', 'mypassword')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port='5672', credentials=credentials))  
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.160.197', port='5672', credentials=credentials))  
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue='vaccination_queue', durable=True)
         self.number_of_vaccines_for_today = 261
