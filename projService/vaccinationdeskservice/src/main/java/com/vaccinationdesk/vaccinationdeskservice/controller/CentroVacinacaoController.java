@@ -45,16 +45,6 @@ public class CentroVacinacaoController {
     }
 
     @Async
-    @GetMapping("/{id}/vacinas")
-    public Integer /*List<Vacina>*/ centroVacinacaoVacinas(@PathVariable Integer id) {
-        Integer qtd = 0;
-         for (Integer i : centroVacinacaoRepository.findVacinas(id)){
-             qtd+=i;
-         }
-         return qtd;
-     }
-
-    @Async
     @GetMapping("/{id}/agendamentos")
     public List<Agendamento> /*List<Vacina>*/ centroVacinacaoAgendamentos(@PathVariable Integer id) {
         return centroVacinacaoRepository.findAgendamentos(id);
@@ -66,6 +56,8 @@ public class CentroVacinacaoController {
         @Valid @RequestBody Integer capacidade) throws ResourceNotFoundException {
         try {
             CentroVacinacao centro = centroVacinacaoRepository.findCentroVacinacaoById(id);
+            if (centro==null)
+                throw new ResourceNotFoundException("Centro Vacinacao "+id+" not found");
             centro.setCapacidadeMax(capacidade);
             CentroVacinacao updatedCentro = centroVacinacaoRepository.save(centro);
             return ResponseEntity.ok(updatedCentro);

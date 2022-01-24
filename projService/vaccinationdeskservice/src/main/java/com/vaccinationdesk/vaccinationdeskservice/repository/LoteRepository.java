@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface LoteRepository extends JpaRepository<Lote, Integer>{
-    Lote findLoteById(Integer id);
     List<Lote> findAll();
     @Query("SELECT l FROM Lote l WHERE l.data_chegada >= :date")
     List<Lote> findAllAfterDate(@Param("date") Date date);

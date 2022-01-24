@@ -12,6 +12,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequestMapping("/api/v1/vacinacao")
-@CrossOrigin(origins = { "/http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
 public class VacinacaoController {
 
     @Autowired
@@ -30,26 +31,31 @@ public class VacinacaoController {
     @Autowired
     private Vacinacao vacinacao;
     
+    @Async
     @GetMapping("/vacinas")
     public List<Vacina> getAllVacinas() {
         return vacinaRepository.findAll();
     }
 
+    @Async
     @GetMapping("/vacinas_a_ser_tomadas")
     public ResponseEntity<Object> getAllVacinasTomadas() throws JsonProcessingException, ConflictException {
         return vacinacao.vacinacao();
     }
 
+    @Async
     @GetMapping("/real_time/{id}")
     public List<String> getVacincaoTempoReal(@PathVariable Integer id) {
         return vacinacao.getVacinacaoEmTempoReal(id);
     }
 
+    @Async
     @GetMapping("/vacinas_administradas_hoje/{id}")
     public String getVacinasInfoDiaVacina(@PathVariable Integer id) throws JsonProcessingException {
         return vacinacao.getVacinasInfoDia(id);
     }
 
+    @Async
     @GetMapping("/utente_vacinados/{id}")
     public String getUtentesVacinadosPorDia (@PathVariable Integer id) throws JsonProcessingException {
         return vacinacao.getUtentesVacinadosPorDia(id);
