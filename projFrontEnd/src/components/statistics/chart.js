@@ -5,6 +5,7 @@ import api from "../../api";
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import { Avatar, Grid, LinearProgress, Box, CardActionArea, CardContent, Typography } from '@mui/material';
 import { VaccinationRates } from "./vaccination-rates.js";
+import { ErrorAlert } from "../erro/erro";
 
 
 const VaccinesChart = ({periodo}) => {
@@ -36,9 +37,15 @@ const VaccinesChart = ({periodo}) => {
             })
             setLoading(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
+          .catch(function (error) {
+            if (error.response) {
+              <ErrorAlert message={error.response}/>
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
           });
         }, 1000);
         return () => clearInterval(loop);       

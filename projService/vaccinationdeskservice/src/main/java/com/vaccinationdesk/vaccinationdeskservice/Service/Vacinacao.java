@@ -3,7 +3,6 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,7 @@ public class Vacinacao {
      * @throws JsonProcessingException
      * @throws ConflictException
      */
+    @Async
     public ResponseEntity<Object> vacinacao() throws JsonProcessingException, ConflictException {
         // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
         // a uma tabela que faça so guardar os dias e passa-los)
@@ -153,6 +153,7 @@ public class Vacinacao {
         }
     }
 
+    @Async
     public String getVacinasInfoDia(Integer id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Map<Integer, String> mapinha = new HashMap<>();

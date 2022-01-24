@@ -9,14 +9,12 @@ import javax.validation.Valid;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.Agendamento;
-import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.model.Doenca;
 import com.vaccinationdesk.vaccinationdeskservice.model.DoencaPorUtente;
 import com.vaccinationdesk.vaccinationdeskservice.model.ListaEspera;
 import com.vaccinationdesk.vaccinationdeskservice.model.Lote;
 import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
-import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaPorUtenteRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.DoencaRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.LoteRepository;
@@ -25,14 +23,13 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.ListaEsperaReposito
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -53,27 +50,26 @@ public class VaccinationDeskController {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
-    /*@GetMapping("/utente")
-    public Utente getUtenteByNome(@RequestParam(value="nome") String nome) {
-        return utenteRepository.findUtenteByNome(nome);
-    }*/
-
+    @Async
     @GetMapping("/utente/{id}")
     public Utente getUtenteByIDUtente(@RequestBody Integer id) {
         return utenteRepository.findUtenteById(id);
     }
 
+    @Async
     @GetMapping("/lote/{id}")
     public Lote getUtenteByNome(@PathVariable Integer lote) {
         return loteRepository.findLoteById(lote);
     }
 
+    @Async
     @GetMapping("/lote")
     public List<Lote> getUtenteByNome() {
         Date d = new Date(System.currentTimeMillis());
         return loteRepository.findAllAfterDate(d);
     }
 
+    @Async
     @PostMapping("/utente")
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
 
@@ -101,6 +97,7 @@ public class VaccinationDeskController {
         return ResponseEntity.notFound().build();
     }
 
+    @Async
     @PostMapping("/agendamento")
     public Agendamento getAgendamentoByUtente(@Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)
@@ -122,6 +119,7 @@ public class VaccinationDeskController {
         return agendamentoRepository.findAllByUtente(utente.getID());
     }
 
+    @Async
     @GetMapping("/doencaPorUtente/{id}")
     public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id) throws ResourceNotFoundException{
         try{
@@ -133,6 +131,7 @@ public class VaccinationDeskController {
         
     }
 
+    @Async
     @GetMapping("/doencas")
     public List<Doenca> doencas(){
         return doencaRepository.findAll();

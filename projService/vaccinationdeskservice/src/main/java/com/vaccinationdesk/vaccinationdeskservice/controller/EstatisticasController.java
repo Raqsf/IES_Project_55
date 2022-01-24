@@ -20,6 +20,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepo
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class EstatisticasController {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
+    @Async
     @GetMapping("/pessoasVacinadas")
     public Integer pessoasVacinadas(@RequestParam(value="data", required = false) Date data) {
         if (data != null){
@@ -47,6 +49,7 @@ public class EstatisticasController {
         return vacinaRepository.findAllVacinnated().size();
     }
 
+    @Async
     @GetMapping("/pessoasVacinadasPorPeriodo/{periodo}")
     public Map<String, Integer> pessoasVacinadasPeriodo(@PathVariable Integer periodo/*, @RequestParam(value="cv", required = false) Integer cv*/) throws ConflictException{
         
@@ -126,6 +129,7 @@ public class EstatisticasController {
         throw new ConflictException("Apenas pode ser apresentado períodos do dia/semana/mes/ano");
     }
 
+    @Async
     @GetMapping("/taxaVacinacaoPorPeriodo/{periodo}")
     public Integer taxa2semanas(@PathVariable Integer periodo) throws ConflictException{
         long millis = System.currentTimeMillis();
@@ -166,6 +170,7 @@ public class EstatisticasController {
         throw new ConflictException("Apenas apresentamos taxas de vacinação por hoje e ultima semana.");
     }
 
+    @Async
     @GetMapping("/pessoasVacinadas/{id}")
     public Integer pessoasVacinadasPorCV(@PathVariable Integer id, @RequestParam(value="data", required = false) Date data) throws ResourceNotFoundException{
         try{
@@ -179,6 +184,7 @@ public class EstatisticasController {
         }
     }
 
+    @Async
     @GetMapping("/vacinasDisponiveis/{id}")
     public Integer vacinasDisponiveisPorCV(@PathVariable Integer id) throws ResourceNotFoundException{
         try{
@@ -189,6 +195,7 @@ public class EstatisticasController {
         }
     }
 
+    @Async
     @GetMapping("/vacinasPrevistas")
     public Integer agendamentosHoje(@RequestParam(value="cv", required = false) Integer cv) throws Exception{
         long millis = System.currentTimeMillis();
@@ -211,6 +218,7 @@ public class EstatisticasController {
         }
     }
 
+    @Async
     @GetMapping("/pessoasVacinadasPorTodosCentros")
     public Map<String, Integer> pessoasVacinadasPorTodosCentros() throws ResourceNotFoundException, ConflictException{
         Integer total = pessoasVacinadas(null);

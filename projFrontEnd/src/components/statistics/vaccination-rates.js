@@ -2,6 +2,7 @@ import { Avatar, Grid, Box, CardActionArea, CardContent, Typography } from '@mui
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import React, { useEffect, useState } from 'react';
 import api from "../../api";
+import { ErrorAlert } from "../erro/erro";
 
 export const VaccinationRates = ({ periodo }) => {
 
@@ -13,10 +14,16 @@ export const VaccinationRates = ({ periodo }) => {
                 .then(res => {
                 setRate(res.data)
             })
-            .catch((err) => {
-              console.error("ops! ocorreu um erro" + err);
-              alert("Erro");
-            })
+            .catch(function (error) {
+              if (error.response) {
+                <ErrorAlert message={error.response}/>
+              } else if (error.request) {
+                console.log(error.request);
+              } else {
+                console.log('Error', error.message);
+              }
+              console.log(error.config);
+            });
             }, 1000);
         return () => clearInterval(loop);       
       }, [periodo]);
