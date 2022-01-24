@@ -43,10 +43,10 @@ export const VaccinesAdministered = (props) => {
       }
       const loop = setInterval(function() {
       // console.log("Loop", id)
-      // id = localStorage.getItem("id_vaccines_administrated");
+      id = localStorage.getItem("id_vaccines_administrated");
       // console.log("Loop", param1)
       api.get(
-          `/estatisticas/pessoasVacinadas/${localStorage.getItem("id_vaccines_administrated")}`, headers
+          `/estatisticas/pessoasVacinadas/${id}`, headers
         ).then((response) => {
           console.log(response.data)
           setTotalVaccines(response.data);

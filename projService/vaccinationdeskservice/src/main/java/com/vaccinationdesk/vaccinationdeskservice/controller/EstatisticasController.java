@@ -16,6 +16,7 @@ import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
 import com.vaccinationdesk.vaccinationdeskservice.model.CentroVacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.repository.AgendamentoRepository;
+import com.vaccinationdesk.vaccinationdeskservice.repository.CapacidadeRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.CentroVacinacaoRepository;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
@@ -39,13 +40,14 @@ public class EstatisticasController {
     private CentroVacinacaoRepository centroVacinacaoRepository;
     @Autowired
     private AgendamentoRepository agendamentoRepository;
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
 
     @Async
     @GetMapping("/pessoasVacinadas")
     public Integer pessoasVacinadas(@RequestParam(value="data", required = false) Date data) {
-        if (data != null){
+        if (data!=null)
             return vacinaRepository.findAllVacinnatedByDate(data).size();
-        }
         return vacinaRepository.findAllVacinnated().size();
     }
 
@@ -78,8 +80,7 @@ public class EstatisticasController {
         months_of_year[10] = "Nov";
         months_of_year[11] = "Dez";
         
-        long millis = System.currentTimeMillis();
-        Date hoje = new Date(millis);
+        Date hoje = capacidadeRepository.getDiaDB().getDia();
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
         // c.add(Calendar.DATE, 3);
@@ -132,9 +133,9 @@ public class EstatisticasController {
     @Async
     @GetMapping("/taxaVacinacaoPorPeriodo/{periodo}")
     public Integer taxa2semanas(@PathVariable Integer periodo) throws ConflictException{
-        long millis = System.currentTimeMillis();
-        Date hoje = new Date(millis);
+        Date hoje = capacidadeRepository.getDiaDB().getDia();
         Calendar c = Calendar.getInstance();
+        c.setTime(hoje);
         // c.add(Calendar.DATE, 3);
         // hoje = new Date(c.getTimeInMillis());
         switch(periodo){
@@ -172,13 +173,15 @@ public class EstatisticasController {
 
     @Async
     @GetMapping("/pessoasVacinadas/{id}")
-    public Integer pessoasVacinadasPorCV(@PathVariable Integer id, @RequestParam(value="data", required = false) Date data) throws ResourceNotFoundException{
+    public Integer pessoasVacinadasPorCV(@PathVariable Integer id, @RequestParam(value="hoje", required = false) Boolean hoje) throws ResourceNotFoundException{
         try{
             CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(id);
             if (cv==null)
                 throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
-            if ( data !=null)
-                return vacinaRepository.findAllVacinnatedByCentroVacinacaoByDate(cv, data).size();
+            if ( hoje !=null){
+                Date dia = capacidadeRepository.getDiaDB().getDia();
+                return vacinaRepository.findAllVacinnatedByCentroVacinacaoByDate(cv, dia).size();
+            }
             return vacinaRepository.findAllVacinnatedByCentroVacinacao(cv).size();
         }
         catch(Exception e){
@@ -202,14 +205,15 @@ public class EstatisticasController {
     @Async
     @GetMapping("/vacinasPrevistas")
     public Integer agendamentosHoje(@RequestParam(value="cv", required = false) Integer cv) throws Exception{
-        long millis = System.currentTimeMillis();
-        Date d = new Date(millis);
+        Date hoje = capacidadeRepository.getDiaDB().getDia();
+        Calendar c = Calendar.getInstance();
+        c.setTime(hoje);
         // Calendar c = Calendar.getInstance();
         // c.setTime(d);
         // c.add(Calendar.DATE, 3);
         // d = new Date(c.getTimeInMillis());
-        String date1 = d + " 00:00:00";
-        String date2 = d + " 23:59:59";
+        String date1 = hoje + " 00:00:00";
+        String date2 = hoje + " 23:59:59";
         SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Timestamp ts1 = new Timestamp(DATE_TIME_FORMAT.parse(date1).getTime());
