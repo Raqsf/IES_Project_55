@@ -39,6 +39,13 @@ public class Utente {
         this.nome = nome;
     }
 
+    public Utente(int numUtente, String nome, String email, Date dataNascimento){
+        this.nome = nome;
+        this.id = numUtente;
+        this.email = email;
+        this.dataNascimento = dataNascimento;
+    }
+
     public Utente( int numUtente, String nome, String email, String morada, Date dataNascimento){
         this.nome = nome;
         this.id = numUtente;

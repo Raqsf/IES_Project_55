@@ -9,7 +9,6 @@ export const PeopleVaccinated = (props) => {
   const [loadingScheduled, setLoadingScheduled] = useState(true);
   const [vaccinated, setVaccinated] = useState();
   const [scheduled, setScheduled] = useState();
-  const d = new Date().toISOString().split('T')[0];
   let {id} = props;
 
   if(id) {
@@ -28,7 +27,7 @@ export const PeopleVaccinated = (props) => {
     setLoadingPeople(true);
 
     if (id) {
-      let payload = {data:d}
+      let payload = {hoje:true}
       api.get(
           `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
@@ -52,7 +51,7 @@ export const PeopleVaccinated = (props) => {
       // console.log("Loop", id)
       id = localStorage.getItem("id_people_vaccinated");
       // console.log("Loop", param1)
-      let payload = {data:d}
+      let payload = {hoje:true}
       api.get(
           `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
