@@ -2,7 +2,10 @@ import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import { useState, useEffect } from "react";
 import api from 'src/api';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export const TotalVaccinesAdministrated = () => {
     const [total, setTotal] = useState(0)
     
@@ -15,7 +18,7 @@ export const TotalVaccinesAdministrated = () => {
         )
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {

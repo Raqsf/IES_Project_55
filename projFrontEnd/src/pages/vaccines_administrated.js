@@ -15,8 +15,10 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 import { useRouter } from "next/router";
 import api from "../api";
 import { useState } from 'react';
-import { ErrorAlert } from '../components/erro/erro';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 const VaccinesAdministered = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ const VaccinesAdministered = () => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -105,7 +107,7 @@ const VaccinesAdministered = () => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {

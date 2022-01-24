@@ -2,8 +2,10 @@ import { Avatar, Grid, Box, CardActionArea, CardContent, Typography } from '@mui
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import React, { useEffect, useState } from 'react';
 import api from "../../api";
-import { ErrorAlert } from "../erro/erro";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export const VaccinationRates = ({ periodo }) => {
 
     const [rate, setRate]=useState(0)
@@ -16,7 +18,7 @@ export const VaccinationRates = ({ periodo }) => {
             })
             .catch(function (error) {
               if (error.response) {
-                <ErrorAlert message={error.response}/>
+                toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER})
               } else if (error.request) {
                 console.log(error.request);
               } else {
