@@ -7,8 +7,10 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 import { useRouter } from "next/router";
 import api from "../api";
 import { useState } from 'react';
-import { ErrorAlert } from "../components/erro/erro"
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 const PeopleVaccinated = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -18,7 +20,6 @@ const PeopleVaccinated = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     
     useEffect(() => { 
-      console.log("Aqui")
       setLoading(true);
       if(!JSON.parse(localStorage.getItem("login"))) {
         router.push("/");
@@ -57,7 +58,6 @@ const PeopleVaccinated = () => {
 
     useEffect(() => {
       // setLoadingData(true);
-      console.log( `/vacinacao/utente_vacinados/${id}`)
       if(id) {
         api.get(
           `/vacinacao/utente_vacinados/${id}`, headers
@@ -72,7 +72,7 @@ const PeopleVaccinated = () => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER}.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -96,7 +96,7 @@ const PeopleVaccinated = () => {
         })
         .catch(function (error) {
           if (error.response) {
-            <ErrorAlert message={error.response}/>
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
           } else if (error.request) {
             console.log(error.request);
           } else {

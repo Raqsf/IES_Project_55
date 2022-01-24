@@ -3,7 +3,10 @@ import { Typography, Box, Switch, Toolbar, FormControlLabel, Table, TableBody, T
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
 import api from "../../api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 function createData(centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual) {
   return { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual };
 }
@@ -165,7 +168,7 @@ const TableVaccines = (props) => {
       })
       .catch(function (error) {
         if (error.response) {
-          <ErrorAlert message={error.response}/>
+          toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
         } else if (error.request) {
           console.log(error.request);
         } else {
@@ -185,7 +188,7 @@ const TableVaccines = (props) => {
           })
           .catch(function (error) {
             if (error.response) {
-              <ErrorAlert message={error.response}/>
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
             } else if (error.request) {
               console.log(error.request);
             } else {
