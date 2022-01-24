@@ -17,7 +17,6 @@ const PeopleVaccinated = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     
     useEffect(() => { 
-      console.log("Aqui")
       setLoading(true);
       if(!JSON.parse(localStorage.getItem("login"))) {
         router.push("/");
@@ -56,7 +55,6 @@ const PeopleVaccinated = () => {
 
     useEffect(() => {
       // setLoadingData(true);
-      console.log( `/vacinacao/utente_vacinados/${id}`)
       if(id) {
         api.get(
           `/vacinacao/utente_vacinados/${id}`, headers

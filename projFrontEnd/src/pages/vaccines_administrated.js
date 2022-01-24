@@ -25,7 +25,6 @@ const VaccinesAdministered = () => {
 	  const [rowsPerPage, setRowsPerPage] = useState(5);
 
     useEffect(() => { 
-      console.log("Aqui")
       setLoading(true);
       if(!JSON.parse(localStorage.getItem("login"))) {
         router.push("/");
