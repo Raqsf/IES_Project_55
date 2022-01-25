@@ -64,7 +64,7 @@ public class Distribuicao {
     // int capacidadeDia =
     // capacidadeRepository.getCapacidadePorDia(capacidadeRepository.getDiaDB().toString())
     // - 47;
-    int capacidadeDia = 105;
+    int capacidadeDia = 224;
 
     public Distribuicao() {
     }
@@ -96,12 +96,13 @@ public class Distribuicao {
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
         
         Date dia = capacidadeRepository.getDiaDB().getDia();
+        Date diadia = dia;
         Calendar calendario = Calendar.getInstance();
-        calendario.setTime(dia);
+        calendario.setTime(diadia);
         calendario.add(Calendar.DATE, -3);
-        dia.setTime(calendario.getTime().getTime());
+        diadia.setTime(calendario.getTime().getTime());
 
-        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(dia.toString());
+        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(diadia.toString());
 
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
@@ -113,16 +114,15 @@ public class Distribuicao {
             }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-
+        
         for (int i = 0; i < listaEspera.size(); i++) {
             ListaEspera pedido = listaEspera.get(i);
-            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             // Utilização da Google API para escolher o centro de vacinação mais proximo do utente
             String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal",
                     moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
-
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
 
@@ -133,6 +133,8 @@ public class Distribuicao {
                     cal.add(Calendar.DATE, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
+                    //System.out.println("data do agendamento: " + dataVacina.toString());
+
                     // criar agendamento e guarda-lo
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
@@ -142,16 +144,22 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    try {
+//                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+/*                    try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
                         throw new ConflictException("Não foi possível enviar email." + e);
-                    }
+                    }*/
                     break;
                 }
             }
         }
+        
+        Date dia2 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario2 = Calendar.getInstance();
+        calendario2.setTime(dia2);
+        calendario2.add(Calendar.DATE, 3);
+        dia2.setTime(calendario2.getTime().getTime());
         return agendamentosFeitos;
     }
 
