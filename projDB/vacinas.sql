@@ -188,13 +188,19 @@ BEGIN
     SELECT * FROM vacina WHERE DATE(data_administracao) = dia AND administrada_a IS NOT NULL;
 END
 
+CREATE PROCEDURE getUtentesInCenter(IN centro INT)
+BEGIN
+    select *  from pessoa as p
+    join agendamento as a on a.n_utente = p.n_utente
+    where a.centro_vacinacao = centro;
+END
 
 -- use `vaccinationdb`;
--- drop table capacidade_por_dia;
--- drop table lista_de_espera;
--- drop table agendamento;
--- drop table doencas_por_utente;
--- drop table vacina;
--- drop table lote;
--- drop table pessoa;
+drop table capacidade_por_dia;
+drop table lista_de_espera;
+drop table agendamento;
+drop table doencas_por_utente;
+drop table vacina;
+drop table lote;
+drop table pessoa;
 

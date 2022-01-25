@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.vaccinationdesk.vaccinationdeskservice.Service.Vacinacao;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
+import com.vaccinationdesk.vaccinationdeskservice.model.Utente;
 import com.vaccinationdesk.vaccinationdeskservice.model.Vacina;
 import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 
@@ -35,23 +36,24 @@ public class VacinacaoController {
         return vacinaRepository.findAll();
     }
 
+
     @GetMapping("/vacinas_a_ser_tomadas")
     public ResponseEntity<Object> getAllVacinasTomadas() throws JsonProcessingException, ConflictException {
         return vacinacao.vacinacao();
     }
 
     @GetMapping("/real_time/{id}")
-    public List<String> getVacincaoTempoReal(@PathVariable Integer id) {
+    public List<Utente> getVacincaoTempoReal(@PathVariable Integer id) {
         return vacinacao.getVacinacaoEmTempoReal(id);
     }
 
     @GetMapping("/vacinas_administradas_hoje/{id}")
-    public String getVacinasInfoDiaVacina(@PathVariable Integer id) throws JsonProcessingException {
+    public List<Vacina> getVacinasInfoDiaVacina(@PathVariable Integer id) throws JsonProcessingException {
         return vacinacao.getVacinasInfoDia(id);
     }
 
     @GetMapping("/utente_vacinados/{id}")
-    public String getUtentesVacinadosPorDia (@PathVariable Integer id) throws JsonProcessingException {
+    public List<Utente> getUtentesVacinadosPorDia (@PathVariable Integer id) throws JsonProcessingException {
         return vacinacao.getUtentesVacinadosPorDia(id);
     }
     
