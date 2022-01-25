@@ -1,15 +1,18 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NextLink from 'next/link';
 import { ChartLine } from 'src/icons/chart-line';
 import { useState, useEffect } from "react";
 import api from 'src/api';
 import { LinearProgress } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export const HigherVaccinationRateCV = () => {
     const [centroId, setCentroId] = useState(0)
     const [centro, setCentro] = useState("")
     const [rate, setRate] = useState(0)
+    const [noData, setNoData] = useState(false)
     
     useEffect(() => {
         const loop = setInterval(function() {
@@ -30,12 +33,35 @@ export const HigherVaccinationRateCV = () => {
                 .then(res => {
                   setCentroId(res.data.id)
                 })
-                .catch((err) => {
-                  console.error("ops! ocorreu um erro" + err);
-                  alert("Erro");
-                })
+                .catch(function (error) {
+                  console.log("HERE")
+                  if (error.response) {
+                    toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+                  } else if (error.request) {
+                    console.log(error.request);
+                  } else {
+                    console.log('Error', error.message);
+                  }
+                  console.log(error.config);
+                });
+                setNoData(false)
             }
-        )    
+        )
+        .catch(function (error) {
+          console.log("HERE")
+          if (error.response) {
+            if(error.response.status === 409) {
+              setNoData(true);
+            } else {
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+            }
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });    
         }, 1000);
         return () => clearInterval(loop);       
       }, []);
@@ -130,7 +156,7 @@ export const HigherVaccinationRateCV = () => {
             Ver Centro
           </Button>
         </NextLink>
-      </Box></> : <LinearProgress/>}
+      </Box></> : noData ? "Sem dados" : <LinearProgress/>}
     </CardContent>
   </Card>
 )

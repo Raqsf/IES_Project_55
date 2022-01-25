@@ -58,6 +58,7 @@ public class Vacinacao {
      * @throws JsonProcessingException
      * @throws ConflictException
      */
+    @Async
     public ResponseEntity<Object> vacinacao() throws JsonProcessingException, ConflictException {
         // ! ir buscar a string para o dia em questao (como esta escrito em cima, talvez
         // a uma tabela que faça so guardar os dias e passa-los)
@@ -189,8 +190,7 @@ public class Vacinacao {
         calendario3.setTime(dia3);
         calendario3.add(Calendar.DATE, 1);
         dia2.setTime(calendario3.getTime().getTime());
-        return resultList
-        A sua vacina encontra-se agendada para o dia 2022-01-28 no Centro de Vacinação do Aveiro sendo a morada do mesmo: Aveiro
-        Em anexo segue-se um QR Code, que terá de ser apresentado à entrada do centro, na data ;
+        return resultList;
+
     }
 }

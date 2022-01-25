@@ -78,8 +78,14 @@ export default function FormVaccinationInfo() {
                     }, "/vaccination_info");
                 }
             } else {
-                console.error("ops! ocorreu um erro" + err);
-                toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+                if (err.response) {
+                    toast.error(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+                  } else if (err.request) {
+                    console.log(err.request);
+                  } else {
+                    console.log('Error', err.message);
+                  }
+                  console.log(err.config);
             }
         });
         // router.push('/vaccination_info');
@@ -91,8 +97,12 @@ export default function FormVaccinationInfo() {
         //action="/vaccination_info"
         onSubmit={(e) => {
             handleSubmit(e);
-          }} >
-          <div className="row" style={{ marginTop: "20px" }}>
+          }} 
+          style={{
+            backgroundColor: '#f3f4f6', borderRadius: "25px"
+          }}
+        >
+          <div className="row" style={{ margin: "20px" }}>
               <FormControl variant="outlined">
                   <TextField
                       style={{ marginTop: "10px" }}

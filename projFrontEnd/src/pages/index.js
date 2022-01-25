@@ -1,17 +1,9 @@
 import Head from "next/head";
 import { Box, Container, Grid } from "@mui/material";
-// import { Budget } from "../components/dashboard/budget";
 import { Schedule } from "../components/dashboard/schedule-vaccine";
 import { Check } from "../components/dashboard/check-schedule";
 import { ManageVaccines } from "../components/gerente/manage";
 import { Statistics } from "../components/gerente/statistics";
-// import { LatestOrders } from "../components/dashboard/latest-orders";
-// import { LatestProducts } from "../components/dashboard/latest-products";
-// import { Sales } from "../components/dashboard/sales";
-// import { TasksProgress } from "../components/dashboard/tasks-progress";
-// import { TotalCustomers } from "../components/dashboard/total-customers";
-// import { TotalProfit } from "../components/dashboard/total-profit";
-// import { TrafficByDevice } from "../components/dashboard/traffic-by-device";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { DashboardLayoutGerente } from "../components/dashboard-layout-gerente";
 import { useEffect, useState } from 'react';
@@ -27,7 +19,6 @@ const Dashboard = () => {
     const user = JSON.parse(localStorage.getItem("login"));
 
     if (user == null) {
-      // TODO: acho q devia ser false
       setUsername(true);
     }
     if (user) {

@@ -1,13 +1,10 @@
 package com.vaccinationdesk.vaccinationdeskservice.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import com.google.zxing.WriterException;
 import com.vaccinationdesk.vaccinationdeskservice.Service.Distribuicao;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ConflictException;
 import com.vaccinationdesk.vaccinationdeskservice.exception.ResourceNotFoundException;
@@ -20,6 +17,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.UtenteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +42,7 @@ public class AgendamentoController {
     @Autowired
     private Distribuicao distribuicao;
 
+    @Async
     @GetMapping("/agendar")
     public List<Agendamento> agendar() throws Exception {
         try {
@@ -51,24 +50,27 @@ public class AgendamentoController {
         } catch (Exception e) {
             throw e;
         }
-        
     }
 
+    @Async
     @GetMapping("/listaespera")
     public List<ListaEspera> getAllListaEspera() {
         return listaesperaRepository.findAll();
     }
 
+    @Async
     @GetMapping("/listaespera/{id}")
     public ListaEspera getListaEsperaByid(@PathVariable Integer id) {
         return listaesperaRepository.findListaEsperaByid(id);
     }
 
+    @Async
     @GetMapping("/get_por_dia")
     public List<Agendamento> getAgendarDia() {
         return agendamentoRepository.getAgendamentosPorDia("2022-01-20");
     }
 
+    @Async
     @PostMapping("/agendar_com_filtros")
     public ResponseEntity<List<Agendamento>> agendarComFiltros(@Valid @RequestBody String filtros) throws Exception {
         // {idade: int, doenca: int}
@@ -83,6 +85,7 @@ public class AgendamentoController {
         
     }
 
+    @Async
     @GetMapping("/{id}")
     public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
         if ( utente !=null)

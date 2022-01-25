@@ -5,8 +5,10 @@ import api from "../../api";
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import { Avatar, Grid, LinearProgress, Box, CardActionArea, CardContent, Typography } from '@mui/material';
 import { VaccinationRates } from "./vaccination-rates.js";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
+toast.configure()
 const VaccinesChart = ({periodo}) => {
 
     const [chartData, setChartData] = useState({})
@@ -36,9 +38,15 @@ const VaccinesChart = ({periodo}) => {
             })
             setLoading(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
+          .catch(function (error) {
+            if (error.response) {
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER})
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
           });
         }, 1000);
         return () => clearInterval(loop);       

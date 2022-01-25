@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import VaccinesChart from "./chart.js";
 import {
     Box,

@@ -15,7 +15,10 @@ import { DashboardLayoutGerente } from '../components/dashboard-layout-gerente';
 import { useRouter } from "next/router";
 import api from "../api";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 const VaccinesAdministered = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -25,7 +28,6 @@ const VaccinesAdministered = () => {
 	  const [rowsPerPage, setRowsPerPage] = useState(5);
 
     useEffect(() => { 
-      console.log("Aqui")
       setLoading(true);
       if(!JSON.parse(localStorage.getItem("login"))) {
         router.push("/");
@@ -42,7 +44,7 @@ const VaccinesAdministered = () => {
       setPage(0);
     };
 
-    const {
+    let {
         query: { id, nome },
     } = router
     console.log(id)
@@ -77,10 +79,16 @@ const VaccinesAdministered = () => {
           console.log(response.data)
           // setLoadingData(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
+        .catch(function (error) {
+          if (error.response) {
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }
       const loop = setInterval(function() {
         // id = localStorage.getItem("id_people_vaccinated_info");
@@ -97,10 +105,16 @@ const VaccinesAdministered = () => {
           console.log(response.data)
           // setLoadingData(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        })
+        .catch(function (error) {
+          if (error.response) {
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }, 1000);
       return () => clearInterval(loop);
     }, []);

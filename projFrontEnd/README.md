@@ -8,6 +8,6 @@ Aplicação em React application baseada em [Devias Kit Template](https://materi
 
 - Instalar dependências: `npm install` or `yarn`
 
-- Iniciar o servidor: `npm run dev` or `yarn dev`
+- Iniciar o servidor: `npm start` or `yarn start`
 
 - Views estão em: `localhost:3000`

@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import okhttp3.OkHttpClient;
@@ -88,6 +89,7 @@ public class Distribuicao {
      * @throws IOException        - excecao QRcode
      * @throws WriterException    - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorOrdemMarcacao()
             throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
@@ -142,13 +144,12 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    /*try {
+                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
                         throw new ConflictException("Não foi possível enviar email." + e);
-                    }*/
-
+                    }
                     break;
                 }
             }
@@ -187,6 +188,7 @@ public class Distribuicao {
      * @throws IOException       - excecao QRcode
      * @throws WriterException   - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorFiltros(String filtrosJSON)
             throws WriterException, IOException, ConflictException {
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
@@ -275,7 +277,9 @@ public class Distribuicao {
      * @return - em JSON, distancia entre os centros de vacinacao e o utente, ou
      *         null se algo correr mal no pedido à API
      */
-    private static String getDistanceWithGoogleAPI(String from, String to) {
+    @Async
+    public
+    static String getDistanceWithGoogleAPI(String from, String to) {
         // example of google api =
         // https://maps.googleapis.com/maps/api/distancematrix/json?origins=Viseu|Porto&destinations=Lisboa|Coimbra&key=AIzaSyDnusra6igG8TAkOY1CFFsuiyaMNEWyFLY
         try {
@@ -301,6 +305,7 @@ public class Distribuicao {
      * @param quantidadeCentros - quantidade de centros que há na BD
      * @return - o centro de vacinacao mais proximo do utente
      */
+    @Async
     private static String calculateShorterPath(String responseString, int quantidadeCentros) {
         try {
             int indexLocation = 0;
@@ -341,6 +346,7 @@ public class Distribuicao {
      * @throws WriterException - excecao de escrita do QRcode
      * @throws IOException     - excecao do QRcode
      */
+    @Async
     public static void generateQRCodeImage(String text, int i) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
@@ -359,12 +365,13 @@ public class Distribuicao {
      * @throws MessagingException -
      * @throws IOException        -
      */
+    @Async
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
-        // helper.setTo(pedido.getUtente().getEmail());
-        helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
+        helper.setTo(pedido.getUtente().getEmail());
+        // helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);

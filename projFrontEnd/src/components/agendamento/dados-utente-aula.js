@@ -11,16 +11,17 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure()
-export default function DadosUtente(props) {
+export default function DadosUtenteAula(props) {
   const router = useRouter();
 
   const [utente, setUtente] = useState("");
   const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
   const [date, setDate] = useState(new Date());
   const [resposta, setResposta] = useState();
 
   function validateForm() {
-    return utente.length > 0 && nome.length > 0;
+    return utente.length > 0 && nome.length > 0 && email.length > 0;
   }
 
   function handleSubmit(event) {
@@ -34,11 +35,12 @@ export default function DadosUtente(props) {
     const user = {
       id: utente,
       nome: nome,
+      email: email,
       dataNascimento: date.toISOString(),
     };
 
     api
-      .post(`/utente`, user, headers)
+      .post(`/utente2`, user, headers)
       .then((response) => {
         // if (response.status >= 200 && response.status < 300)
         console.log(response)
@@ -99,6 +101,13 @@ export default function DadosUtente(props) {
               label="Nome Completo"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
+              style={{ marginTop: "20px" }}
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{ marginTop: "20px" }}
             />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
