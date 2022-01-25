@@ -91,9 +91,9 @@ const VaccinesAdministered = () => {
         });
       }
       const loop = setInterval(function() {
-        id = localStorage.getItem("id_people_vaccinated_info");
+        // id = localStorage.getItem("id_people_vaccinated_info");
         api.get(
-          `/vacinacao/vacinas_administradas_hoje/${id}`, headers
+          `/vacinacao/vacinas_administradas_hoje/${localStorage.getItem("id_people_vaccinated_info")}`, headers
         ).then((response) => {
           if(response.data.length > 0) {
             setRows(response.data);
@@ -157,7 +157,7 @@ const VaccinesAdministered = () => {
 		    						<TableCell>Vacina</TableCell>
 		    						<TableCell>Lote</TableCell>
 		    						<TableCell>
-		    							<TableSortLabel active direction="desc">
+		    							<TableSortLabel active >
 		    								Data Validade
 		    							</TableSortLabel>
 		    						</TableCell>
@@ -168,16 +168,11 @@ const VaccinesAdministered = () => {
 		    					{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((vacina) => (
 		    						<TableRow
 		    							hover
-		    							key={vacina.n_utente}
+		    							key={vacina.utente.id}
 		    						>
                       <TableCell>
                       	<Box alignItems="center" display="flex">
-                      		<Avatar /* className={classes.avatar} */>
-                      			{/* {getInitials( */}
-                      				{/* transaction.transaction */}
-                      					{/* .client.name */}
-                      			{/* )} */}
-                      		</Avatar>
+
                       		<Typography
                       			color="textPrimary"
                       			variant="body1"
@@ -186,22 +181,20 @@ const VaccinesAdministered = () => {
                       				{/* transaction.transaction */}
                       					{/* .client.name */}
                       			{/* } */}
-                            {vacina.nome_vacina}
+                            {vacina.nome}
                       		</Typography>
                       	</Box>
                       </TableCell>
 		    							<TableCell>
 		    								{/* {transaction.total.toFixed(2)}€ */}
-                        {vacina.lote}
+                        {vacina.lote.id}
 		    							</TableCell>
                       <TableCell>
-                      	{moment(
-                      		vacina.data_validade
-                      	).format("DD/MM/YYYY, HH:mm:ss")}
+                      		{vacina.dataValidade}
                       </TableCell>
 		    							<TableCell>
 		    								{/* {transaction.products.length} */}
-                        {vacina.n_utente}
+                        {vacina.utente.id}
 		    							</TableCell>
 		    						</TableRow>
 		    					))}

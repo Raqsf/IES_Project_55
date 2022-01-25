@@ -5,7 +5,8 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeoutException;
-
+import javax.transaction.Transactional;
+@Transactional
 public class MQProducer {
     private Connection connection;
     private Channel channel;
@@ -13,7 +14,7 @@ public class MQProducer {
 
     public MQProducer() {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("192.168.160.197");
         factory.setPort(5672);
         factory.setUsername("prod");
         factory.setPassword("prod");

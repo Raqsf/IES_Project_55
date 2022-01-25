@@ -67,7 +67,7 @@ const PeopleVaccinated = () => {
           } else {
             setRows([]);
           }
-          console.log(response.data)
+          console.log(Object.values(response.data))
           // setLoadingData(false);
         })
         .catch(function (error) {
@@ -190,27 +190,21 @@ const PeopleVaccinated = () => {
 		    						<TableCell>Utente</TableCell>
 		    						<TableCell>Número</TableCell>
 		    						<TableCell>
-		    							<TableSortLabel active direction="desc">
-		    								Data Nascimento
+		    							<TableSortLabel active >
+		    								Email
 		    							</TableSortLabel>
 		    						</TableCell>
-		    						<TableCell>Email</TableCell>
 		    					</TableRow>
 		    				</TableHead>
 		    				<TableBody>
 		    					{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((utente) => (
 		    						<TableRow
 		    							hover
-		    							key={utente.n_utente}
+		    							key={utente.id}
 		    						>
                       <TableCell>
                       	<Box alignItems="center" display="flex">
-                      		<Avatar /* className={classes.avatar} */>
-                      			{/* {getInitials( */}
-                      				{/* transaction.transaction */}
-                      					{/* .client.name */}
-                      			{/* )} */}
-                      		</Avatar>
+                      		
                       		<Typography
                       			color="textPrimary"
                       			variant="body1"
@@ -225,13 +219,9 @@ const PeopleVaccinated = () => {
                       </TableCell>
                       <TableCell>
                       	{/* {transaction.total.toFixed(2)}€ */}
-                        {utente.n_utente}
+                        {utente.id}
                       </TableCell>
-                      <TableCell>
-                      	{moment(
-                      		utente.data_nascimento
-                      	).format("DD/MM/YYYY")}
-                      </TableCell>
+                      
 		    							<TableCell>
 		    								{/* {transaction.total.toFixed(2)}€ */}
                         {utente.email}

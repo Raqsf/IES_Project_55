@@ -70,4 +70,8 @@ public class Utente {
     public String getMorada(){
         return morada;
     }
+
+    public void setMorada(String m) {
+        this.morada = m;
+    }
 }

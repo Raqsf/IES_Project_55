@@ -196,7 +196,7 @@ public class MQConsumer {
         List<CentroVacinacao> centrosVacinacaoList = centroVacinacaoRepository.findAll();
         for (CentroVacinacao centroVacinacao : centrosVacinacaoList) {
             centroVacinacao.incrementCapacidadeAtual(quantidade);
-            centroVacinacaoRepository.save(centroVacinacao);
+//            centroVacinacaoRepository.save(centroVacinacao);
         }
 
         // Atraves do id do lote, conseguimos saber o nome da vacina

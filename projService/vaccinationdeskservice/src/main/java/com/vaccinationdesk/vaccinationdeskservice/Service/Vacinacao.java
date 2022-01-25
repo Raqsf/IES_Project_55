@@ -3,6 +3,7 @@ package com.vaccinationdesk.vaccinationdeskservice.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ public class Vacinacao {
 
     Map<Integer, String> dentroDoCentroMap = new HashMap<>();
 
+    private boolean first_time = true;
+
     /**
      * Funcao que faz a vacinacao para um determinado dia.
      * É feito um pedido à Base de Dados de todos os agendamentos para o dia em questão
@@ -66,12 +69,9 @@ public class Vacinacao {
         }
         Capacidade dia = capacidadeRepository.getDiaDB();
         Date dia_ = capacidadeRepository.getDiaDB().getDia();
-        // Calendar calendario = Calendar.getInstance();
-        // calendario.setTime(dia_);
-        // calendario.add(Calendar.DATE, 3);
-        // dia_.setTime(calendario.getTime().getTime());
 
-        System.out.println("dia: tem de ser 25 ->" + dia_.toString());
+        // System.out.println("data como esta no repo: " + dia_.toString());
+    
         List<Agendamento> agendamentoParaODiaList = agendamentoRepository.getAgendamentosPorDia(dia_.toString());
         //List<Agendamento> agendamentoParaODiaList = agendamentoRepository.findAll();
         List<Vacina> vacinaList = vacinaRepository.findAll();
@@ -84,9 +84,9 @@ public class Vacinacao {
                 Timestamp data_toma_vacina = agendamento.getDiaVacinacao();
                 Utente utente_vacina_administrada = agendamento.getUtente();
                 CentroVacinacao centro = agendamento.getCentro();
-                if (centro.getCapacidadeAtual() <= 0) {
-                    throw new ConflictException(centro.getNome() + " encontra-se sem vacinas!");
-                }
+//                if (centro.getCapacidadeAtual() <= 0) {
+//                    throw new ConflictException(centro.getNome() + " encontra-se sem vacinas!");
+//                }
                 vacina.setUtente(utente_vacina_administrada);
                 vacina.setDataAdministracao(data_toma_vacina);
                 centro.decreaseCapacidadeAtual();
@@ -100,8 +100,6 @@ public class Vacinacao {
                 map.put("nome", utente_vacina_administrada.getNome());
                 map.put("n_utente", utente_vacina_administrada.getID());
                 map.put("centro", agendamento.getCentro().getID());
-                map.put("vacina", vacina.getNome());
-                map.put("data_administracao", vacina.getDataAdministracao().toString());
                 
                 String infoJSON = mapper.writeValueAsString(map);
                 
@@ -122,6 +120,7 @@ public class Vacinacao {
                 break;
             }
         }
+        
         capacidadeRepository.delete(dia);
 
         return ResponseEntity.ok(null);
@@ -133,13 +132,14 @@ public class Vacinacao {
      * @return
      */
     @Async
-    public List<String> getVacinacaoEmTempoReal(Integer id_centro) {
-        List<String> vacinacaoTempoReal = new ArrayList<>();
+    public List<Utente> getVacinacaoEmTempoReal(Integer id_centro) {
+        List<Utente> vacinacaoTempoReal = new ArrayList<>();
         for (Integer key : dentroDoCentroMap.keySet()) {
             JSONObject json = new JSONObject(dentroDoCentroMap.get(key));
             int centro = json.getInt("centro");
             if (centro == id_centro) {
-                vacinacaoTempoReal.add(dentroDoCentroMap.get(key));
+                Utente utente = utenteRepository.findUtenteById((int) json.get("n_utente"));
+                vacinacaoTempoReal.add(utente);
             }
         }
         return vacinacaoTempoReal;
@@ -153,46 +153,44 @@ public class Vacinacao {
         }
     }
 
-    @Async
-    public String getVacinasInfoDia(Integer id) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<Integer, String> mapinha = new HashMap<>();
-        Capacidade dia = capacidadeRepository.getDiaDB();
-        Date date = dia.getDia();
-        List<Vacina> resultList = vacinaRepository.getVacinasInfoDiaVacina(id, date.toString());
-        int i = 0;
-        for (Vacina vacina : resultList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("nome_vacina", vacina.getNome());
-            map.put("lote", vacina.getLote().getID());
-            map.put("data_validade", vacina.getDataValidade());
-            map.put("n_utente", vacina.getUtente().getNome());
-            String json = mapper.writeValueAsString(map);
-            mapinha.put(i, json);
-            i++;
-        }
-        String r = mapper.writeValueAsString(mapinha);
-        return r; 
+    public List<Vacina> getVacinasInfoDia(Integer id) throws JsonProcessingException {
+        //Capacidade dia = capacidadeRepository.getDiaDB();
+        //Date date = dia.getDia();
+        
+        Date dia2 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario2 = Calendar.getInstance();
+        calendario2.setTime(dia2);
+        calendario2.add(Calendar.DATE, -1);
+        dia2.setTime(calendario2.getTime().getTime());
+
+        List<Vacina> resultList = vacinaRepository.getVacinasInfoDiaVacina(id, dia2.toString());
+        
+        Date dia3 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario3 = Calendar.getInstance();
+        calendario3.setTime(dia3);
+        calendario3.add(Calendar.DATE, 1);
+        dia2.setTime(calendario3.getTime().getTime());
+        return resultList; 
     }
 
-    public String getUtentesVacinadosPorDia(Integer id) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<Integer, String> mapinha = new HashMap<>();
-        Capacidade dia = capacidadeRepository.getDiaDB();
-        Date date = dia.getDia();
-        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, date.toString());
-        int i = 0;
-        for (Utente utente : resultList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("nome", utente.getNome());
-            map.put("data_nascimento", utente.getDataNascimento());
-            map.put("email", utente.getEmail());
-            map.put("n_utente", utente.getID());
-            String json = mapper.writeValueAsString(map);
-            mapinha.put(i, json);
-            i++;
-        }
-        String result = mapper.writeValueAsString(mapinha);
-        return result ;
+    public List<Utente> getUtentesVacinadosPorDia(Integer id) throws JsonProcessingException {
+        //Capacidade dia = capacidadeRepository.getDiaDB();
+        //Date date = dia.getDia();
+
+        Date dia2 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario2 = Calendar.getInstance();
+        calendario2.setTime(dia2);
+        calendario2.add(Calendar.DATE, -1);
+        dia2.setTime(calendario2.getTime().getTime());
+
+        List<Utente> resultList = utenteRepository.getUtenteInfoDiaVacina(id, dia2.toString());
+    
+        Date dia3 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario3 = Calendar.getInstance();
+        calendario3.setTime(dia3);
+        calendario3.add(Calendar.DATE, 1);
+        dia2.setTime(calendario3.getTime().getTime());
+        return resultList;
+
     }
 }
