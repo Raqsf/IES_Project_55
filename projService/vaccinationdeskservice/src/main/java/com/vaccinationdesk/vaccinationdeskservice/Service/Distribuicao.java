@@ -144,12 +144,12 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    try {
+//                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+/*                    try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
                         throw new ConflictException("Não foi possível enviar email." + e);
-                    }
+                    }*/
                     break;
                 }
             }

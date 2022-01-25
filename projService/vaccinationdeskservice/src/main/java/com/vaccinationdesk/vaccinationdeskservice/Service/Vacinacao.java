@@ -84,9 +84,9 @@ public class Vacinacao {
                 Timestamp data_toma_vacina = agendamento.getDiaVacinacao();
                 Utente utente_vacina_administrada = agendamento.getUtente();
                 CentroVacinacao centro = agendamento.getCentro();
-                if (centro.getCapacidadeAtual() <= 0) {
-                    throw new ConflictException(centro.getNome() + " encontra-se sem vacinas!");
-                }
+//                if (centro.getCapacidadeAtual() <= 0) {
+//                    throw new ConflictException(centro.getNome() + " encontra-se sem vacinas!");
+//                }
                 vacina.setUtente(utente_vacina_administrada);
                 vacina.setDataAdministracao(data_toma_vacina);
                 centro.decreaseCapacidadeAtual();
