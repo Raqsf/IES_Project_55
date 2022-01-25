@@ -44,12 +44,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://192.168.160.197:3000", "http://192.168.160.197:80" })
 public class VaccinationDeskController {
-    
+
     @Autowired
     private UtenteRepository utenteRepository;
     @Autowired
@@ -79,15 +78,15 @@ public class VaccinationDeskController {
     public ResponseEntity<ListaEspera> createAppointment(@Valid @RequestBody Utente utente) throws ConflictException {
 
         if (utenteRepository.findUtenteById(utente.getID()) != null) {
-            
+
             Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
-            if (!utente.getNome().equals(utenteDB.getNome()) || 
-                !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())){
+            if (!utente.getNome().equals(utenteDB.getNome()) ||
+                    !utente.getDataNascimento().toString().equals(utenteDB.getDataNascimento().toString())) {
                 throw new ConflictException("Dados inválidos");
             }
             List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
-            if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
-                throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
+            if (findUtenteEmLE != null && findUtenteEmLE.size() != 0) {
+                throw new ConflictException("Utente com id " + utente.getID() + " já fez o pedido de agendamento");
             }
             long millis = System.currentTimeMillis();
             ListaEspera le = new ListaEspera(utenteDB, new Timestamp(millis));
@@ -104,21 +103,24 @@ public class VaccinationDeskController {
 
     @Async
     @PostMapping("/utente2")
-    public ResponseEntity<String> createAppointment2(@Valid @RequestBody Utente utente) throws ConflictException, WriterException, IOException {
+    public ResponseEntity<String> createAppointment2(@Valid @RequestBody Utente utente)
+            throws ConflictException, WriterException, IOException {
 
         utente.setMorada("Aveiro");
         System.out.println("MORADA");
         // utenteRepository.save(utente);
-        // List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
+        // List<Utente> findUtenteEmLE =
+        // listaEsperaRepository.findUtenteInListaEspera(utente);
         // if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
-        //     throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
+        // throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido
+        // de agendamento");
         // }
         // long millis = System.currentTimeMillis();
         // ListaEspera le = new ListaEspera(utente, new Timestamp(millis));
         // try {
-        //     listaEsperaRepository.save(le);
+        // listaEsperaRepository.save(le);
         // } catch (Exception e) {
-        //     return ResponseEntity.badRequest().build();
+        // return ResponseEntity.badRequest().build();
         // }
 
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
@@ -126,7 +128,8 @@ public class VaccinationDeskController {
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
 
-        // Gerar String com morada de todos os centros no formato certo para a Google API
+        // Gerar String com morada de todos os centros no formato certo para a Google
+        // API
         for (CentroVacinacao centro : centrosVacinacao) {
             if (centro.getMorada().equals("Porto")) {
                 moradasCentrosAPI += centro.getMorada() + ",Portugal";
@@ -134,37 +137,37 @@ public class VaccinationDeskController {
             moradasCentrosAPI += centro.getMorada() + "|";
         }
         System.out.println("AFTER FOR");
-        
-            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
-            String centroEscolhido = "Aveiro";
+        // listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
-            for (CentroVacinacao centro : centrosVacinacao) {
-                if (centroEscolhido.equals(centro.getMorada())) {
-                    System.out.println("IFFFFFFFFFF");
+        String centroEscolhido = "Aveiro";
 
-                    // escolher a data em que o utente irá tomar a vacina
-                    Date dataVacina = new Date(System.currentTimeMillis());
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(dataVacina);
-                    cal.add(Calendar.DATE, 3);
-                    dataVacina.setTime(cal.getTime().getTime());
+        for (CentroVacinacao centro : centrosVacinacao) {
+            if (centroEscolhido.equals(centro.getMorada())) {
+                System.out.println("IFFFFFFFFFF");
 
-                    // gerar QRcode e enviar email
-                    String textToQRCode = "Nome - " + utente.getNome() + "\nN Utente - "
-                            + utente.getID() + "\nCentro de Vacinacao - "
-                            + 4 + "\nData da Vacina - " + dataVacina.toString();
-                    Distribuicao.generateQRCodeImage(textToQRCode, utente.getID());
-                    System.out.println("QR");
-                    try {
-                        sendEmail(utente.getID(), utente.getNome(), utente.getEmail(), dataVacina.toString(), centro);
-                        System.out.println("CATCH");
-                    } catch (Exception e) {
-                        throw new ConflictException("Não foi possível enviar email." + e);
-                    }
-                    break;
+                // escolher a data em que o utente irá tomar a vacina
+                Date dataVacina = new Date(System.currentTimeMillis());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dataVacina);
+                cal.add(Calendar.DATE, 3);
+                dataVacina.setTime(cal.getTime().getTime());
+
+                // gerar QRcode e enviar email
+                String textToQRCode = "Nome - " + utente.getNome() + "\nN Utente - "
+                        + utente.getID() + "\nCentro de Vacinacao - "
+                        + 4 + "\nData da Vacina - " + dataVacina.toString();
+                Distribuicao.generateQRCodeImage(textToQRCode, utente.getID());
+                System.out.println("QR");
+                try {
+                    sendEmail(utente.getID(), utente.getNome(), utente.getEmail(), dataVacina.toString(), centro);
+                    System.out.println("CATCH");
+                } catch (Exception e) {
+                    throw new ConflictException("Não foi possível enviar email." + e);
                 }
+                break;
             }
+        }
 
         return ResponseEntity.ok("OK");
 
@@ -176,21 +179,22 @@ public class VaccinationDeskController {
 
     @Async
     @PostMapping("/agendamento")
-    public Agendamento getAgendamentoByUtente(@Valid @RequestBody(required = false) Utente utente) throws Exception{
-        if ( utente !=null)
-            try{
-                if (utenteRepository.findUtenteById(utente.getID()) != null){
+    public Agendamento getAgendamentoByUtente(@Valid @RequestBody(required = false) Utente utente) throws Exception {
+        if (utente != null)
+            try {
+                if (utenteRepository.findUtenteById(utente.getID()) != null) {
                     Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
-                    if (!utente.getNome().equals(utenteDB.getNome())){
+                    if (!utente.getNome().equals(utenteDB.getNome())) {
                         throw new ConflictException("Dados inválidos");
                     }
-                    if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty() && agendamentoRepository.findAllByUtente(utente.getID()) == null){
+                    if (!listaEsperaRepository.findUtenteInListaEspera(utente).isEmpty()
+                            && agendamentoRepository.findAllByUtente(utente.getID()) == null) {
                         throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
                     }
-                }else{
-                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+                } else {
+                    throw new ResourceNotFoundException("Utente " + utente.getID() + " não encontrado!");
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 throw e;
             }
         return agendamentoRepository.findAllByUtente(utente.getID());
@@ -198,25 +202,24 @@ public class VaccinationDeskController {
 
     @Async
     @GetMapping("/doencaPorUtente/{id}")
-    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id) throws ResourceNotFoundException{
-        try{
+    public List<DoencaPorUtente> getDoencasPorUtente(@PathVariable Integer id) throws ResourceNotFoundException {
+        try {
             Utente u = utenteRepository.findUtenteById(id);
             return dpuRepository.findByIdUtente(u);
-        }catch(Exception e){
-            throw new ResourceNotFoundException("Utente "+id+" não encontrado!");
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Utente " + id + " não encontrado!");
         }
-        
+
     }
 
     @Async
     @GetMapping("/doencas")
-    public List<Doenca> doencas(){
+    public List<Doenca> doencas() {
         return doencaRepository.findAll();
     }
 
     @Async
-    public
-    void sendEmail(int n_utente, String nome_utente, String email, String dataVacina, CentroVacinacao centro)
+    public void sendEmail(int n_utente, String nome_utente, String email, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException, javax.mail.MessagingException {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message

@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/estatisticas")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://192.168.160.197:3000", "http://192.168.160.197:80" })
 @Transactional
 public class EstatisticasController {
     @Autowired
@@ -45,16 +45,19 @@ public class EstatisticasController {
 
     @Async
     @GetMapping("/pessoasVacinadas")
-    public Integer pessoasVacinadas(@RequestParam(value="data", required = false) Date data) {
-        if (data!=null)
+    public Integer pessoasVacinadas(@RequestParam(value = "data", required = false) Date data) {
+        if (data != null)
             return vacinaRepository.findAllVacinnatedByDate(data).size();
         return vacinaRepository.findAllVacinnated().size();
     }
 
     @Async
     @GetMapping("/pessoasVacinadasPorPeriodo/{periodo}")
-    public Map<String, Integer> pessoasVacinadasPeriodo(@PathVariable Integer periodo/*, @RequestParam(value="cv", required = false) Integer cv*/) throws ConflictException{
-        
+    public Map<String, Integer> pessoasVacinadasPeriodo(@PathVariable Integer periodo/*
+                                                                                      * , @RequestParam(value="cv",
+                                                                                      * required = false) Integer cv
+                                                                                      */) throws ConflictException {
+
         LinkedHashMap<String, Integer> res = new LinkedHashMap<>();
 
         String[] days_of_the_week = new String[7];
@@ -79,46 +82,46 @@ public class EstatisticasController {
         months_of_year[9] = "Out";
         months_of_year[10] = "Nov";
         months_of_year[11] = "Dez";
-        
+
         Date hoje = capacidadeRepository.getDiaDB().getDia();
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
         // c.add(Calendar.DATE, 3);
         // hoje = new Date(c.getTimeInMillis());
-        switch(periodo){
-            //Hoje      (comparação entre hoje e ontem) ask them?! >.<
+        switch (periodo) {
+            // Hoje (comparação entre hoje e ontem) ask them?! >.<
             case 0:
-                res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                res.put(c.get(c.DAY_OF_MONTH) + "/" + (c.get(c.MONTH) + 1), pessoasVacinadas(hoje));
                 c.add(Calendar.DATE, -1);
                 hoje = new Date(c.getTimeInMillis());
-                res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                res.put(c.get(c.DAY_OF_MONTH) + "/" + (c.get(c.MONTH) + 1), pessoasVacinadas(hoje));
                 return res;
-            //Última Semana
+            // Última Semana
             case 1:
-                for (int i=0; i<7; i++){
-                    res.put(days_of_the_week[c.get(c.DAY_OF_WEEK)-1], pessoasVacinadas(hoje));
+                for (int i = 0; i < 7; i++) {
+                    res.put(days_of_the_week[c.get(c.DAY_OF_WEEK) - 1], pessoasVacinadas(hoje));
                     c.add(Calendar.DATE, -1);
                     hoje = new Date(c.getTimeInMillis());
                 }
                 return res;
-            //Último mês
+            // Último mês
             case 2:
-                for (int i=0; i<31; i++){
-                    res.put(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1), pessoasVacinadas(hoje));
+                for (int i = 0; i < 31; i++) {
+                    res.put(c.get(c.DAY_OF_MONTH) + "/" + (c.get(c.MONTH) + 1), pessoasVacinadas(hoje));
                     c.add(Calendar.DATE, -1);
                     hoje = new Date(c.getTimeInMillis());
                 }
                 return res;
-            //Último ano
+            // Último ano
             case 3:
-                for (int i=1; i<=12; i++){
+                for (int i = 1; i <= 12; i++) {
                     int month = c.get(c.MONTH);
-                    YearMonth yearMonthObject = YearMonth.of(c.get(c.YEAR), month+1);
+                    YearMonth yearMonthObject = YearMonth.of(c.get(c.YEAR), month + 1);
                     int daysInMonth = yearMonthObject.lengthOfMonth();
                     int totalVacs = 0;
-                    
-                    for (int j=0; j<daysInMonth; j++){
-                        totalVacs+= pessoasVacinadas(hoje);
+
+                    for (int j = 0; j < daysInMonth; j++) {
+                        totalVacs += pessoasVacinadas(hoje);
                         c.add(Calendar.DATE, -1);
                         hoje = new Date(c.getTimeInMillis());
                     }
@@ -132,79 +135,78 @@ public class EstatisticasController {
 
     @Async
     @GetMapping("/taxaVacinacaoPorPeriodo/{periodo}")
-    public Integer taxa2semanas(@PathVariable Integer periodo) throws ConflictException{
+    public Integer taxa2semanas(@PathVariable Integer periodo) throws ConflictException {
         Date hoje = capacidadeRepository.getDiaDB().getDia();
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
         // c.add(Calendar.DATE, 3);
         // hoje = new Date(c.getTimeInMillis());
-        switch(periodo){
+        switch (periodo) {
             case 0:
-                Integer ultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
+                Integer ultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH) + "/" + (c.get(c.MONTH) + 1));
                 c.add(Calendar.DATE, -1);
-                Integer penultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH)+"/"+(c.get(c.MONTH)+1));
+                Integer penultima = pessoasVacinadasPeriodo(0).get(c.get(c.DAY_OF_MONTH) + "/" + (c.get(c.MONTH) + 1));
 
-                if (penultima==0 && ultima==0)
+                if (penultima == 0 && ultima == 0)
                     return 0;
-                else if (penultima==0)
+                else if (penultima == 0)
                     return 100;
-                return (int) Math.round((((double) ultima/ (double) penultima)-1)*100);
+                return (int) Math.round((((double) ultima / (double) penultima) - 1) * 100);
             case 1:
-                ultima=0;
-                for (int i=0; i<7; i++){
-                    ultima+= pessoasVacinadas(hoje);
+                ultima = 0;
+                for (int i = 0; i < 7; i++) {
+                    ultima += pessoasVacinadas(hoje);
                     c.add(Calendar.DATE, -1);
                     hoje = new Date(c.getTimeInMillis());
                 }
                 penultima = 0;
-                for (int i=0; i<7; i++){
-                    penultima+= pessoasVacinadas(hoje);
+                for (int i = 0; i < 7; i++) {
+                    penultima += pessoasVacinadas(hoje);
                     c.add(Calendar.DATE, -1);
                     hoje = new Date(c.getTimeInMillis());
                 }
-                if (penultima==0 && ultima==0)
+                if (penultima == 0 && ultima == 0)
                     return 0;
-                else if (penultima==0)
+                else if (penultima == 0)
                     return 100;
-                return (int) Math.round((((double) ultima/ (double) penultima)-1)*100);   
+                return (int) Math.round((((double) ultima / (double) penultima) - 1) * 100);
         }
         throw new ConflictException("Apenas apresentamos taxas de vacinação por hoje e ultima semana.");
     }
 
     @Async
     @GetMapping("/pessoasVacinadas/{id}")
-    public Integer pessoasVacinadasPorCV(@PathVariable Integer id, @RequestParam(value="hoje", required = false) Boolean hoje) throws ResourceNotFoundException{
-        try{
+    public Integer pessoasVacinadasPorCV(@PathVariable Integer id,
+            @RequestParam(value = "hoje", required = false) Boolean hoje) throws ResourceNotFoundException {
+        try {
             CentroVacinacao cv = centroVacinacaoRepository.findCentroVacinacaoById(id);
-            if (cv==null)
-                throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
-            if ( hoje !=null){
+            if (cv == null)
+                throw new ResourceNotFoundException("Centro Vacinacao " + id + " não encontrado!");
+            if (hoje != null) {
                 Date dia = capacidadeRepository.getDiaDB().getDia();
                 return vacinaRepository.findAllVacinnatedByCentroVacinacaoByDate(cv, dia).size();
             }
             return vacinaRepository.findAllVacinnatedByCentroVacinacao(cv).size();
-        }
-        catch(Exception e){
-            throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Centro Vacinacao " + id + " não encontrado!");
         }
     }
 
     @Async
     @GetMapping("/vacinasDisponiveis/{id}")
-    public Integer vacinasDisponiveisPorCV(@PathVariable Integer id) throws ResourceNotFoundException{
-        try{
-            if (centroVacinacaoRepository.findCentroVacinacaoById(id)==null)
-                throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
+    public Integer vacinasDisponiveisPorCV(@PathVariable Integer id) throws ResourceNotFoundException {
+        try {
+            if (centroVacinacaoRepository.findCentroVacinacaoById(id) == null)
+                throw new ResourceNotFoundException("Centro Vacinacao " + id + " não encontrado!");
             return centroVacinacaoRepository.getVacinasDisponiveis(id);
-        }
-        catch(Exception e){
-            throw new ResourceNotFoundException("Centro Vacinacao "+id+" não encontrado!");
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Centro Vacinacao " + id + " não encontrado!");
         }
     }
 
     @Async
     @GetMapping("/vacinasPrevistas")
-    public Integer agendamentosHoje(@RequestParam(value="cv", required = false) Integer cv) throws Exception{
+    public Integer agendamentosHoje(@RequestParam(value = "cv", required = false) Integer cv) throws Exception {
         Date hoje = capacidadeRepository.getDiaDB().getDia();
         Calendar c = Calendar.getInstance();
         c.setTime(hoje);
@@ -218,13 +220,13 @@ public class EstatisticasController {
         try {
             Timestamp ts1 = new Timestamp(DATE_TIME_FORMAT.parse(date1).getTime());
             Timestamp ts2 = new Timestamp(DATE_TIME_FORMAT.parse(date2).getTime());
-            if (cv !=null){
+            if (cv != null) {
                 CentroVacinacao centro = centroVacinacaoRepository.findCentroVacinacaoById(cv);
                 if (centro == null)
-                    throw new ResourceNotFoundException("Centro Vacinacao "+cv+" não encontrado");
-                return agendamentoRepository.findAllTotalVaccinesByDate(ts1,ts2, centro).size();
+                    throw new ResourceNotFoundException("Centro Vacinacao " + cv + " não encontrado");
+                return agendamentoRepository.findAllTotalVaccinesByDate(ts1, ts2, centro).size();
             }
-            return agendamentoRepository.findAllTotalVaccinesByDate(ts1,ts2).size();
+            return agendamentoRepository.findAllTotalVaccinesByDate(ts1, ts2).size();
         } catch (Exception e) {
             throw e;
         }
@@ -232,17 +234,17 @@ public class EstatisticasController {
 
     @Async
     @GetMapping("/pessoasVacinadasPorTodosCentros")
-    public Map<String, Integer> pessoasVacinadasPorTodosCentros() throws ResourceNotFoundException, ConflictException{
+    public Map<String, Integer> pessoasVacinadasPorTodosCentros() throws ResourceNotFoundException, ConflictException {
         Integer total = pessoasVacinadas(null);
-        if (total==0){
+        if (total == 0) {
             throw new ConflictException("No data to show!");
         }
         List<CentroVacinacao> centros = centroVacinacaoRepository.findAll();
         Map<String, Integer> res = new HashMap<>();
-        for (CentroVacinacao c : centros){
-            double taxaVacinacao = Math.round( ((double) pessoasVacinadasPorCV( c.getID(), null) / (double) total)*100);
+        for (CentroVacinacao c : centros) {
+            double taxaVacinacao = Math.round(((double) pessoasVacinadasPorCV(c.getID(), null) / (double) total) * 100);
             res.put(c.getNome(), (int) taxaVacinacao);
-        } 
+        }
         return res;
     }
 }

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequestMapping("/api/v1/agendamento")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://192.168.160.197:3000", "http://192.168.160.197:80" })
 public class AgendamentoController {
 
     @Autowired
@@ -82,32 +82,32 @@ public class AgendamentoController {
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     @Async
     @GetMapping("/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
-        if ( utente !=null)
-            try{
-                if (utenteRepository.findUtenteById(utente.getID()) != null){
+    public Agendamento getAgendamentoByUtente(@PathVariable Integer id,
+            @Valid @RequestBody(required = false) Utente utente) throws Exception {
+        if (utente != null)
+            try {
+                if (utenteRepository.findUtenteById(utente.getID()) != null) {
                     Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
-                    if (!utente.getNome().equals(utenteDB.getNome())){
+                    if (!utente.getNome().equals(utenteDB.getNome())) {
                         throw new ConflictException("Dados inválidos");
                     }
                     List<Utente> findUtenteEmLE = listaesperaRepository.findUtenteInListaEspera(utente);
-                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
+                    if (findUtenteEmLE != null && findUtenteEmLE.size() != 0) {
                         throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
                     }
                     return agendamentoRepository.findAllByUtente(utente.getID());
-                }else{
-                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
+                } else {
+                    throw new ResourceNotFoundException("Utente " + utente.getID() + " não encontrado!");
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 throw e;
             }
         return agendamentoRepository.findAllByUtente(id);
     }
-
 
 }
