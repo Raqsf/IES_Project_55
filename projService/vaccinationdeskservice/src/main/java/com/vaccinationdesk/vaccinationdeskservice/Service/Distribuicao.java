@@ -142,12 +142,12 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    /*try {
+                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+                    try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
                         throw new ConflictException("Não foi possível enviar email." + e);
-                    }*/
+                    }
                     break;
                 }
             }
@@ -270,7 +270,8 @@ public class Distribuicao {
      *         null se algo correr mal no pedido à API
      */
     @Async
-    private static String getDistanceWithGoogleAPI(String from, String to) {
+    public
+    static String getDistanceWithGoogleAPI(String from, String to) {
         // example of google api =
         // https://maps.googleapis.com/maps/api/distancematrix/json?origins=Viseu|Porto&destinations=Lisboa|Coimbra&key=AIzaSyDnusra6igG8TAkOY1CFFsuiyaMNEWyFLY
         try {
@@ -361,8 +362,8 @@ public class Distribuicao {
             throws MessagingException, IOException {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
-        // helper.setTo(pedido.getUtente().getEmail());
-        helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
+        helper.setTo(pedido.getUtente().getEmail());
+        // helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);
