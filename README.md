@@ -46,7 +46,7 @@ docker-compose up
 <hr>
 
 ## Deploy
-.......
+.......   
 O deploy foi feito na VM fornecida.  
 * O frontend pode ser acessado pelo endereço http://deti-engsoft-18.ua.pt:3000/
 * O backend (Springboot) está a correr em background na porta 8081.  
