@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequestMapping("/api/v1/agendamento")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://192.168.160.197:3000", "http://192.168.160.197:80" })
 public class AgendamentoController {
 
     @Autowired
@@ -76,7 +76,6 @@ public class AgendamentoController {
         } catch (Exception e) {
             throw e;
         }
-        
-    }
 
+    }
 }

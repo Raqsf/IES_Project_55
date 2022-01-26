@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequestMapping("/api/v1/vacinacao")
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "http://192.168.160.197:3000", "http://192.168.160.197:80" })
 public class VacinacaoController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class VacinacaoController {
 
     @Autowired
     private Vacinacao vacinacao;
-    
+
     @Async
     @GetMapping("/vacinas")
     public List<Vacina> getAllVacinas() {
@@ -58,8 +58,8 @@ public class VacinacaoController {
 
     @Async
     @GetMapping("/utente_vacinados/{id}")
-    public List<Utente> getUtentesVacinadosPorDia (@PathVariable Integer id) throws JsonProcessingException {
+    public List<Utente> getUtentesVacinadosPorDia(@PathVariable Integer id) throws JsonProcessingException {
         return vacinacao.getUtentesVacinadosPorDia(id);
     }
-    
+
 }
