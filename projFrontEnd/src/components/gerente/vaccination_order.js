@@ -72,8 +72,22 @@ export const VaccinationOrder = (props) => {
       } else {
         localStorage.removeItem("idade");
       }
-      console.log(order)
 
+      // api
+      // .post(`/agendar_com_filtros`, order, headers)
+      // .then((response) => {
+      //   toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER})
+      // })
+      // .catch((err) => {
+      //   if (err.response) {
+      //       toast.error(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+      //     } else if (err.request) {
+      //       console.log(err.request);
+      //     } else {
+      //       console.log('err', err.message);
+      //     }
+      //     console.log(err.config);
+      // });
       toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER})
       
     };

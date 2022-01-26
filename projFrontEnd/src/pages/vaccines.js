@@ -44,7 +44,13 @@ const Manage = () => {
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+        if (err.response) {
+          console.error("ops! ocorreu um erro" + err);
+        } else if (err.request) {
+          console.log(err.request);
+        } else {
+          console.log('err', err.message);
+        }
       });
     };
     getData();
@@ -81,7 +87,13 @@ const Manage = () => {
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+        if (err.response) {
+          console.error("ops! ocorreu um erro" + err);
+        } else if (err.request) {
+          console.log(err.request);
+        } else {
+          console.log('err', err.message);
+        }
       });
     };
     getData();

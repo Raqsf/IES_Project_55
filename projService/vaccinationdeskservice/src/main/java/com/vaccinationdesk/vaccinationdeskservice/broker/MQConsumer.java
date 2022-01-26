@@ -31,7 +31,7 @@ import com.vaccinationdesk.vaccinationdeskservice.repository.VacinaRepository;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-
+@Transactional
 public class MQConsumer {
     private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private MQProducer producer = new MQProducer();

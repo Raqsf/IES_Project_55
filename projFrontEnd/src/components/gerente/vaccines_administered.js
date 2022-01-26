@@ -34,8 +34,13 @@ export const VaccinesAdministered = (props) => {
           setLoadingVaccines(false);
         })
         .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
+          if (err.response) {
+            console.error("ops! ocorreu um erro" + err);
+          } else if (err.request) {
+            console.log(err.request);
+          } else {
+            console.log('err', err.message);
+          }
           // if(response.status === 500 && typeof id == undefined) {
           //   alert("Erro")
           // }
@@ -53,8 +58,13 @@ export const VaccinesAdministered = (props) => {
           setLoadingVaccines(false);
         })
         .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
+          if (err.response) {
+            console.error("ops! ocorreu um erro" + err);
+          } else if (err.request) {
+            console.log(err.request);
+          } else {
+            console.log('err', err.message);
+          }
         }
       );
       }, 1000);
@@ -74,11 +84,13 @@ export const VaccinesAdministered = (props) => {
             setLoadingAvailable(false);
           })
           .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-            // if(response.status === 500 && typeof id == undefined) {
-            //   alert("Erro")
-            // }
+            if (err.response) {
+              console.error("ops! ocorreu um erro" + err);
+            } else if (err.request) {
+              console.log(err.request);
+            } else {
+              console.log('err', err.message);
+            }
           })
         }
         const loop = setInterval(function() {
@@ -93,8 +105,13 @@ export const VaccinesAdministered = (props) => {
             setLoadingAvailable(false);
           })
           .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
+            if (err.response) {
+              console.error("ops! ocorreu um erro" + err);
+            } else if (err.request) {
+              console.log(err.request);
+            } else {
+              console.log('err', err.message);
+            }
           }
         );
         }, 1000);

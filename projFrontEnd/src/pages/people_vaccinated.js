@@ -190,9 +190,7 @@ const PeopleVaccinated = () => {
 		    						<TableCell>Utente</TableCell>
 		    						<TableCell>Número</TableCell>
 		    						<TableCell>
-		    							<TableSortLabel active >
 		    								Email
-		    							</TableSortLabel>
 		    						</TableCell>
 		    					</TableRow>
 		    				</TableHead>

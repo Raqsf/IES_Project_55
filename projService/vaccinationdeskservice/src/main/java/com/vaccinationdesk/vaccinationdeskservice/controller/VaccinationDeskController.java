@@ -107,23 +107,9 @@ public class VaccinationDeskController {
     public ResponseEntity<String> createAppointment2(@Valid @RequestBody Utente utente) throws ConflictException, WriterException, IOException {
 
         utente.setMorada("Aveiro");
-        System.out.println("MORADA");
-        // utenteRepository.save(utente);
-        // List<Utente> findUtenteEmLE = listaEsperaRepository.findUtenteInListaEspera(utente);
-        // if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
-        //     throw new ConflictException("Utente com id "+utente.getID()+" já fez o pedido de agendamento");
-        // }
-        // long millis = System.currentTimeMillis();
-        // ListaEspera le = new ListaEspera(utente, new Timestamp(millis));
-        // try {
-        //     listaEsperaRepository.save(le);
-        // } catch (Exception e) {
-        //     return ResponseEntity.badRequest().build();
-        // }
 
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         System.out.println("CENTROS");
-        int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
 
         // Gerar String com morada de todos os centros no formato certo para a Google API
@@ -133,45 +119,35 @@ public class VaccinationDeskController {
             }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-        System.out.println("AFTER FOR");
         
-            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+        String centroEscolhido = "Aveiro";
 
-            String centroEscolhido = "Aveiro";
+        for (CentroVacinacao centro : centrosVacinacao) {
+            if (centroEscolhido.equals(centro.getMorada())) {
 
-            for (CentroVacinacao centro : centrosVacinacao) {
-                if (centroEscolhido.equals(centro.getMorada())) {
-                    System.out.println("IFFFFFFFFFF");
+                // escolher a data em que o utente irá tomar a vacina
+                Date dataVacina = new Date(System.currentTimeMillis());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dataVacina);
+                cal.add(Calendar.DATE, 3);
+                dataVacina.setTime(cal.getTime().getTime());
 
-                    // escolher a data em que o utente irá tomar a vacina
-                    Date dataVacina = new Date(System.currentTimeMillis());
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(dataVacina);
-                    cal.add(Calendar.DATE, 3);
-                    dataVacina.setTime(cal.getTime().getTime());
-
-                    // gerar QRcode e enviar email
-                    String textToQRCode = "Nome - " + utente.getNome() + "\nN Utente - "
-                            + utente.getID() + "\nCentro de Vacinacao - "
-                            + 4 + "\nData da Vacina - " + dataVacina.toString();
-                    Distribuicao.generateQRCodeImage(textToQRCode, utente.getID());
-                    System.out.println("QR");
-                    try {
-                        sendEmail(utente.getID(), utente.getNome(), utente.getEmail(), dataVacina.toString(), centro);
-                        System.out.println("CATCH");
-                    } catch (Exception e) {
-                        throw new ConflictException("Não foi possível enviar email." + e);
-                    }
-                    break;
+                // gerar QRcode e enviar email
+                String textToQRCode = "Nome - " + utente.getNome() + "\nN Utente - "
+                        + utente.getID() + "\nCentro de Vacinacao - "
+                        + 4 + "\nData da Vacina - " + dataVacina.toString();
+                Distribuicao.generateQRCodeImage(textToQRCode, utente.getID());
+                try {
+                    sendEmail(utente.getID(), utente.getNome(), utente.getEmail(), dataVacina.toString(), centro);
+                } catch (Exception e) {
+                    throw new ConflictException("Não foi possível enviar email." + e);
                 }
+                break;
             }
+        }
 
         return ResponseEntity.ok("OK");
 
-    }
-
-    private String calculateShorterPath(String resultadoAPIGoogle, int quantidadeDeCentros) {
-        return null;
     }
 
     @Async

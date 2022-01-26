@@ -65,12 +65,6 @@ public class AgendamentoController {
     }
 
     @Async
-    @GetMapping("/get_por_dia")
-    public List<Agendamento> getAgendarDia() {
-        return agendamentoRepository.getAgendamentosPorDia("2022-01-20");
-    }
-
-    @Async
     @PostMapping("/agendar_com_filtros")
     public ResponseEntity<List<Agendamento>> agendarComFiltros(@Valid @RequestBody String filtros) throws Exception {
         // {idade: int, doenca: int}
@@ -84,30 +78,5 @@ public class AgendamentoController {
         }
         
     }
-
-    @Async
-    @GetMapping("/{id}")
-    public Agendamento getAgendamentoByUtente(@PathVariable Integer id, @Valid @RequestBody(required = false) Utente utente) throws Exception{
-        if ( utente !=null)
-            try{
-                if (utenteRepository.findUtenteById(utente.getID()) != null){
-                    Utente utenteDB = utenteRepository.findUtenteById(utente.getID());
-                    if (!utente.getNome().equals(utenteDB.getNome())){
-                        throw new ConflictException("Dados inválidos");
-                    }
-                    List<Utente> findUtenteEmLE = listaesperaRepository.findUtenteInListaEspera(utente);
-                    if (findUtenteEmLE!=null && findUtenteEmLE.size()!=0){
-                        throw new ConflictException("Utente encontra-se em lista de espera. Aguarde pelo agendamento");
-                    }
-                    return agendamentoRepository.findAllByUtente(utente.getID());
-                }else{
-                    throw new ResourceNotFoundException("Utente "+utente.getID()+" não encontrado!");
-                }
-            }catch(Exception e){
-                throw e;
-            }
-        return agendamentoRepository.findAllByUtente(id);
-    }
-
 
 }

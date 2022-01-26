@@ -157,9 +157,7 @@ const VaccinesAdministered = () => {
 		    						<TableCell>Vacina</TableCell>
 		    						<TableCell>Lote</TableCell>
 		    						<TableCell>
-		    							<TableSortLabel active >
 		    								Data Validade
-		    							</TableSortLabel>
 		    						</TableCell>
 		    						<TableCell>Utente</TableCell>
 		    					</TableRow>
