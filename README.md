@@ -118,6 +118,7 @@ password: mypassword
     password: prod  
 4. dar permissões de administrador
 <hr>
+
 ## Equipa
 | NMEC | NOME| Papel |
 |----:|-----|-----|
