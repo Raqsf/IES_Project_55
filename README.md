@@ -37,7 +37,6 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 >- **Raspberry:** Com o objetivo de ler códigos QR, relativos a informações do agendamento feitas pelo back-end, temos implementado num Raspberry, um leitor de códigos QR, este leitor está desenvolvido em Python, e utiliza a biblioteca do OpenCV, para ler os códigos. A resultante da leitura dos codigos, é enviada para o Message Broker.
 
 <hr>
-
 ## Backlog
 
 - Para o backlog tiramos o máximo partido das funcionalidades do ***GitHub***, sendo que utilizamos o ***GitHub Projects*** de forma a dividir-mos as tarefas/funcionalidades de uma forma bastante organizada a implementar no projeto. 
@@ -48,7 +47,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 1. correr os conteiners docker. Na raiz do projeto corra o comando  
     `docker-compose up`  
-**Nota:** leia o tópico **DevOps** ao final desse ficheiro.  
+**Nota:** leia o tópico [DevOps](#devops) ao final desse ficheiro.  
 2. correr o backend. no diretório projService/vaccinationdeskservice/ corra o comando:  
     `./mvnw spring-boot:run`  
 3. correr o frontend. no diretório projFrontend/ corra os comandos:  
@@ -80,6 +79,16 @@ O deploy foi feito na VM fornecida.
 * O broker (rabbitMQ) esta a correr em um docker container e pode ser acessado na porta 15672
   
 **OBS:** Configuramos o nginx para servir o frontend na porta 80 da VM, entretanto os arquivos html estáticos gerados pelo next.js não estão a funcionar bem. Portanto existe uma versão do frontend a rodar na porta 80, servida pelo nginx com o funcionamento das paginas html incorredo, para efeitos de avaliação do frontend utilize o link http://deti-engsoft-18.ua.pt:3000/  
+
+
+<hr>
+
+## Documentação da API
+
+A documentação da API foi feita com recurso ao **Swagger**, e da mesma foi gerado o seguinte [ficheiro](index.html) em html. Visto que é a unica forma de a documentação estar
+assim sempre acessível.
+
+
 
 <hr>
 
