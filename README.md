@@ -37,16 +37,25 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 ## Como executar
 
- Toda a execução do projeto, é feita com recurso ao *Docker Compose*, sendo necessária a sua instalação.
-Tendo os requesitos satisfeitos, basta correr o [docker-compose](docker-compose.yml) para iniciar o projeto.
-```
-docker-compose up
-```
-
+1. correr os conteiners docker. Na raiz do projeto corra o comando  
+    docker-compose up  
+**Nota:** leia o tópico **DevOps** ao final desse ficheiro.  
+2. correr o backend. no diretório projService/vaccinationdeskservice/ corra o comando:  
+    mvn spring-boot:run  
+3. correr o frontend. no diretório projFrontend/ corra os comandos:  
+    npm install  
+    npm run start  
+4. correr os scripts python.  
+no diretório projDataGen/ corra os comandos:  
+    source venv/bin/activate  
+    python3 generator.py  
+no diretório projService/vaccinationdeskservice corra o comando:  
+    python3 requests_API.py  
+    
 <hr>
 
 ## Deploy
-.......   
+
 O deploy foi feito na VM fornecida.  
 * O frontend pode ser acessado pelo endereço http://deti-engsoft-18.ua.pt:3000/
 * O backend (Springboot) está a correr em background na porta 8081.  
@@ -76,7 +85,10 @@ Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrg
 ## DevOps
 ### Docker-compose
 Na raiz do projeto basta correr o comando.  
-    `docker-compose up`  
+    docker-compose up   
+Para interromper o docker compose basta correr o comando.  
+    docker-compose down  
+### mySQL
 Na primeira execução deve tambem criar as tabelas na base de dados.  
 Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.
 db connection:
@@ -84,5 +96,12 @@ db connection:
             MYSQL_DATABASE: vaccinationdb  
             MYSQL_USER: ies  
             MYSQL_PASSWORD: password  
-Para interromper o docker compose basta correr o comando.  
-    `docker-compose down`  
+### rabbitMQ
+Certifique-se de que o exist o user "prod" no rabbitmq.  
+1. acessar http://deti-engsoft-18.ua.pt:15672/ ou http://localhost:15672/ e fazer login:  
+user: myuser  
+password: mypassword  
+2. ir para a tab "admin"  
+3. adicionar o user "prod" caso não exista:  
+user: prod  
+password: prod  
