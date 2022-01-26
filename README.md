@@ -1,6 +1,9 @@
 # Vaccination Desk
 
-<hr>
+<p align="center">
+  <img  src="/images/logo.png" height=200 width=200>
+</p>
+
 Sistema de agendamento de vacinação, distribuição de vacinas e verificação de administração de vacinas.
 <hr>
 
