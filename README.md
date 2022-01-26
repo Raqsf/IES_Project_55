@@ -16,6 +16,10 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 > Todos os dados supramencionados são gerados automaticamente pelo sistema, não sendo reais.
 <hr>
 
+<a href="https://youtu.be/09V4a1aT1p8">
+    <img src="/reports/images/template.png">
+  </a>
+
 ## Arquitetura
 ![arquitetura](./images/123.png)
 
@@ -55,6 +59,7 @@ no diretório projDataGen/ corra os comandos:
     ```
     no diretório projService/vaccinationdeskservice corra o comando:  
     ```
+    pip install requests
     python3 requests_API.py  
     ```
     
