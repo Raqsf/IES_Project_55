@@ -15,10 +15,11 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 > Todos os dados supramencionados são gerados automaticamente pelo sistema, não sendo reais.
 <hr>
-
+# Demo
 <a href="https://youtu.be/09V4a1aT1p8">
-    <img src="/reports/images/template.png">
+    <img src="./images/template.png">
   </a>
+  <hr>
 
 ## Arquitetura
 ![arquitetura](./images/123.png)
@@ -30,12 +31,13 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 >- **Back-end:** Terá acesso à base de dados e terá comunicações com a parte do cliente e do broker, será aqui que os principais processamentos serão feitos (Spring Boot - Rest API, Broker e BD).
 >- **Client:** A aplicação web, será desenvolvida com base no template em JS React, sendo depois adaptado às necessidades quer de visualização quer de comunicação com o back-end.
 >- **Persistence:** A base de dados (MySQL) do sistema é do tipo relacional sendo bastante importante guardar de forma segura todos os dados que o sistema gera.
+>- **Raspberry:** Com o objetivo de ler códigos QR, relativos a informações do agendamento feitas pelo back-end, temos implementado num Raspberry, um leitor de códigos QR, este leitor está desenvolvido em Python, e utiliza a biblioteca do OpenCV, para ler os códigos. A resultante da leitura dos codigos, é enviada para o Message Broker.
 
 <hr>
 
 ## Backlog
 
-- Para o backlog foi usado o o *Github Projects*  ....
+- Para o backlog tiramos o máximo partido das funcionalidades do ***GitHub***, sendo que utilizamos o ***GitHub Projects*** de forma a dividir-mos as tarefas/funcionalidades de uma forma bastante organizada a implementar no projeto. 
 
 <hr>
 
@@ -76,21 +78,15 @@ O deploy foi feito na VM fornecida.
   
 **OBS:** Configuramos o nginx para servir o frontend na porta 80 da VM, entretanto os arquivos html staticos gerados pelo next.js não estão a funcionar bem. Portanto existe uma versão do frontend a rodar na porta 80, servida pelo nginx com o funcionamento das paginas html incorredo, paraa efeitos de avaliação do frontend utilize o link http://deti-engsoft-18.ua.pt:3000/  
 
+<hr>
+
 ## Relatório
 
 O projeto está acompanhado de um relatório, sendo que o mesmo pode ser consultado [aqui](reports/IES%20Project%20Specification%20Report.pdf).
 
-Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrgvn6NY8cXZja3s/edit?usp=sharing
-
 <hr>
 
-## Equipa
-| NMEC | NOME| Papel |
-|----:|-----|-----|
-| 98323 | [Raquel da Silva Ferreira](https://github.com/Raqsf) | Team Manager, Developer |
-| 98546 | [Patrícia Matias Dias](https://github.com/Patricia-Dias)) | Product Owner, Developer |
-| 91359 | [Juan Victor Lessa Gonçalves](https://github.com/juanlessa) | DevOps Master, Developer |
-| 98491 | [Pedro Alexandre Coelho Sobral](https://github.com/TheScorpoi) | Architect, Developer |
+
 
 
 ## DevOps
@@ -111,8 +107,8 @@ db connection:
     MYSQL_PASSWORD: password  
 ```
             
-### rabbitMQ
-Certifique-se de que o exist o user "prod" no rabbitmq.  
+### RabbitMQ
+Certifique-se de que o existe o user "prod" no Rabbitmq.  
 1. acessar http://deti-engsoft-18.ua.pt:15672/ ou http://localhost:15672/ e fazer login:  
 user: myuser  
 password: mypassword  
@@ -120,3 +116,12 @@ password: mypassword
 3. adicionar o user "prod" caso não exista:  
     user: prod  
     password: prod  
+4. dar permissões de administrador
+<hr>
+## Equipa
+| NMEC | NOME| Papel |
+|----:|-----|-----|
+| 98323 | [Raquel da Silva Ferreira](https://github.com/Raqsf) | Team Manager, Developer |
+| 98546 | [Patrícia Matias Dias](https://github.com/Patricia-Dias) | Product Owner, Developer |
+| 91359 | [Juan Victor Lessa Gonçalves](https://github.com/juanlessa) | DevOps Master, Developer |
+| 98491 | [Pedro Alexandre Coelho Sobral](https://github.com/TheScorpoi) | Architect, Developer |
