@@ -70,17 +70,15 @@ no diretório projDataGen/ corra os comandos:
 O deploy foi feito na VM fornecida.  
 * O frontend pode ser acessado pelo endereço http://deti-engsoft-18.ua.pt:3000/
 * O backend (Springboot) está a correr em background na porta 8081.  
-* Existem 2 scripts pyhon a correr em beckgrond para geração de dados.  
-* A database (mySQL) esta a correr em um docker container e pode ser acessada na porta 3306
+* Existem 2 scripts pyhon a correr em backgrond para geração de dados.  
+* A base de dados (mySQL) está a correr num docker container e pode ser acessada na porta 3306
 * O broker (rabbitMQ) esta a correr em um docker container e pode ser acessado na porta 15672
   
-**OBS:** Configuramos o nginx para servir o frontend na porta 80 da VM, entretanto os arquivos html staticos gerados pelo next.js não estão a funcionar bem. Portanto existe uma versão do frontend a rodar na porta 80, servida pelo nginx com o funcionamento das paginas html incorredo, paraa efeitos de avaliação do frontend utilize o link http://deti-engsoft-18.ua.pt:3000/  
+**OBS:** Configuramos o nginx para servir o frontend na porta 80 da VM, entretanto os arquivos html estáticos gerados pelo next.js não estão a funcionar bem. Portanto existe uma versão do frontend a rodar na porta 80, servida pelo nginx com o funcionamento das paginas html incorredo, para efeitos de avaliação do frontend utilize o link http://deti-engsoft-18.ua.pt:3000/  
 
 ## Relatório
 
 O projeto está acompanhado de um relatório, sendo que o mesmo pode ser consultado [aqui](reports/IES%20Project%20Specification%20Report.pdf).
-
-Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrgvn6NY8cXZja3s/edit?usp=sharing
 
 <hr>
 
