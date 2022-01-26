@@ -1,4 +1,3 @@
 # Run application 
-1. $ mvn install
-2. $ ./mvnw spring-boot:run
-3. Go to [localhost](http://localhost:8080/)
+1. $ ./mvnw spring-boot:run
+2. Go to [localhost](http://localhost:8081/)
