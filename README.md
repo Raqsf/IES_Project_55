@@ -19,7 +19,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 > Todos os dados supramencionados são gerados automaticamente pelo sistema, não sendo reais.
 <hr>
 
-# Demo
+## Demo
 <a href="https://youtu.be/09V4a1aT1p8">
     <img src="./images/template.png">
   </a>
@@ -38,6 +38,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 >- **Raspberry:** Com o objetivo de ler códigos QR, relativos a informações do agendamento feitas pelo back-end, temos implementado num Raspberry, um leitor de códigos QR, este leitor está desenvolvido em Python, e utiliza a biblioteca do OpenCV, para ler os códigos. A resultante da leitura dos codigos, é enviada para o Message Broker.
 
 <hr>
+
 ## Backlog
 
 - Para o backlog tiramos o máximo partido das funcionalidades do ***GitHub***, sendo que utilizamos o ***GitHub Projects*** de forma a dividir-mos as tarefas/funcionalidades de uma forma bastante organizada a implementar no projeto. 
