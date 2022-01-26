@@ -18,6 +18,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 
 > Todos os dados supramencionados são gerados automaticamente pelo sistema, não sendo reais.
 <hr>
+
 # Demo
 <a href="https://youtu.be/09V4a1aT1p8">
     <img src="./images/template.png">
