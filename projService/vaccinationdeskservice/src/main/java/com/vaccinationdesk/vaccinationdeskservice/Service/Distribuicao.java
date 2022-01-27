@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import okhttp3.OkHttpClient;
@@ -63,7 +64,7 @@ public class Distribuicao {
     // int capacidadeDia =
     // capacidadeRepository.getCapacidadePorDia(capacidadeRepository.getDiaDB().toString())
     // - 47;
-    int capacidadeDia = 105;
+    int capacidadeDia = 224;
 
     public Distribuicao() {
     }
@@ -88,18 +89,20 @@ public class Distribuicao {
      * @throws IOException        - excecao QRcode
      * @throws WriterException    - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorOrdemMarcacao()
             throws ConflictException, WriterException, IOException {
         List<CentroVacinacao> centrosVacinacao = centroVacinacaoRepository.findAll();
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
         
         Date dia = capacidadeRepository.getDiaDB().getDia();
+        Date diadia = dia;
         Calendar calendario = Calendar.getInstance();
-        calendario.setTime(dia);
+        calendario.setTime(diadia);
         calendario.add(Calendar.DATE, -3);
-        dia.setTime(calendario.getTime().getTime());
+        diadia.setTime(calendario.getTime().getTime());
 
-        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(dia.toString());
+        List<ListaEspera> listaEspera = listaesperaRepository.getListaEsperaPeloDia(diadia.toString());
 
         int quantidadeDeCentros = centrosVacinacao.size();
         String moradasCentrosAPI = "";
@@ -111,16 +114,15 @@ public class Distribuicao {
             }
             moradasCentrosAPI += centro.getMorada() + "|";
         }
-
+        
         for (int i = 0; i < listaEspera.size(); i++) {
             ListaEspera pedido = listaEspera.get(i);
-            //listaesperaRepository.deleteListaEsperaByid(pedido.getId());
+            listaesperaRepository.deleteListaEsperaByid(pedido.getId());
 
             // Utilização da Google API para escolher o centro de vacinação mais proximo do utente
             String resultadoAPIGoogle = getDistanceWithGoogleAPI(pedido.getUtente().getMorada() + ",Portugal",
                     moradasCentrosAPI);
             String centroEscolhido = calculateShorterPath(resultadoAPIGoogle, quantidadeDeCentros);
-
             for (CentroVacinacao centro : centrosVacinacao) {
                 if (centroEscolhido.equals(centro.getMorada())) {
 
@@ -131,6 +133,8 @@ public class Distribuicao {
                     cal.add(Calendar.DATE, 3);
                     dataVacina.setTime(cal.getTime().getTime());
 
+                    //System.out.println("data do agendamento: " + dataVacina.toString());
+
                     // criar agendamento e guarda-lo
                     Agendamento agendamento = new Agendamento(pedido.getUtente(), dataVacina, centro);
                     agendamentoRepository.save(agendamento);
@@ -140,8 +144,8 @@ public class Distribuicao {
                     String textToQRCode = "Nome - " + pedido.getUtente().getNome() + "\nN Utente - "
                             + pedido.getUtente().getID() + "\nCentro de Vacinacao - "
                             + centro.getID() + "\nData da Vacina - " + dataVacina.toString();
-                    //generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
-                    /*try {
+//                    generateQRCodeImage(textToQRCode, pedido.getUtente().getID());
+/*                    try {
                         sendEmail(pedido, dataVacina.toString(), centro);
                     } catch (Exception e) {
                         throw new ConflictException("Não foi possível enviar email." + e);
@@ -150,6 +154,12 @@ public class Distribuicao {
                 }
             }
         }
+        
+        Date dia2 = capacidadeRepository.getDiaDB().getDia();
+        Calendar calendario2 = Calendar.getInstance();
+        calendario2.setTime(dia2);
+        calendario2.add(Calendar.DATE, 3);
+        dia2.setTime(calendario2.getTime().getTime());
         return agendamentosFeitos;
     }
 
@@ -178,6 +188,7 @@ public class Distribuicao {
      * @throws IOException       - excecao QRcode
      * @throws WriterException   - excecao QRcode
      */
+    @Async
     public List<Agendamento> distribuirVacinasPorFiltros(String filtrosJSON)
             throws WriterException, IOException, ConflictException {
         List<Agendamento> agendamentosFeitos = new ArrayList<>();
@@ -266,7 +277,9 @@ public class Distribuicao {
      * @return - em JSON, distancia entre os centros de vacinacao e o utente, ou
      *         null se algo correr mal no pedido à API
      */
-    private static String getDistanceWithGoogleAPI(String from, String to) {
+    @Async
+    public
+    static String getDistanceWithGoogleAPI(String from, String to) {
         // example of google api =
         // https://maps.googleapis.com/maps/api/distancematrix/json?origins=Viseu|Porto&destinations=Lisboa|Coimbra&key=AIzaSyDnusra6igG8TAkOY1CFFsuiyaMNEWyFLY
         try {
@@ -292,6 +305,7 @@ public class Distribuicao {
      * @param quantidadeCentros - quantidade de centros que há na BD
      * @return - o centro de vacinacao mais proximo do utente
      */
+    @Async
     private static String calculateShorterPath(String responseString, int quantidadeCentros) {
         try {
             int indexLocation = 0;
@@ -332,6 +346,7 @@ public class Distribuicao {
      * @throws WriterException - excecao de escrita do QRcode
      * @throws IOException     - excecao do QRcode
      */
+    @Async
     public static void generateQRCodeImage(String text, int i) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 400, 400);
@@ -350,12 +365,13 @@ public class Distribuicao {
      * @throws MessagingException -
      * @throws IOException        -
      */
+    @Async
     void sendEmail(ListaEspera pedido, String dataVacina, CentroVacinacao centro)
             throws MessagingException, IOException {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);// true = multipart message
-        // helper.setTo(pedido.getUtente().getEmail());
-        helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
+        helper.setTo(pedido.getUtente().getEmail());
+        // helper.setTo("joaosilveirasantos8@gmail.com"); // pass = joaosilveira8--
         String subject = "Agendamento da Vacina - " + pedido.getUtente().getNome() + " - Nº Utente - "
                 + pedido.getUtente().getID();
         helper.setSubject(subject);

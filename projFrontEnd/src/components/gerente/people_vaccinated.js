@@ -1,12 +1,18 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Grid, Typography, CircularProgress } from '@mui/material';
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import { useEffect, useState } from 'react';
 import api from "../../api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 export const PeopleVaccinated = (props) => {
+  const [loadingPeople, setLoadingPeople] = useState(true);
+  const [loadingScheduled, setLoadingScheduled] = useState(true);
   const [vaccinated, setVaccinated] = useState();
   const [scheduled, setScheduled] = useState();
-  const {id} = props;
+  let {id} = props;
+
   if(id) {
     localStorage.setItem("id_people_vaccinated", id);
   }
@@ -20,82 +26,98 @@ export const PeopleVaccinated = (props) => {
   // }
       
   useEffect(() => {
-    // setLoading(true);
+    setLoadingPeople(true);
 
     if (id) {
-
+      let payload = {hoje:true}
       api.get(
-          `/estatisticas/pessoasVacinadas/${id}`, headers
+          `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
-          console.log("Second", id)
-          console.log(response.data)
+          // console.log("Second", id)
+          // console.log(response.data)
           setVaccinated(response.data);
-          // setCentro(response.data);
-          // setLoading(false);
+          setLoadingPeople(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-          // if(response.status === 500 && typeof id == undefined) {
-          //   alert("Erro")
-          // }
-        })
+        .catch(function (error) {
+          if (error.response) {
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }
     const loop = setInterval(function() {
-      console.log("Loop", id)
+      // console.log("Loop", id)
       id = localStorage.getItem("id_people_vaccinated");
       // console.log("Loop", param1)
+      let payload = {hoje:true}
       api.get(
-          `/estatisticas/pessoasVacinadas/${id}`, headers
+          `/estatisticas/pessoasVacinadas/${id}`, {params: payload}, headers
         ).then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           setVaccinated(response.data);
-          // setCentro(response.data);
+          setLoadingPeople(false);
         })
-        .catch((err) => {
-          console.error("ops! ocorreu um erro" + err);
-          alert("Erro");
-        }
-      );
+        .catch(function (error) {
+          if (error.response) {
+            toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
       }, 1000);
       return () => clearInterval(loop);
     }, []);
 
-  // /vacinasPrevistas
     useEffect(() => {
-      // setLoading(true);
+      setLoadingScheduled(true);
       if (id) {
         api.get(
             `/estatisticas/vacinasPrevistas`, {cv: id}, headers
           ).then((response) => {
-            console.log("Second", id)
-            console.log(response.data)
+            // console.log("Second", id)
+            // console.log(response.data)
             setScheduled(response.data);
-            // setLoading(false);
+            setLoadingScheduled(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-            // if(response.status === 500 && typeof id == undefined) {
-            //   alert("Erro")
-            // }
-          })
+          .catch(function (error) {
+            if (error.response) {
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }
       const loop = setInterval(function() {
-        console.log("Loop", id)
+        // console.log("Loop", id)
         id = localStorage.getItem("id_people_vaccinated");
         // console.log("Loop", param1)
         api.get(
             `/estatisticas/vacinasPrevistas`, {cv: id}, headers
           ).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             setScheduled(response.data);
+            setLoadingScheduled(false);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-          }
-        );
+          .catch(function (error) {
+            if (error.response) {
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }, 1000);
         return () => clearInterval(loop);
       }, []);
@@ -103,7 +125,12 @@ export const PeopleVaccinated = (props) => {
 
   return (
   <Card
-    sx={{ height: '100%' }}
+    sx={{ 
+      height: '100%', 
+      ':hover': {
+      boxShadow: 20, 
+      cursor: "pointer"
+    } }}
     {...props}
   >
     <CardContent>
@@ -124,7 +151,12 @@ export const PeopleVaccinated = (props) => {
             color="textPrimary"
             variant="h4"
           >
-            {vaccinated}
+            {loadingPeople ? 
+              <Box sx={{ display: 'flex', mt: 1 }}>
+                <CircularProgress size="30px"/> 
+              </Box>
+            : 
+            vaccinated}
           </Typography>
         </Grid>
         <Grid item>
@@ -159,7 +191,9 @@ export const PeopleVaccinated = (props) => {
           color="textSecondary"
           variant="caption"
         >
-          {scheduled}
+          {loadingScheduled ? 
+            <CircularProgress size="10px" /> 
+          : scheduled}
         </Typography>
       </Box>
     </CardContent>

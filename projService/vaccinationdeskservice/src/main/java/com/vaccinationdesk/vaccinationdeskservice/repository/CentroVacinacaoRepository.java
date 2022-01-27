@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface CentroVacinacaoRepository extends JpaRepository<CentroVacinacao, Integer>  {
     
     CentroVacinacao findCentroVacinacaoById(Integer id);
+    CentroVacinacao findByNome(String nome);
     // List<CentroVacinacao> findAll();
 
     // @Query(value="SELECT v FROM Vacina v LEFT JOIN Lote l ON v.lote = l.id WHERE l.centroVacinacao = :centro")

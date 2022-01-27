@@ -53,9 +53,14 @@ export default function DadosUtente(props) {
         if(err.response.status === 409) {
           toast.info(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
         } else {
-          console.error("ops! ocorreu um erro" + err);
-          // alert("Erro");
-          toast.error("Erro", {position: toast.POSITION.TOP_CENTER});
+          if (err.response) {
+            toast.error(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+          } else if (err.request) {
+            console.log(err.request);
+          } else {
+            console.log('err', err.message);
+          }
+          console.log(err.config);
         }
       });
   }
@@ -73,7 +78,11 @@ export default function DadosUtente(props) {
         <form
           component="form"
           onSubmit={handleSubmit}
+          style={{
+            backgroundColor: '#f3f4f6', borderRadius: "25px"
+          }}
         >
+          <div className="row" style={{ margin: "20px" }}>
           <FormControl variant="outlined">
             <TextField
               fullWidth
@@ -106,7 +115,6 @@ export default function DadosUtente(props) {
                 />
               </Stack>
             </LocalizationProvider>
-            {/* <NextLink href="/success" passHref> */}
             <Button
               variant="contained"
               size="lg"
@@ -116,8 +124,8 @@ export default function DadosUtente(props) {
             >
               Validação
             </Button>
-            {/* </NextLink> */}
           </FormControl>
+          </div>
         </form>
       </Box>
     </Container>

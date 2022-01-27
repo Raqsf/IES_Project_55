@@ -53,25 +53,9 @@ export const Schedule = (props) => (
             variant="body2"
         >
             Depois de efetuar o pedido de agendamento é realizada uma validação para confirmar se reúne os critérios de elegibilidade em vigor, para a toma da vacina. 
-            Irá receber um código QR por email/sms/site juntamente com a indicação da hora e local onde se realizará a vacinação. 
+            Irá receber um código QR por email juntamente com a indicação da hora e local onde se realizará a vacinação. 
             Terá de apresentar o código QR quando for levar a dose.
         </Typography>
-        {/* <ArrowDownwardIcon color="error" />
-        <Typography
-          color="error"
-          sx={{
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography> */}
       </Box>
       <Box sx={{
           pt: 2,

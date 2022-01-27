@@ -1,6 +1,8 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET TIME_ZONE = "+00:00";
  
+
+
 CREATE DATABASE IF NOT EXISTS `vaccinationdb` DEFAULT CHARACTER SET latin1;
 USE `vaccinationdb`;
 
@@ -115,7 +117,6 @@ BEGIN
     where TIMESTAMPDIFF(year,p.data_nascimento,CURRENT_DATE) > age;
 END
 
-
 CREATE PROCEDURE getListaEsperaByAgeAndDoenca(IN age int, IN doenca int)
 BEGIN
     select * from lista_de_espera as le
@@ -139,6 +140,7 @@ BEGIN
     WHERE DATE(a.dia_vacinacao) BETWEEN dia AND dia;
 END
 
+
 CREATE PROCEDURE getDiaDB()
 BEGIN
     select * from capacidade_por_dia limit 1;
@@ -158,6 +160,8 @@ BEGIN
     and DATE(dia_vacinacao) = dia;
 END
 
+
+
 CREATE PROCEDURE getListaEsperaPeloDia(IN dia DATE)
 BEGIN
     select * from lista_de_espera as le
@@ -172,8 +176,6 @@ BEGIN
     where DATE(v.data_administracao) = dia and l.atribuida_ao_centro = centro;
 END
 
-drop procedure getUtenteInfoDiaVacina
-
 CREATE PROCEDURE getVacinasInfoDiaVacina(IN centro INT, IN dia DATE)
 BEGIN
     select * from vacina as v
@@ -181,12 +183,24 @@ BEGIN
     where DATE(v.data_administracao) = dia and l.atribuida_ao_centro = centro;
 END
 
+CREATE PROCEDURE findAllVacinnatedByDate(IN dia DATE)
+BEGIN
+    SELECT * FROM vacina WHERE DATE(data_administracao) = dia AND administrada_a IS NOT NULL;
+END
 
+CREATE PROCEDURE getUtentesInCenter(IN centro INT)
+BEGIN
+    select *  from pessoa as p
+    join agendamento as a on a.n_utente = p.n_utente
+    where a.centro_vacinacao = centro;
+END
 
--- drop table capacidade_por_dia;
--- drop table lista_de_espera;
--- drop table agendamento;
--- drop table doencas_por_utente;
--- drop table vacina;
--- drop table lote;
--- drop table pessoa;
+-- use `vaccinationdb`;
+drop table capacidade_por_dia;
+drop table lista_de_espera;
+drop table agendamento;
+drop table doencas_por_utente;
+drop table vacina;
+drop table lote;
+drop table pessoa;
+

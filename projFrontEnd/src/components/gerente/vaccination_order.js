@@ -1,90 +1,95 @@
 import { Box, Card, CardContent, Typography, Button, FormGroup, FormControlLabel, Checkbox, TextField, LinearProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
-import api from "../../api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
+toast.configure()
 export const VaccinationOrder = (props) => { 
     const {doencas} = props;
     const [age, setAge] = useState(65);
     const [ageCheck, setAgeCheck] = useState(false);
     const [checkboxes, setCheckboxes] = useState(doencas);
+
+    useEffect(() => {
+      if(localStorage.getItem("idade") !== null) {
+        setAge(JSON.parse(localStorage.getItem("idade")));
+        setAgeCheck(true);
+      }
+    }, [])
+    
     useEffect(() => {
       setCheckboxes(doencas);
     },[doencas])
 
+    // console.log(doencas)
+
     const handleChange = (event) => {
         if (event.target.type == "checkbox") {
-          // console.log(event.target.value + " " + event.target.checked)
-          // console.log(doencas)
           let doe = "";
+          // console.log(doencas)
+          // console.log(checkboxes)
           for (const d in doencas) {
             if(parseInt(d,10) == event.target.value) {
-              // console.log(doencas[d].doenca)
               doe = doencas[d].doenca;
-
+              break;
             }
           }
           let newDoencas = [...checkboxes];
           newDoencas[event.target.value] = {id: event.target.value, doenca: doe, checked: event.target.checked}
+          // console.log(newDoencas)
           setCheckboxes(newDoencas);
         }
 
         if (event.target.type == "number") {
           setAge(event.target.value);
         }
-        // console.log(checkboxes);
-        // alert("Funciona");
     };
 
     const handleChangeAge = (event) => {
-      // console.log(ageCheck)
       setAgeCheck(!ageCheck);
     }
 
     const handleSubmit = (event) => {
-      // alert("Submit");
-      // console.log(event.target)
-      const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      };
-
       let res = []
+      let ls = [];
       for (const c of checkboxes) {
+        ls.push(c);
         if(c.checked) {
           res.push(c.id)
           // TODO: alterar para mais doenças
-          break;
         }
       }
 
+      localStorage.setItem("ordem", JSON.stringify(ls));
+
       let order = {};
-      if(ageCheck && res.length > 0){
-        order = {
-          doenca: res[0],
-          idade: age
-        }
-      } else if(!ageCheck && res.length > 0) {
-        order = {
-          doenca: res[0]
-        }
-      } else if(ageCheck && res.length === 0) {
-        order = {
-          idade: age
-        }
+      if(res.length > 0) {
+        order["doenca"] = res[0];
       }
-      console.log(order)
-      
+      if(ageCheck) {
+        order["idade"] = age;
+        localStorage.setItem("idade", JSON.stringify(age));
+      } else {
+        localStorage.removeItem("idade");
+      }
+
       // api
-      // .post(`TODO`, order, headers)
+      // .post(`/agendar_com_filtros`, order, headers)
       // .then((response) => {
-      //   // if (response.status >= 200 && response.status < 300)
-      //   alert("Nova ordem definida")
+      //   toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER})
       // })
       // .catch((err) => {
-      //   console.error("ops! ocorreu um erro" + err);
-      //   alert("Erro");
+      //   if (err.response) {
+      //       toast.error(err.response.data.message, {position: toast.POSITION.TOP_CENTER});
+      //     } else if (err.request) {
+      //       console.log(err.request);
+      //     } else {
+      //       console.log('err', err.message);
+      //     }
+      //     console.log(err.config);
       // });
+      toast.info("Nova ordem definida", {position: toast.POSITION.TOP_CENTER})
+      
     };
     return(
   <Card {...props}>
@@ -126,8 +131,8 @@ export const VaccinationOrder = (props) => {
         <FormGroup 
           sx={{ width: '100%', mb: 2 }}
         >
-            {doencas.length > 0 ? doencas.map((doenca) => (
-              <FormControlLabel control={<Checkbox onChange={handleChange} value={doenca.id} />} key={doenca.id} label={doenca.doenca} />
+            {checkboxes.length > 0 ? checkboxes.map((doenca) => (
+              <FormControlLabel control={<Checkbox onChange={handleChange} checked={doenca.checked} value={doenca.id} />} key={doenca.id} label={doenca.doenca} />
             )) :  
             <Box sx={{ width: '100%' }}>
               <LinearProgress />
@@ -139,14 +144,7 @@ export const VaccinationOrder = (props) => {
             inputProps={{ 'aria-label': 'controlled' }} */}
         </FormGroup>
       </Box>
-      <Box
-        // component="form"
-        // sx={{
-        //     '& .MuiTextField-root': { m: 1, width: '25ch' },
-        // }}
-        // noValidate
-        // autoComplete="off"
-        >
+      <Box>
         <Typography
             color="textSecondary"
             gutterBottom
@@ -154,7 +152,7 @@ export const VaccinationOrder = (props) => {
         >
             Idade
         </Typography>
-        <FormControlLabel value="age_checked" control={<Checkbox onChange={handleChangeAge}/>} label="Ordenar pela idade" />
+        <FormControlLabel value="age_checked" control={<Checkbox onChange={handleChangeAge} checked={ageCheck} />} label="Ordenar pela idade" />
         <div>
             <TextField
             id="outlined-number"

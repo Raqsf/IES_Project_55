@@ -1,10 +1,12 @@
 import React from 'react';
-import Head from 'next/head';
 import { Typography, Box, Switch, Toolbar, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableSortLabel, Paper } from '@mui/material';
 import PropTypes from 'prop-types';
 import { visuallyHidden } from '@mui/utils';
 import api from "../../api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure()
 function createData(centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual) {
   return { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual };
 }
@@ -158,18 +160,21 @@ const TableVaccines = (props) => {
         `/lote`, headers
       ).then((response) => {
         console.log(response.data)
-        // TODO: junção centros com lotes
-        // { centro_vacinacao, n_vacinas_a_chegar, dia_chegada, n_vacinas_atual }
         let res = []
         for(let lote of response.data) {
           res.push({"centro_vacinacao": lote.centroVacinacao.nome, "n_vacinas_a_chegar": lote.quantidade, "dia_chegada":lote.data_chegada, "n_vacinas_atual": lote.centroVacinacao.capacidadeAtual})
         }
         setRows(res);
-        // alert("HEY")
       })
-      .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-        alert("Erro");
+      .catch(function (error) {
+        if (error.response) {
+          toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
       });
       const loop = setInterval(function() {
         api.get(
@@ -181,11 +186,16 @@ const TableVaccines = (props) => {
             }
             setRows(res);
           })
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-            alert("Erro");
-          }
-        );
+          .catch(function (error) {
+            if (error.response) {
+              toast.error(error.response.data.message, {position: toast.POSITION.TOP_CENTER});
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
         }, 1000);
         return () => clearInterval(loop);
   }, []);

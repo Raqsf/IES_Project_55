@@ -1,4 +1,5 @@
 import React from 'react';
+import VaccinesChart from "./chart.js";
 import {
     Box,
     Typography, 
@@ -8,10 +9,10 @@ import {
   } from '@mui/material';
   
   export const StatisticsToolbar = (props) => {
-    const [age, setAge] = React.useState('');
+    const [periodo, setPeriodo] = React.useState(0);
 
     const handleChange = (event) => {
-      setAge(event.target.value);
+      setPeriodo(event.target.value);
     };
   
     return (
@@ -31,26 +32,25 @@ import {
         >
           Estatísticas
         </Typography>
-        <Box sx={{ m: 1 }}>
+        <Box sx={{ m: -1 }}>
             <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="demo-simple-select-helper-label">Período</InputLabel>
             <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={age}
+                value={periodo}
                 label="Período"
                 onChange={handleChange}
             >
-                <MenuItem value={"Hoje"}>
-                    <em>Hoje</em>
-                </MenuItem>
-                <MenuItem value={10}>Última semana</MenuItem>
-                <MenuItem value={20}>Último mês</MenuItem>
-                <MenuItem value={30}>Último ano</MenuItem>
+                <MenuItem value={0}><em>Hoje</em></MenuItem>
+                <MenuItem value={1}>Última semana</MenuItem>
+                <MenuItem value={2}>Último mês</MenuItem>
+                <MenuItem value={3}>Último ano</MenuItem>
             </Select>
             </FormControl>
         </Box>
       </Box>
+      <VaccinesChart periodo={periodo}/>
     </Box>
   );
 }

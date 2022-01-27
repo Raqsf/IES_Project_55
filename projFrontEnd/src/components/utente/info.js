@@ -13,7 +13,14 @@ import { useRouter } from 'next/router';
         query: { utente_nome, utente_num, estado, centro, morada, data }
     } = router
     const d = new Date(data)
-    const data_str = d.toLocaleDateString() + " " + d.toLocaleDateString();
+	  const today = new Date();  
+     
+    // se a data for menor que a de hoje quer dizer q a vacinação já foi
+    if(d.toLocaleDateString() < today.toLocaleDateString()) {
+      estado = "terminado";
+    }
+    
+    const data_str = d.toLocaleDateString() + " " + d.toLocaleTimeString();
     // if(data) {
       // data = new Date(data);
     // }

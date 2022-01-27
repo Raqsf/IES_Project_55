@@ -5,7 +5,8 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeoutException;
-
+import javax.transaction.Transactional;
+@Transactional
 public class MQProducer {
     private Connection connection;
     private Channel channel;

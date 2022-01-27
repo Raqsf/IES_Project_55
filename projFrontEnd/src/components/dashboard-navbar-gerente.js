@@ -16,7 +16,6 @@ export const DashboardNavbarGerente = (props) => {
   const { onSidebarOpen, ...other } = props;
 
   function logout() {
-    // alert("LOGOUT");
     localStorage.setItem("login", false);
   }
 
@@ -79,7 +78,7 @@ export const DashboardNavbarGerente = (props) => {
               width: 40,
               ml: 1
             }}
-            src="/static/images/avatars/avatar_1.png"
+            src="/static/images/avatars/avatar_11.png"
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>

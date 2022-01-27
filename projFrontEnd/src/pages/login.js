@@ -10,7 +10,7 @@ const Login = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
+      email: 'filo@vaccinationdesk.pt',
       password: 'Password123'
     },
     validationSchema: Yup.object({
@@ -28,7 +28,7 @@ const Login = () => {
           'Password is required')
     }),
     onSubmit: () => {
-      localStorage.setItem("login", true, "username", JSON.stringify('demo@devias.io'));
+      localStorage.setItem("login", true, "username", JSON.stringify(formik.initialValues.email));
       router.push('/');
     }
   });
@@ -130,7 +130,7 @@ const Login = () => {
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Email"
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}

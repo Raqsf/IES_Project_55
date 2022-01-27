@@ -1,11 +1,14 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Grid, Typography, CircularProgress } from '@mui/material';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import { useEffect, useState } from 'react';
 import api from "../../api";
 
 export const VaccinesAdministered = (props) => {
-  const {id} = props;
+  let {id} = props;
   const [totalVaccines, setTotalVaccines] = useState();
+  const [loadingVaccines, setLoadingVaccines] = useState(true);
+  const [availableVaccines, setAvailableVaccines] = useState();
+  const [loadingAvailable, setLoadingAvailable] = useState(true);
 
   if(id) {
     localStorage.setItem("id_vaccines_administrated", id);
@@ -16,52 +19,113 @@ export const VaccinesAdministered = (props) => {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   };    
-  // while(id == null) {
-  // }
       
   useEffect(() => {
-    // setLoading(true);
+    setLoadingVaccines(true);
 
-    // if (id) {
+    if (id) {
+      // TOTAL de pessoas vacinadas
+      api.get(
+          `/estatisticas/pessoasVacinadas/${id}`, headers 
+        ).then((response) => {
+          // console.log("Second", id)
+          // console.log(response.data)
+          setTotalVaccines(response.data);
+          setLoadingVaccines(false);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.error("ops! ocorreu um erro" + err);
+          } else if (err.request) {
+            console.log(err.request);
+          } else {
+            console.log('err', err.message);
+          }
+          // if(response.status === 500 && typeof id == undefined) {
+          //   alert("Erro")
+          // }
+        })
+      }
+      const loop = setInterval(function() {
+      // console.log("Loop", id)
+      id = localStorage.getItem("id_vaccines_administrated");
+      // console.log("Loop", param1)
+      api.get(
+          `/estatisticas/pessoasVacinadas/${id}`, headers
+        ).then((response) => {
+          console.log(response.data)
+          setTotalVaccines(response.data);
+          setLoadingVaccines(false);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.error("ops! ocorreu um erro" + err);
+          } else if (err.request) {
+            console.log(err.request);
+          } else {
+            console.log('err', err.message);
+          }
+        }
+      );
+      }, 1000);
+      return () => clearInterval(loop);
+    }, []);
 
-      /* api.get( */
-      /*     `/centrovacinacao/${id}/vacinas`, headers */
-      /*   ).then((response) => { */
-      /*     // console.log("Second", id) */
-      /*     console.log(response.data) */
-      /*     setTotalVaccines(response.data); */
-      /*     // setLoading(false); */
-      /*   }) */
-      /*   .catch((err) => { */
-      /*     console.error("ops! ocorreu um erro" + err); */
-      /*     alert("Erro"); */
-      /*     // if(response.status === 500 && typeof id == undefined) { */
-      /*     //   alert("Erro") */
-      /*     // } */
-      /*   }) */
-      /* } */
-      /* const loop = setInterval(function() { */
-      /* // console.log("Loop", id) */
-      /* id = localStorage.getItem("id_vaccines_administrated"); */
-      /* // console.log("Loop", param1) */
-      /* api.get( */
-      /*     `/centrovacinacao/${id}/vacinas`, headers */
-      /*   ).then((response) => { */
-      /*     console.log(response.data) */
-      /*     setTotalVaccines(response.data); */
-      /*   }) */
-      /*   .catch((err) => { */
-      /*     console.error("ops! ocorreu um erro" + err); */
-      /*     alert("Erro"); */
-      /*   } */
-      /* ); */
-      /* }, 1000); */
-      /* return () => clearInterval(loop); */
+    useEffect(() => {
+      setLoadingAvailable(true);
+      if (id) {
+        // TOTAL de pessoas vacinadas
+        api.get(
+            `/estatisticas/vacinasDisponiveis/${id}`, headers 
+          ).then((response) => {
+            // console.log("Second", id)
+            // console.log(response.data)
+            setAvailableVaccines(response.data);
+            setLoadingAvailable(false);
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.error("ops! ocorreu um erro" + err);
+            } else if (err.request) {
+              console.log(err.request);
+            } else {
+              console.log('err', err.message);
+            }
+          })
+        }
+        const loop = setInterval(function() {
+        // console.log("Loop", id)
+        id = localStorage.getItem("id_vaccines_administrated");
+        // console.log("Loop", param1)
+        api.get(
+            `/estatisticas/vacinasDisponiveis/${id}`, headers
+          ).then((response) => {
+            // console.log(response.data)
+            setAvailableVaccines(response.data);
+            setLoadingAvailable(false);
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.error("ops! ocorreu um erro" + err);
+            } else if (err.request) {
+              console.log(err.request);
+            } else {
+              console.log('err', err.message);
+            }
+          }
+        );
+        }, 1000);
+        return () => clearInterval(loop);
     }, []);
 
   return (
   <Card
-    sx={{ height: '100%' }}
+    sx={{ 
+      height: '100%',
+      ':hover': {
+        boxShadow: 20, 
+        cursor: "pointer"
+    } }}
     {...props}
   >
     <CardContent>
@@ -82,7 +146,12 @@ export const VaccinesAdministered = (props) => {
             color="textPrimary"
             variant="h4"
           >
-            10
+            {loadingVaccines ? 
+              <Box sx={{ display: 'flex', mt: 1 }}>
+                <CircularProgress size="30px"/> 
+              </Box>
+            : 
+            totalVaccines}
           </Typography>
         </Grid>
         <Grid item>
@@ -111,14 +180,16 @@ export const VaccinesAdministered = (props) => {
           }}
           variant="body2"
         >
-          Faltam/Total (TODO: escolher o q preferirem)
+          Disponíveis
         </Typography>
         <Typography
           color="textSecondary"
           variant="caption"
         >
-          {/* 50 (Total para o dia de hoje) */}
-          {totalVaccines}
+          {loadingAvailable ? 
+            <CircularProgress size="10px"/> 
+          : 
+          availableVaccines}
         </Typography>
       </Box>
     </CardContent>

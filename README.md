@@ -3,14 +3,13 @@
 <p align="center">
   <img  src="/images/logo.png" height=200 width=200>
 </p>
-
-Sistema de agendamento de vacinação, distribuição de vacinas e verificação de administração de vacinas.
+<p align="center"> Sistema de agendamento de vacinação, distribuição de vacinas e verificação de administração de vacinas. </p>
 <hr>
 
 ## Sobre o Projeto
-O sistema tem como objetivo realizar a gestão de todo o processo relacionado com a administração de vacinas. Permite também o agendamento automático de vacinas, a sua distribuição por diferentes centros de vacinação, podendo esta ser feita por grupo prioritários e a verificação da presença de utentes a levar a vacina num determinado centro de vacinação. 
+O sistema tem como objetivo realizar a gestão de todo o processo relacionado com a administração de vacinas. Permite também o agendamento automático de vacinas, a sua distribuição por diferentes centros de vacinação, podendo esta ser feita por grupo prioritários e a verificação da presença de utentes a levar a vacina num determinado centro de vacinação.
 
-Para marcar uma vacina, o utilizador insere no sistema os seus dados, ficando assim numa lista de espera a aguardar que receba uma notificação via e-mail, com as informações relativas ao agendamento da sua vacina, mais propiamente, qual o centro que lhe foi atribuido, e a data acompanhada do horário da mesma. Mais tarde, à chegada ao centro de vacinação, o utente terá de validar o código QR que lhe foi enviado no email. Caso seja válido, poderá levar a vacina. 
+Para marcar uma vacina, o utilizador insere no sistema os seus dados, ficando assim numa lista de espera a aguardar que receba uma notificação via e-mail, com as informações relativas ao agendamento da sua vacina, mais propiamente, qual o centro que lhe foi atribuido, e a data acompanhada do horário da mesma. Mais tarde, à chegada ao centro de vacinação, o utente terá de validar o código QR que lhe foi enviado no email. Caso seja válido, poderá levar a vacina.
 
 A distribuição de vacinas pelos centros de vacinação pode ser feita automaticamente pelo sistema (i.e. a distribuição é feita de acordo com a ordem de marcação no sistema), ou ser feita de acordo com critérios de prioridade definidos pelo gerente.
 
@@ -26,7 +25,7 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
   <hr>
 
 ## Arquitetura
-![arquitetura](./images/123.png)
+![arquitetura](./images/arquitetura.drawio.png)
 
 >#### Componentes
 >A arquitetura do sistema está dividida em 5 grupos principais:
@@ -99,9 +98,6 @@ assim sempre acessível.
 O projeto está acompanhado de um relatório, sendo que o mesmo pode ser consultado [aqui](reports/IES%20Project%20Specification%20Report.pdf).
 
 <hr>
-
-
-
 
 ## DevOps
 ### Docker-compose

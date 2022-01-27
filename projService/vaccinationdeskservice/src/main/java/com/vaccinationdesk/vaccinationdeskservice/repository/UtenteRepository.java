@@ -16,4 +16,7 @@ public interface UtenteRepository extends JpaRepository<Utente, Integer> {
     
     @Procedure(procedureName = "getUtenteInfoDiaVacina")
     List<Utente> getUtenteInfoDiaVacina(@Param("idCentro") Integer centro, @Param("data") String dia);
+
+    @Procedure(procedureName = "getUtentesInCenter")
+    List<Utente> getUtentesInCenter(@Param("centro") Integer centro);
 }
