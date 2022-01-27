@@ -14,7 +14,7 @@ public class MQProducer {
 
     public MQProducer() {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("192.168.160.197");
+        factory.setHost("localhost");
         factory.setPort(5672);
         factory.setUsername("prod");
         factory.setPassword("prod");
