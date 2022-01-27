@@ -18,6 +18,12 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 > Todos os dados supramencionados são gerados automaticamente pelo sistema, não sendo reais.
 <hr>
 
+## Demo
+<a href="https://youtu.be/09V4a1aT1p8">
+    <img src="./images/template.png">
+  </a>
+  <hr>
+
 ## Arquitetura
 ![arquitetura](./images/arquitetura.drawio.png)
 
@@ -28,35 +34,99 @@ O gerente do sistema monitoriza as vacinas e gere os centros de vacinação.
 >- **Back-end:** Terá acesso à base de dados e terá comunicações com a parte do cliente e do broker, será aqui que os principais processamentos serão feitos (Spring Boot - Rest API, Broker e BD).
 >- **Client:** A aplicação web, será desenvolvida com base no template em JS React, sendo depois adaptado às necessidades quer de visualização quer de comunicação com o back-end.
 >- **Persistence:** A base de dados (MySQL) do sistema é do tipo relacional sendo bastante importante guardar de forma segura todos os dados que o sistema gera.
+>- **Raspberry:** Com o objetivo de ler códigos QR, relativos a informações do agendamento feitas pelo back-end, temos implementado num Raspberry, um leitor de códigos QR, este leitor está desenvolvido em Python, e utiliza a biblioteca do OpenCV, para ler os códigos. A resultante da leitura dos codigos, é enviada para o Message Broker.
 
 <hr>
 
 ## Backlog
 
-- Para o backlog foi usado o o *Github Projects*  ....
+- Para o backlog tiramos o máximo partido das funcionalidades do ***GitHub***, sendo que utilizamos o ***GitHub Projects*** de forma a dividir-mos as tarefas/funcionalidades de uma forma bastante organizada a implementar no projeto. 
 
 <hr>
 
 ## Como executar
 
- Toda a execução do projeto, é feita com recurso ao *Docker Compose*, sendo necessária a sua instalação.
-Tendo os requesitos satisfeitos, basta correr o [docker-compose](docker-compose.yml) para iniciar o projeto.
-```
-docker-compose up
-```
-
+1. correr os conteiners docker. Na raiz do projeto corra o comando  
+    `docker-compose up`  
+**Nota:** leia o tópico [DevOps](#devops) ao final desse ficheiro.  
+2. correr o backend. no diretório projService/vaccinationdeskservice/ corra o comando:  
+    `./mvnw spring-boot:run`  
+3. correr o frontend. no diretório projFrontend/ corra os comandos:  
+    ```
+    npm install  
+    npm run start  
+    ```
+4. correr os scripts python.  
+no diretório projDataGen/ corra os comandos:  
+    ```
+    source venv/bin/activate  
+    python3 generator.py  
+    ```
+    no diretório projService/vaccinationdeskservice corra o comando:  
+    ```
+    pip install requests
+    python3 requests_API.py  
+    ```
+    
 <hr>
 
 ## Deploy
-.......
+
+O deploy foi feito na VM fornecida.  
+* O frontend pode ser acessado pelo endereço http://deti-engsoft-18.ua.pt:3000/
+* O backend (Springboot) está a correr em background na porta 8081.  
+* Existem 2 scripts pyhon a correr em backgrond para geração de dados.  
+* A base de dados (mySQL) está a correr num docker container e pode ser acessada na porta 3306
+* O broker (rabbitMQ) esta a correr em um docker container e pode ser acessado na porta 15672
+  
+**OBS:** Configuramos o nginx para servir o frontend na porta 80 da VM, entretanto os arquivos html estáticos gerados pelo next.js não estão a funcionar bem. Portanto existe uma versão do frontend a rodar na porta 80, servida pelo nginx com o funcionamento das paginas html incorredo, para efeitos de avaliação do frontend utilize o link http://deti-engsoft-18.ua.pt:3000/  
+
+
+<hr>
+
+## Documentação da API
+
+A documentação da API foi feita com recurso ao **Swagger**, e da mesma foi gerado o seguinte [ficheiro](index.html) em html. Visto que é a unica forma de a documentação estar
+assim sempre acessível.
+
+
+
 <hr>
 
 ## Relatório
 
 O projeto está acompanhado de um relatório, sendo que o mesmo pode ser consultado [aqui](reports/IES%20Project%20Specification%20Report.pdf).
 
-Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrgvn6NY8cXZja3s/edit?usp=sharing
+<hr>
 
+## DevOps
+### Docker-compose
+Na raiz do projeto basta correr o comando.  
+    `docker-compose up`   
+Para interromper o docker compose basta correr o comando.  
+    `docker-compose down`
+    
+### mySQL
+Na primeira execução deve tambem criar as tabelas na base de dados.  
+Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.
+db connection:
+```
+    MYSQL_ROOT_PASSWORD: password  
+    MYSQL_DATABASE: vaccinationdb  
+    MYSQL_USER: ies  
+    MYSQL_PASSWORD: password  
+```
+            
+### RabbitMQ
+Certifique-se de que o existe o user "prod" no Rabbitmq.  
+1. acessar http://deti-engsoft-18.ua.pt:15672/ ou http://localhost:15672/ e fazer login:  
+user: myuser  
+password: mypassword  
+2. ir para a tab "admin"  
+3. adicionar o user "prod" caso não exista:  
+    user: prod  
+    password: prod  
+4. dar permissões de administrador
 <hr>
 
 ## Equipa
@@ -66,22 +136,3 @@ Em progresso: https://docs.google.com/document/d/16WMrNr4wjFYltof8mGiAAXVExDsUrg
 | 98546 | [Patrícia Matias Dias](https://github.com/Patricia-Dias) | Product Owner, Developer |
 | 91359 | [Juan Victor Lessa Gonçalves](https://github.com/juanlessa) | DevOps Master, Developer |
 | 98491 | [Pedro Alexandre Coelho Sobral](https://github.com/TheScorpoi) | Architect, Developer |
-
-
-## DevOps
-### Docker-compose
-Na raiz do projeto basta correr o comando.  
-    `docker-compose up`  
-Na primeira execução deve tambem criar as tabelas na base de dados.  
-Basta se conectar a db, por exemplo usando a extensão "mysql' do vs code e correr o script .sql de criação das dbs.
-db connection:
-            MYSQL_ROOT_PASSWORD: password  
-            MYSQL_DATABASE: vaccinationdb  
-            MYSQL_USER: ies  
-            MYSQL_PASSWORD: password  
-Para interromper o docker compose basta correr o comando.  
-    `docker-compose down`  
-
-
-### MySQL docker image
-    docker run --name vaccinationdb-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=vaccinationdb -e MYSQL_USER=ies -e MYSQL_PASSWORD=password -d mysql:8.0
